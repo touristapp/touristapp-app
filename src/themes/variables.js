@@ -5,5 +5,7 @@ export const colors = {
     COAL: '#282425',
     CREAM: '#EEDBD4',
     FIRE: '#D95A2B',
-    BLOOD: '#8C241B'
+    BLOOD: '#8C241B',
+    WHITE: 'white',
+    BLACK: 'black'
 };
