@@ -1,13 +1,26 @@
 import React from 'react';
-import { View, Text } from 'react-native';
-import Style from '../../styles/account';
+import ViewAccount from './ViewAccount'
+import EditAccount from './EditAccount';
 
 export default class Account extends React.Component {
+    state = {
+        currentScreen: "viewAccount"        
+    }
+    
+    switchScreen = (screen) => {
+        this.setState({
+            currentScreen: screen
+        })
+    }
+    
     render() {
-        return (
-            <View style={Style.mainContainer}>
-                <Text>You are on the Account Page</Text>
-            </View>
-        );
+        switch (this.state.currentScreen) {
+            case 'viewAccount':
+                return <ViewAccount switchScreen = {this.switchScreen}/>
+            case 'editAccount':
+                return <EditAccount switchScreen = {this.switchScreen}/>
+            default:
+                null
+        }
     }
 }
