@@ -7,9 +7,16 @@ import Account from '../../screens/Account';
 
 const HomeRoute = () => <Home />;
 const SearchRoute = () => <Search />;
-const AccountRoute = () => <Account />;
+const AccountRoute = () => {
+    //todo: remove '|| true' and get from context if the user isLogged or not
+    if ({/*isLogged*/} || true) {
+        return <Account />
+    } else {
+        return <Login />
+    }
+};
 
-export default class Footer extends React.Component {
+export default class Navigation extends React.Component {
     state = {
         index: 0,
         routes: [
@@ -35,7 +42,7 @@ export default class Footer extends React.Component {
             renderScene={this._renderScene}
             barStyle={{backgroundColor: colors.COAL}} 
             activeColor={colors.SKY}
-            inactiveColor={colors.WHITE}          
+            inactiveColor={colors.WHITE}       
         />
         );
     }
