@@ -1,10 +1,10 @@
 import React from 'react';
-import AppNavigator from './src/navigation';
+import Home from './src/screens/Home';
 
 export default class App extends React.Component {
   render() {
     return (
-        <AppNavigator ref={navigatorRef => this.navigatorRef = navigatorRef} />
+        <Home />
     );
   }
 }
