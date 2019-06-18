@@ -31,9 +31,9 @@ export default class Footer extends React.Component {
             navigationState={this.state}
             onIndexChange={this._handleIndexChange}
             renderScene={this._renderScene}
-            barStyle={{backgroundColor: colors.FIRE}} 
+            barStyle={{backgroundColor: colors.FIRE}}
             activeColor={colors.COAL}
-            inactiveColor={colors.WHITE}          
+            inactiveColor={colors.WHITE}
         />
         );
     }
