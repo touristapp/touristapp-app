@@ -1,12 +1,10 @@
 import React from 'react';
-import { View } from 'react-native';
-import Style from '../../styles/home'
-import Footer from '../../components/Footer'
+import Navigation from '../../components/Navigation'
 
 export default class Home extends React.Component {
     render() {
         return (
-            <Footer />
+            <Navigation />
         );
     }
 }
