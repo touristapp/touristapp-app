@@ -1,11 +1,11 @@
 import React from 'react';
-import Home from './src/screens/Home';
-import Login from './src/screens/Auth/Login';
+import Navigation from './src/components/Navigation';
+import { colors } from './src/themes/variables';
 
 export default class App extends React.Component {
   render() {
     return (
-        <Login />
+        <Navigation style={{backgroundColor: colors.SKY}}/>
     );
   }
 }

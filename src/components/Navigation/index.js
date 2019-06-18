@@ -1,13 +1,22 @@
 import React from 'react';
 import { BottomNavigation } from 'react-native-paper';
-import { colors } from '../../themes/variables'
-import Account from '../../screens/Account'
+import { colors } from '../../themes/variables';
+import Home from '../../screens/Home'
+import Search from '../../screens/Search'
+import Account from '../../screens/Account';
 
-const HomeRoute = () => null;
-const SearchRoute = () => null;
-const AccountRoute = () => <Account />;
+const HomeRoute = () => <Home />;
+const SearchRoute = () => <Search />;
+const AccountRoute = () => {
+    //todo: remove '|| true' and get from context if the user isLogged or not
+    if ({/*isLogged*/} || true) {
+        return <Account />
+    } else {
+        return <Login />
+    }
+};
 
-export default class Footer extends React.Component {
+export default class Navigation extends React.Component {
     state = {
         index: 0,
         routes: [
@@ -31,9 +40,9 @@ export default class Footer extends React.Component {
             navigationState={this.state}
             onIndexChange={this._handleIndexChange}
             renderScene={this._renderScene}
-            barStyle={{backgroundColor: colors.FIRE}}
-            activeColor={colors.COAL}
-            inactiveColor={colors.WHITE}
+            barStyle={{backgroundColor: colors.COAL}} 
+            activeColor={colors.SKY}
+            inactiveColor={colors.WHITE}       
         />
         );
     }

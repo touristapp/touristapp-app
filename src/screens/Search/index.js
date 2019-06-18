@@ -1,12 +1,12 @@
 import React from 'react';
 import { View, Text } from 'react-native';
-import Style from '../../styles/account';
+import Style from '../../styles/search';
 
-export default class Account extends React.Component {
+export default class Search extends React.Component {
     render() {
         return (
             <View style={Style.mainContainer}>
-                <Text>You are on the Account Page</Text>
+                <Text>You are on the Search Page</Text>
             </View>
         );
     }
