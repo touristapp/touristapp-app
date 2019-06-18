@@ -1,5 +1,6 @@
 import { createStackNavigator, createAppContainer } from "react-navigation";
 import Home from '../screens/Home'
+import Login from '../screens/Auth/Login'
 
 const AppNavigator = createStackNavigator({
     Home: {
@@ -8,9 +9,15 @@ const AppNavigator = createStackNavigator({
             header: null
         }
     },
+    Login: {
+        screen: Login,
+        navigationOptions: {
+            header: null
+        }
+    }
 },
 {
-    initialRouteName: 'Home',
+    initialRouteName: 'Login',
     headerMode: 'float',
     defaultNavigationOptions: {
         headerTintColor: '#fff',
