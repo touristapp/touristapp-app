@@ -1,10 +1,12 @@
 import React from 'react';
 import { BottomNavigation } from 'react-native-paper';
-import { colors } from '../../themes/variables'
-import Account from '../../screens/Account'
+import { colors } from '../../themes/variables';
+import Home from '../../screens/Home'
+import Search from '../../screens/Search'
+import Account from '../../screens/Account';
 
-const HomeRoute = () => null;
-const SearchRoute = () => null;
+const HomeRoute = () => <Home />;
+const SearchRoute = () => <Search />;
 const AccountRoute = () => <Account />;
 
 export default class Footer extends React.Component {
@@ -31,9 +33,9 @@ export default class Footer extends React.Component {
             navigationState={this.state}
             onIndexChange={this._handleIndexChange}
             renderScene={this._renderScene}
-            barStyle={{backgroundColor: colors.FIRE}}
-            activeColor={colors.COAL}
-            inactiveColor={colors.WHITE}
+            barStyle={{backgroundColor: colors.COAL}} 
+            activeColor={colors.SKY}
+            inactiveColor={colors.WHITE}          
         />
         );
     }
