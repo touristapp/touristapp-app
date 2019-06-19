@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect }from 'react';
 import { View,ScrollView, Image } from 'react-native';
 import { Title, TextInput, Button } from 'react-native-paper';
 import useInput from '../../../hooks/useInputs';
@@ -10,6 +10,12 @@ export default function Login() {
     const email = useInput();
     const password = useInput();
     const [{ isLogged }, dispatch ] = useStateValue(); // Get the login state, defined in App.js
+
+    useEffect(() => {
+      // do something
+    }, [email.value, password.value])
+
+    /*// TODO: onClick, connect to DB, check credentials, and store in Storage using tools/asyncstorage.js */
 
     return (
       <View style={Style.main}>
@@ -33,7 +39,7 @@ export default function Login() {
              type: 'authenticate',
              authenticate: { isLogged: true }
            })}>
-              LOGIN
+              CLICK TO LOGIN
            </Button>
        </View>
       </View>

@@ -1,4 +1,4 @@
-import React, {createContext, useContext, useReducer} from 'react';
+import React from 'react';
 import Navigation from './src/components/Navigation';
 import { colors } from './src/styles/themes/variables';
 import { StateProvider } from './src/hooks/state';
@@ -13,11 +13,15 @@ const App = () => {
   const reducer = (state, action) => {
     switch (action.type) {
       case 'authenticate':
-        return {
-          ...state,
+        return (
+        { ...state,
           isLogged: action.authenticate
-        };
-
+        });
+      case 'logout':
+        return (
+        {...state,
+          isLogged: action.logout
+        });
       default:
         return state;
     }
@@ -32,13 +36,3 @@ const App = () => {
 }
 
 export default App;
-
-/*
-export default class App extends React.Component {
-  render() {
-    return (
-
-    );
-  }
-}
-*/

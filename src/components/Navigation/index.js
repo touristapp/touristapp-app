@@ -1,4 +1,4 @@
-import React, {createContext, useContext, useReducer} from 'react';
+import React, { useState, useEffect } from 'react';
 import { BottomNavigation } from 'react-native-paper';
 import { colors } from '../../styles/themes/variables';
 import Home from '../../screens/Home'
@@ -11,43 +11,41 @@ import { useStateValue } from '../../hooks/state'
 const HomeRoute = () => <Home />;
 const SearchRoute = () => <Search />;
 const AccountRoute = () => {
-    const [{ isLogged }, dispatch ] = useStateValue(); // Get the login state, defined in App.js
-
-    if (isLogged) {
+  const [{ isLogged }, dispatch ] = useStateValue(); // Get the login state, defined in App.js
+    if (isLogged.isLogged) {
         return <Account />
     } else {
         return <Login />
     }
 };
 
-export default class Footer extends React.Component {
-    state = {
-        index: 0,
-        routes: [
-        { key: 'home', title: 'Home', icon: 'home' },
-        { key: 'search', title: 'Search', icon: 'search' },
-        { key: 'account', title: 'Account', icon: 'account-circle' },
-        ],
-    };
+export default function Footer() {
+    const [{ isLogged }, dispatch ] = useStateValue(); // Get the login state, defined in App.js
+    const [index,setIndex] = useState(0);
+    const [routes,setRoutes] = useState([
+      { key: 'home', title: 'Home', icon: 'home' },
+      { key: 'search', title: 'Search', icon: 'search' },
+      { key: 'account', title: 'Account', icon: 'account-circle' }
+    ]);
 
-    _handleIndexChange = index => this.setState({ index });
+    useEffect(
+      ()=> {
+        //console.log('<<<< index changed >>>>');
+      },[index]
+    )
 
-    _renderScene = BottomNavigation.SceneMap({
-        home: HomeRoute,
-        search: SearchRoute,
-        account: AccountRoute,
-    });
+    const _handleIndexChange = index => setIndex(index);
 
-    render() {
-      return (
-        <BottomNavigation
-            navigationState={this.state}
-            onIndexChange={this._handleIndexChange}
-            renderScene={this._renderScene}
-            barStyle={{backgroundColor: colors.COAL}}
-            activeColor={colors.SKY}
-            inactiveColor={colors.WHITE}
-        />
-        );
-    }
+    const _renderScene = BottomNavigation.SceneMap({ home: HomeRoute, search: SearchRoute, account: AccountRoute, })
+
+    return (
+      <BottomNavigation
+          navigationState={{ index, routes }}
+          onIndexChange={_handleIndexChange}
+          renderScene={_renderScene}
+          barStyle={{backgroundColor: colors.COAL}}
+          activeColor={colors.SKY}
+          inactiveColor={colors.WHITE}
+      />
+    );
 }
