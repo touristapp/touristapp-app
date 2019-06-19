@@ -1,16 +1,19 @@
 import React, {createContext, useContext, useReducer} from 'react';
 import { BottomNavigation } from 'react-native-paper';
-import { colors } from '../../themes/variables';
+import { colors } from '../../styles/themes/variables';
 import Home from '../../screens/Home'
 import Search from '../../screens/Search'
 import Account from '../../screens/Account';
+import Login from '../../screens/Auth/Login'
 import Storage from '../../tools/asyncstorage.js'
+import { useStateValue } from '../../hooks/state'
 
 const HomeRoute = () => <Home />;
 const SearchRoute = () => <Search />;
 const AccountRoute = () => {
-    //todo: remove '|| true' and get from context if the user isLogged or not
-    if ({/*isLogged*/} || true) {
+    const [{ isLogged }, dispatch ] = useStateValue(); // Get the login state, defined in App.js
+
+    if (isLogged) {
         return <Account />
     } else {
         return <Login />

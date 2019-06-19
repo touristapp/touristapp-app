@@ -1,11 +1,44 @@
-import React from 'react';
+import React, {createContext, useContext, useReducer} from 'react';
 import Navigation from './src/components/Navigation';
 import { colors } from './src/styles/themes/variables';
+import { StateProvider } from './src/hooks/state';
 
+const App = () => {
+  /*Define default states here*/
+  const initialState = {
+    isLogged: false
+  };
+
+  /*Define how states would be updated by some actions*/
+  const reducer = (state, action) => {
+    switch (action.type) {
+      case 'authenticate':
+        return {
+          ...state,
+          isLogged: action.authenticate
+        };
+
+      default:
+        return state;
+    }
+  };
+
+  /*Wrap the App inside the state Context*/
+  return (
+    <StateProvider initialState={initialState} reducer={reducer}>
+        <Navigation style={{backgroundColor: colors.SKY}}/>
+    </StateProvider>
+  );
+}
+
+export default App;
+
+/*
 export default class App extends React.Component {
   render() {
     return (
-        <Navigation style={{backgroundColor: colors.SKY}}/>
+
     );
   }
 }
+*/

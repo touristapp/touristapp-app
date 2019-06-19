@@ -2,12 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { View,ScrollView, Image } from 'react-native';
 import { Title, TextInput, Button } from 'react-native-paper';
 import useInput from '../../../hooks/useInputs';
+import { useStateValue } from '../../../hooks/state'
 import { colors } from '../../../styles/themes/variables'
 import Style from '../../../styles/login'
 
 export default function Login() {
     const email = useInput();
     const password = useInput();
+    const [{ isLogged }, dispatch ] = useStateValue(); // Get the login state, defined in App.js
 
     return (
       <View style={Style.main}>
@@ -27,7 +29,10 @@ export default function Login() {
             label='Password'
             {...password}
            />
-           <Button  style={Style.button} icon="send" mode="contained" onPress={() => console.log('Pressed')}>
+           <Button  style={Style.button} icon="send" mode="contained" onPress={() => dispatch({
+             type: 'authenticate',
+             authenticate: { isLogged: true }
+           })}>
               LOGIN
            </Button>
        </View>
