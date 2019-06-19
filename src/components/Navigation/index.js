@@ -1,9 +1,10 @@
-import React from 'react';
+import React, {createContext, useContext, useReducer} from 'react';
 import { BottomNavigation } from 'react-native-paper';
 import { colors } from '../../themes/variables';
 import Home from '../../screens/Home'
 import Search from '../../screens/Search'
 import Account from '../../screens/Account';
+import Storage from '../../tools/asyncstorage.js'
 
 const HomeRoute = () => <Home />;
 const SearchRoute = () => <Search />;
@@ -16,7 +17,17 @@ const AccountRoute = () => {
     }
 };
 
-export default class Navigation extends React.Component {
+export const LoginContext = createContext();
+
+export const StateProvider = ({reducer, initialState, children}) =>(
+  <StateContext.Provider value={useReducer(reducer, initialState)}>
+    {children}
+  </StateContext.Provider>
+);
+
+export const useLoginValue = () => useContext(LoginContext);
+
+export default class Footer extends React.Component {
     state = {
         index: 0,
         routes: [
@@ -35,14 +46,14 @@ export default class Navigation extends React.Component {
     });
 
     render() {
-        return (
+      return (
         <BottomNavigation
             navigationState={this.state}
             onIndexChange={this._handleIndexChange}
             renderScene={this._renderScene}
-            barStyle={{backgroundColor: colors.COAL}} 
+            barStyle={{backgroundColor: colors.COAL}}
             activeColor={colors.SKY}
-            inactiveColor={colors.WHITE}       
+            inactiveColor={colors.WHITE}
         />
         );
     }
