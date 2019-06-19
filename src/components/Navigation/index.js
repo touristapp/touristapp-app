@@ -20,9 +20,9 @@ export default class Navigation extends React.Component {
     state = {
         index: 0,
         routes: [
-        { key: 'home', title: 'Home', icon: 'home' },
-        { key: 'search', title: 'Search', icon: 'search' },
-        { key: 'account', title: 'Account', icon: 'account-circle' },
+        { key: 'home', title: 'Accueil', icon: 'home' },
+        { key: 'search', title: 'Rechercher', icon: 'search' },
+        { key: 'account', title: 'Mon compte', icon: 'account-circle' },
         ],
     };
 
