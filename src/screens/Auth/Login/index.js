@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View,ScrollView, Image } from 'react-native';
 import { Title, TextInput, Button } from 'react-native-paper';
 import useInput from '../../../hooks/useInputs';
-import { colors } from '../../../themes/variables'
+import { colors } from '../../../styles/themes/variables'
 import Style from '../../../styles/login'
 
 export default function Login() {
