@@ -17,16 +17,6 @@ const AccountRoute = () => {
     }
 };
 
-export const LoginContext = createContext();
-
-export const StateProvider = ({reducer, initialState, children}) =>(
-  <StateContext.Provider value={useReducer(reducer, initialState)}>
-    {children}
-  </StateContext.Provider>
-);
-
-export const useLoginValue = () => useContext(LoginContext);
-
 export default class Footer extends React.Component {
     state = {
         index: 0,
