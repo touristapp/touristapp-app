@@ -47,7 +47,7 @@ export default function ViewAccount() {
                     mode="contained" 
                     onPress={() => dispatch({
                         type: 'switchScreen',
-                        switch: 'editAccount'
+                        screen: 'editAccount'
                     })}>
                     Editer mes informations
                 </Button>
@@ -56,8 +56,8 @@ export default function ViewAccount() {
                     icon="exit-to-app" 
                     mode="contained" 
                     onPress={() => dispatch({
-                        type: 'logout',
-                        logout: { isLogged: false }
+                        type: 'isLogged',
+                        status: false
                     })}>
                     Déconnexion
                 </Button>

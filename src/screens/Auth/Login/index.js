@@ -47,8 +47,8 @@ export default function Login() {
 					icon="send"
 					mode="contained" 
 					onPress={() => dispatch({
-						type: 'authenticate',
-						switch: { isLogged: true }
+						type: 'isLogged',
+						status: true
 					})}>
 					CLICK TO LOGIN
 				</Button>
