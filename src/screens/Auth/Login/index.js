@@ -26,7 +26,7 @@ export default function Login() {
 
     return (
 		<View style={Style.main}>
-			<Image source={require('../../../assets/logo.png')} style={Style.image} />
+			<Image source={require('../../../assets/logo-notext.png')} style={Style.image} />
 			<View style={Style.form}>
 				<Title style={Style.title}>Login</Title>
 				<TextInput

@@ -16,8 +16,6 @@ export default StyleSheet.create({
       marginBottom: 20,
       marginTop: -130,
       alignSelf: 'center',
-      borderColor: 'red',
-      borderRadius: 5,
     },
     form:  {
       backgroundColor: '#FFF',
