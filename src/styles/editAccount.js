@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native'
-import { colors } from '../themes/variables'
+import { colors } from './themes/variables'
 
 export default StyleSheet.create({
     mainContainer: {
@@ -17,15 +17,6 @@ export default StyleSheet.create({
         color: colors.WHITE,
         textAlign: 'center',
         fontSize: 20
-    },
-    saveContainer: {
-        marginTop: 20,
-        marginLeft: 50,
-        marginRight: 50,
-        marginBottom: 20,
-        height: 40,
-        backgroundColor: colors.SKY,
-        justifyContent: 'center'
     },
     buttonText: {
         textAlign: 'center'
@@ -45,5 +36,17 @@ export default StyleSheet.create({
     input: {
         marginLeft: 20,
         marginRight: 20,
+    },
+    saveContainer: {
+        alignSelf: 'center',
+        marginTop: 20,
+        marginBottom: 10,
+        padding: 4,
+        backgroundColor: colors.SKY,
+    },
+    deleteContainer: {
+        alignSelf: 'center',
+        backgroundColor: colors.FIRE,
+        padding: 4,
     }
 });

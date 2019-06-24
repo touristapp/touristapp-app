@@ -1,6 +1,11 @@
+// React imports
 import React from 'react';
-import { View, Text } from 'react-native';
+
+// Style imports
 import Style from '../../styles/home';
+
+// Components imports
+import { View, Text } from 'react-native';
 
 export default class Home extends React.Component {
     render() {

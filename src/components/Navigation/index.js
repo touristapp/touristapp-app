@@ -1,49 +1,60 @@
-import React from 'react';
-import { BottomNavigation } from 'react-native-paper';
-import { colors } from '../../themes/variables';
-import Home from '../../screens/Home'
-import Search from '../../screens/Search'
-import Account from '../../screens/Account';
+// React imports
+import React, { useState, useEffect } from 'react';
 
-const HomeRoute = () => <Home />;
-const SearchRoute = () => <Search />;
+// Style imports 
+import { colors } from '../../styles/themes/variables';
+
+// Screens imports
+import Home from '../../screens/Home';
+import Search from '../../screens/Search';
+import Account from '../../screens/Account';
+import Login from '../../screens/Auth/Login';
+
+// Hooks imports
+import { useStateValue } from '../../hooks/state';
+
+// Components imports
+import { BottomNavigation } from 'react-native-paper';
+
+// Routes
+const HomeRoute = () => <Home/>;
+const SearchRoute = () => <Search/>;
 const AccountRoute = () => {
-    //todo: remove '|| true' and get from context if the user isLogged or not
-    if ({/*isLogged*/} || true) {
-        return <Account />
+	// Get the login state defined in App.js
+	const isLogged = useStateValue(); 
+    if (isLogged) {
+        return <Account/>
     } else {
-        return <Login />
+        return <Login/>
     }
 };
 
-export default class Navigation extends React.Component {
-    state = {
-        index: 0,
-        routes: [
-        { key: 'home', title: 'Accueil', icon: 'home' },
-        { key: 'search', title: 'Rechercher', icon: 'search' },
-        { key: 'account', title: 'Mon compte', icon: 'account-circle' },
-        ],
-    };
+export default function Navigation() {
+    const [index, setIndex] = useState(0);
+    const [routes] = useState([
+		{ key: 'home', title: 'Accueil', icon: 'home' },
+		{ key: 'search', title: 'Recherches', icon: 'search' },
+		{ key: 'account', title: 'Mon compte', icon: 'account-circle' }
+    ]);
 
-    _handleIndexChange = index => this.setState({ index });
+    useEffect(
+		()=> {
+			//console.log('<<<< index changed >>>>');
+		}, [index]
+    )
 
-    _renderScene = BottomNavigation.SceneMap({
-        home: HomeRoute,
-        search: SearchRoute,
-        account: AccountRoute,
-    });
+    const _handleIndexChange = index => setIndex(index);
 
-    render() {
-        return (
-        <BottomNavigation
-            navigationState={this.state}
-            onIndexChange={this._handleIndexChange}
-            renderScene={this._renderScene}
-            barStyle={{backgroundColor: colors.COAL}} 
-            activeColor={colors.SKY}
-            inactiveColor={colors.WHITE}       
-        />
-        );
-    }
+    const _renderScene = BottomNavigation.SceneMap({ home: HomeRoute, search: SearchRoute, account: AccountRoute, })
+
+    return (
+		<BottomNavigation
+			navigationState={{ index, routes }}
+			onIndexChange={_handleIndexChange}
+			renderScene={_renderScene}
+			barStyle={{backgroundColor: colors.COAL}}
+			activeColor={colors.SKY}
+			inactiveColor={colors.WHITE}
+		/>
+    );
 }

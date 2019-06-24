@@ -1,28 +1,58 @@
-import React, { useState, useEffect } from 'react';
-import { View,ScrollView } from 'react-native';
-import { TextInput, Button } from 'react-native-paper';
+// React imports
+import React, { useEffect } from 'react';
+
+// Styles imports
+import { colors } from '../../../styles/themes/variables'
+import Style from '../../../styles/login'
+
+// Hooks imports
 import useInput from '../../../hooks/useInputs';
-//import Style from '../../styles/footer'
+import { useStateValue } from '../../../hooks/state'
+
+// Components imports
+import { View, Image } from 'react-native';
+import { Title, TextInput, Button } from 'react-native-paper';
 
 export default function Login() {
     const email = useInput();
     const password = useInput();
+    const [{}, dispatch ] = useStateValue();
+
+    useEffect(() => {
+      // do something
+    }, [email.value, password.value])
+
+    /*// TODO: onClick, connect to DB, check credentials, and store in Storage using tools/asyncstorage.js */
 
     return (
-      <View>
-         <TextInput
-          mode='outlined'
-          label='Email'
-          {...email}
-         />
-         <TextInput
-          mode='outlined'
-          label='Password'
-          {...password}
-         />
-         <Button icon="send" mode="outlined" onPress={() => console.log('Pressed')}>
-          LOGIN
-         </Button>
-      </View>
+		<View style={Style.main}>
+			<Image source={require('../../../assets/logo.png')} style={Style.image} />
+			<View style={Style.form}>
+				<Title style={Style.title}>Login</Title>
+				<TextInput
+					style={Style.input}
+					mode='outlined'
+					label='Email'
+					{...email}
+				/>
+				<TextInput
+					style={Style.input}
+					selectionColor={colors.FIRE}
+					mode='outlined'
+					label='Password'
+					{...password}
+				/>
+				<Button 
+					style={Style.button} 
+					icon="send"
+					mode="contained" 
+					onPress={() => dispatch({
+						type: 'authenticate',
+						switch: { isLogged: true }
+					})}>
+					CLICK TO LOGIN
+				</Button>
+			</View>
+		</View>
     )
 }

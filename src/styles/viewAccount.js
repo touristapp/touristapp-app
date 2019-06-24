@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native'
-import { colors } from '../themes/variables'
+import { colors } from './themes/variables'
 
 export default StyleSheet.create({
     mainContainer: {
@@ -30,22 +30,6 @@ export default StyleSheet.create({
         borderWidth: 1,
         borderColor: colors.COAL,
     },
-    editContainer: {
-        marginTop: 20,
-        marginLeft: 50,
-        marginRight: 50,
-        marginBottom: 20,
-        height: 40,
-        backgroundColor: colors.SKY,
-        justifyContent: 'center'
-    },
-    deleteContainer: {
-        marginLeft: 50,
-        marginRight: 50,
-        height: 40,
-        backgroundColor: colors.FIRE,
-        justifyContent: 'center'
-    },
     buttonText: {
         textAlign: 'center'
     },
@@ -74,5 +58,17 @@ export default StyleSheet.create({
         marginLeft: 10,
         marginRight: 10,
         justifyContent: 'space-between'
+    },
+    edit: {
+        alignSelf: 'center',
+        marginTop: 20,
+        marginBottom: 10,
+        padding: 4,
+        backgroundColor: colors.SKY,
+    },
+    disconnect: {
+        alignSelf: 'center',
+        backgroundColor: colors.BLOOD,
+        padding: 4,
     }
 });
