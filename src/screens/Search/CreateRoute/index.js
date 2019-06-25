@@ -1,5 +1,6 @@
 // React imports
 import React from 'react';
+// require('dotenv').config();
 
 // Styles imports
 import Style from '../../../styles/createRoute';
@@ -19,12 +20,11 @@ export default function CreateRoute() {
     const arrivee = useInput();
 
     fetchData = async () =>{
-        // alert('Fetching!')
-        const data = await fetch(`https://maps.googleapis.com/maps/api/directions/json?units=metric?origin=${depart.value}&destination=${depart.value}&key=${GOOGLE_MAPS_API_KEY
-        }`, {
+        // alert('Fetching!').
+        const data = await fetch(`https://maps.googleapis.com/maps/api/directions/json?units=metric&origins=${depart.value}&destinations=${arrivee.value}&key=${GOOGLE_MAPS_API_KEY}`, {
                 headers: {
                     "Content-Type": "application/x-www-form-urlencoded",
-                    "Authorization": GOOGLE_MAPS_API_KEY,
+                    // "Authorization": GOOGLE_MAPS_API_KEY,
                 },
                 method: "GET"
         })
