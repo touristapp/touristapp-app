@@ -5,11 +5,17 @@ import React from 'react';
 import Style from '../../../styles/createRoute';
 import { colors } from '../../../styles/themes/variables';
 
+// Hooks imports
+import useInput from '../../../hooks/useInputs';
+
 // Components imorts
 import { View, Text } from 'react-native';
 import { TextInput, Button } from 'react-native-paper';
 
-export default function CreateRoute() {   
+export default function CreateRoute() {  
+    const depart = useInput();
+    const arrivee = useInput();
+
     return (
         <>
             <View style={Style.banner}>
@@ -23,6 +29,7 @@ export default function CreateRoute() {
                         label='Départ'
                         style={Style.input}
                         dense={true}
+                        {...depart}
                     />
                     <TextInput
                         selectionColor={colors.FIRE}
@@ -30,6 +37,7 @@ export default function CreateRoute() {
                         label='Arrivée'
                         style={Style.input}
                         dense={true}
+                        {...arrivee}
                     />
                     <Button 
                         style={Style.searchButton} 
