@@ -19,8 +19,8 @@ export default function CreateRoute() {
     const arrivee = useInput();
 
     fetchData = async () =>{
-        alert('Fetching!')
-        const data = await fetch(`https://maps.googleapis.com/maps/api/directions/json?units=metric?origin=${depart.value}&destination=${depart.value}&${key=YOUR_API_KEY
+        // alert('Fetching!')
+        const data = await fetch(`https://maps.googleapis.com/maps/api/directions/json?units=metric?origin=${depart.value}&destination=${depart.value}&key=${GOOGLE_MAPS_API_KEY
         }`, {
                 headers: {
                     "Content-Type": "application/x-www-form-urlencoded",
@@ -29,6 +29,8 @@ export default function CreateRoute() {
                 method: "GET"
         })
         return data;
+        alert('Fetching!')
+
     }
 
     return (
