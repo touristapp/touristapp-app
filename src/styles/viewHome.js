@@ -6,7 +6,6 @@ export default StyleSheet.create({
         display: 'flex',
         flex: 1,
         backgroundColor: colors.SKY,
-        justifyContent: 'center'
     },
     banner: {
         height: 50,
@@ -18,4 +17,16 @@ export default StyleSheet.create({
         textAlign: 'center',
         fontSize: 20
     },
+    card: {
+        marginLeft: 20,
+        marginRight: 20,
+        marginTop: 20,
+        marginBottom: 5
+    },
+    cardCover: {
+        height: 100
+    },
+    cardAction: {
+        height: 40
+    }
 });
