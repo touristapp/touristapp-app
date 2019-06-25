@@ -13,7 +13,12 @@ import { StateProvider } from './src/hooks/state';
 const App = () => {
 	// Define default states here
 	const initialState = {
-		isLogged: true,
+		isLogged: false,
+		showSnack: false,
+		snackContent: {
+			style: { backgroundColor: 'green' },
+			theme: { colors: { accent: 'white' } }
+		},
 		AccountScreen: 'viewAccount',
 		SearchScreen: 'createRoute',
 		HomeScreen: 'home'
@@ -23,15 +28,25 @@ const App = () => {
 	const reducer = (state, action) => {
 		switch (action.type) {
 		case 'isLogged':
-			return (
-			{ ...state,
-			isLogged: action.status
+			return ({
+				...state,
+				isLogged: action.status
 			});
 		case 'switchScreen':
-			return(
-			{...state,
-			[action.tab]: action.screen
+			return({
+        ...state,
+			  [action.tab]: action.screen
 			});
+		case 'showSnackbar':
+			return({
+				...state,
+				showSnack: action.snack
+			});
+		case 'snackContent':
+			return({
+				...state,
+				setSnack: action.snackContent
+			})
 		default:
 			return state;
 		}
