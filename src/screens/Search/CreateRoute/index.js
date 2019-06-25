@@ -7,6 +7,8 @@ import { colors } from '../../../styles/themes/variables';
 
 // Hooks imports
 import useInput from '../../../hooks/useInputs';
+import { useStateValue } from '../../../hooks/state'
+
 
 // Components imorts
 import { View, Text } from 'react-native';
@@ -15,6 +17,19 @@ import { TextInput, Button } from 'react-native-paper';
 export default function CreateRoute() {  
     const depart = useInput();
     const arrivee = useInput();
+
+    fetchData = async () =>{
+        alert('Fetching!')
+        const data = await fetch(`https://maps.googleapis.com/maps/api/directions/json?units=metric?origin=${depart.value}&destination=${depart.value}&${key=YOUR_API_KEY
+        }`, {
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                    "Authorization": GOOGLE_MAPS_API_KEY,
+                },
+                method: "GET"
+        })
+        return data;
+    }
 
     return (
         <>
@@ -42,7 +57,8 @@ export default function CreateRoute() {
                     <Button 
                         style={Style.searchButton} 
                         icon="search" 
-                        mode="contained">
+                        mode="contained"
+                        onPress= {fetchData}>
                         Rechercher
                     </Button>
                 </View>
