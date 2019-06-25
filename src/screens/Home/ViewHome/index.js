@@ -6,16 +6,13 @@ import Style from '../../../styles/viewHome';
 
 // Components imports
 import { View, Text } from 'react-native';
+import Banner from '../../../components/Banner'
 
-export default function ViewHome() {  
+export default function ViewHome() {
     return (
-        <>
-            <View style={Style.banner}>
-                <Text style={Style.bannerText}>Accueil</Text>
-            </View> 
-            <View style={Style.mainContainer}>
-
-            </View>
-        </>
+      <>
+        <Banner message="Accueil"/>
+        <View style={Style.mainContainer}></View>
+      </>
     )
 }

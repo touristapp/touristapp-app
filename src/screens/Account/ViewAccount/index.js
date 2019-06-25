@@ -8,18 +8,17 @@ import Style from '../../../styles/viewAccount';
 import { useStateValue } from '../../../hooks/state';
 
 // Components imorts
+import Banner from '../../../components/Banner'
 import { View, Text, Image } from 'react-native';
 import { Button } from 'react-native-paper';
 
 export default function ViewAccount() {
     const [{}, dispatch ] = useStateValue();
-    
+
     return (
         <>
-            <View style={Style.banner}>
-                <Text style={Style.bannerText}>Mon compte</Text>
-            </View>
-            <View style={Style.mainContainer}>                    
+            <Banner message="Mon compte"/>
+            <View style={Style.mainContainer}>
                 <View style={Style.imageContainer}>
                     <Image
                         style={Style.profileImage}
@@ -41,10 +40,10 @@ export default function ViewAccount() {
                         </Text>
                     </View>
                 </View>
-                <Button 
-                    style={Style.edit} 
-                    icon="edit" 
-                    mode="contained" 
+                <Button
+                    style={Style.edit}
+                    icon="edit"
+                    mode="contained"
                     onPress={() => dispatch({
                         type: 'switchScreen',
                         tab: 'AccountScreen',
@@ -52,10 +51,10 @@ export default function ViewAccount() {
                     })}>
                     Editer mes informations
                 </Button>
-                <Button 
-                    style={Style.disconnect} 
-                    icon="exit-to-app" 
-                    mode="contained" 
+                <Button
+                    style={Style.disconnect}
+                    icon="exit-to-app"
+                    mode="contained"
                     onPress={() => dispatch({
                         type: 'isLogged',
                         status: false

@@ -13,10 +13,11 @@ import { StateProvider } from './src/hooks/state';
 const App = () => {
 	// Define default states here
 	const initialState = {
+		bannerText: "Accueil",
 		isLogged: false,
 		showSnack: false,
 		snackContent: {
-			style: { backgroundColor: '#000' },
+			style: { backgroundColor: '#000', marginTop: 100 },
 			theme: { colors: { accent: '#fff' } },
 			message: ''
 		},
@@ -28,6 +29,11 @@ const App = () => {
 	// Define how states would be updated by some actions
 	const reducer = (state, action) => {
 		switch (action.type) {
+		case 'bannerText':
+			return ({
+				...state,
+				bannerText: action.setText
+			});
 		case 'isLogged':
 			return ({
 				...state,
