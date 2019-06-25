@@ -6,12 +6,5 @@ export default StyleSheet.create({
         display: 'flex',
         flex: 1,
         backgroundColor: colors.SKY
-    },
-    button: {
-      alignSelf: 'center',
-      width: 300,
-      marginTop:10,
-      backgroundColor: colors.BLOOD,
-      padding: 8,
     }
 });

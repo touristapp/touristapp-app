@@ -1,28 +1,38 @@
-import React, { useEffect } from 'react';
-import { View, Text } from 'react-native';
-import { Button } from 'react-native-paper';
+// React imports
+import React from 'react';
+
+// Styles imports
 import Style from '../../styles/account';
+
+// Screens imports
+import ViewAccount from './ViewAccount';
+import EditAccount from './EditAccount';
+
+// Hooks imports
 import { useStateValue } from '../../hooks/state'
-import { BottomNavigation } from 'react-native-paper';
+
+// Components imports
+import { View } from 'react-native';
 
 export default function Account() {
-    const [{ isLogged }, dispatch ] = useStateValue(); // Get the login state, defined in App.js
-    
-    useEffect(() => {
-      /* do something */
-    }, [isLogged])
+    const [{ isLogged, currentScreen }] = useStateValue();
+
+    renderSwitch = (currentScreen) => {
+        switch(currentScreen) {
+            case 'viewAccount':
+                return <ViewAccount/>
+            case 'editAccount':
+                return <EditAccount/>
+            default:
+                null
+        }
+    }
 
     return (
-      <View style={Style.mainContainer}>
-          <Text>You are on the Account Page</Text>
-          {isLogged && (
-            <Button  style={Style.button} icon="highlight-off" mode="contained" onPress={() => dispatch({
-              type: 'logout',
-              logout: { isLogged: false }
-            })}>
-               LOGOUT
-            </Button>
-          )}
-      </View>
+        <View style={Style.mainContainer}>
+            {isLogged && (
+                this.renderSwitch(currentScreen)
+            )}
+        </View>
     )
 }
