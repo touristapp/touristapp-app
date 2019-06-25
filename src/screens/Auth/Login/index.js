@@ -16,7 +16,7 @@ import { Title, TextInput, Button } from 'react-native-paper';
 export default function Login() {
     const email = useInput();
     const password = useInput();
-    const [{}, dispatch ] = useStateValue();
+    const [{ showSnack }, dispatch] = useStateValue();
 
     useEffect(() => {
       // do something
@@ -42,14 +42,20 @@ export default function Login() {
 					label='Password'
 					{...password}
 				/>
-				<Button 
-					style={Style.button} 
+				<Button
+					style={Style.button}
 					icon="send"
-					mode="contained" 
-					onPress={() => dispatch({
-						type: 'isLogged',
-						status: true
-					})}>
+					mode="contained"
+					onPress={() => {
+            dispatch({
+  						type: 'isLogged',
+  						status: true
+					  });
+            dispatch({
+              type: 'showSnackbar',
+              snack: !showSnack
+            })
+          }}>
 					CLICK TO LOGIN
 				</Button>
 			</View>
