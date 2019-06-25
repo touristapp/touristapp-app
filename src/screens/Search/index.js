@@ -4,15 +4,40 @@ import React from 'react';
 // Styles imports
 import Style from '../../styles/search';
 
-// Components imports
-import { View, Text } from 'react-native';
+// Screens imports
+import CreateRoute from './CreateRoute';
+import Disconnected from '../Disconnected';
 
-export default class Search extends React.Component {
-    render() {
-        return (
-            <View style={Style.mainContainer}>
-                <Text>You are on the Search Page</Text>
-            </View>
-        );
+// Hooks imports
+import { useStateValue } from '../../hooks/state'
+
+// Components imports
+import { View } from 'react-native';
+
+export default function Account() {
+    const [{ isLogged, SearchScreen }, dispatch] = useStateValue();
+
+    renderSwitch = (SearchScreen) => {
+        switch(SearchScreen) {
+            case 'createRoute':
+                return <CreateRoute/>
+            default:
+                dispatch({
+                    type: 'switchScreen',
+                    tab: 'createRoute',
+                    screen: 'createRoute'
+                })
+        }
     }
+
+    return (
+        <View style={Style.mainContainer}>
+            {isLogged && (
+                this.renderSwitch(SearchScreen)
+            )}
+            {!isLogged && (
+                <Disconnected/>
+            )}
+        </View>
+    )
 }

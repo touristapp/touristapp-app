@@ -13,8 +13,9 @@ import { StateProvider } from './src/hooks/state';
 const App = () => {
 	// Define default states here
 	const initialState = {
-		isLogged: false,
-		currentScreen: 'viewAccount'
+		isLogged: true,
+		AccountScreen: 'viewAccount',
+		SearchScreen: 'createRoute'
 	};
 
 	// Define how states would be updated by some actions
@@ -28,7 +29,7 @@ const App = () => {
 		case 'switchScreen':
 			return(
 			{...state,
-			currentScreen: action.screen
+			[action.tab]: action.screen
 			});
 		default:
 			return state;
