@@ -7,16 +7,6 @@ export default StyleSheet.create({
         flex: 1,
         backgroundColor: colors.SKY,
     },
-    banner: {
-        height: 50,
-        backgroundColor: colors.COAL,
-        justifyContent: 'center'
-    },
-    bannerText: {
-        color: colors.WHITE,
-        textAlign: 'center',
-        fontSize: 20
-    },
     card: {
         marginLeft: 20,
         marginRight: 20,

@@ -8,16 +8,6 @@ export default StyleSheet.create({
         backgroundColor: colors.WHITE,
         justifyContent: 'center'
     },
-    banner: {
-        height: 50,
-        backgroundColor: colors.COAL,
-        justifyContent: 'center'
-    },
-    bannerText: {
-        color: colors.WHITE,
-        textAlign: 'center',
-        fontSize: 20
-    },
     buttonText: {
         textAlign: 'center'
     },
@@ -26,8 +16,8 @@ export default StyleSheet.create({
         paddingBottom: 20
     },
     profileImage: {
-        width: 150, 
-        height: 150, 
+        width: 150,
+        height: 150,
         alignSelf: 'center',
         borderRadius: 4,
         borderWidth: 1,

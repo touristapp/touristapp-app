@@ -10,6 +10,7 @@ import useInput from '../../../hooks/useInputs';
 import { useStateValue } from '../../../hooks/state'
 
 // Components imports
+import Banner from '../../../components/Banner';
 import { View, Image } from 'react-native';
 import { Title, TextInput, Button } from 'react-native-paper';
 
@@ -25,48 +26,51 @@ export default function Login() {
     /*// TODO: onClick, connect to DB, check credentials, and store in Storage using tools/asyncstorage.js */
 
     return (
-		<View style={Style.main}>
-			<Image source={require('../../../assets/logo-notext.png')} style={Style.image} />
-			<View style={Style.form}>
-				<Title style={Style.title}>Login</Title>
-				<TextInput
-					style={Style.input}
-					mode='outlined'
-					label='Email'
-					{...email}
-				/>
-				<TextInput
-					style={Style.input}
-					selectionColor={colors.FIRE}
-					mode='outlined'
-					label='Password'
-					{...password}
-				/>
-				<Button
-					style={Style.button}
-					icon="send"
-					mode="contained"
-					onPress={() => {
-            dispatch({
-  						type: 'isLogged',
-  						status: true
-					  });
-            dispatch({
-              type: 'snackContent',
-              setSnack:  {
-          			style: { backgroundColor: 'green' },
-          			theme: { colors: { accent: 'white' } },
-          			message: 'Connextion réussie !'
-          		},
-            });
-            dispatch({
-              type: 'showSnackbar',
-              snack: !showSnack
-            });
-          }}>
-					CLICK TO LOGIN
-				</Button>
-			</View>
-		</View>
+    <>
+      <Banner message="Login"/>
+  		<View style={Style.main}>
+  			<Image source={require('../../../assets/logo-notext.png')} style={Style.image} />
+  			<View style={Style.form}>
+  				<Title style={Style.title}>touristapp</Title>
+  				<TextInput
+  					style={Style.input}
+  					mode='outlined'
+  					label='Email'
+  					{...email}
+  				/>
+  				<TextInput
+  					style={Style.input}
+  					selectionColor={colors.FIRE}
+  					mode='outlined'
+  					label='Password'
+  					{...password}
+  				/>
+  				<Button
+  					style={Style.button}
+  					icon="send"
+  					mode="contained"
+  					onPress={() => {
+              dispatch({
+    						type: 'isLogged',
+    						status: true
+  					  });
+              dispatch({
+                type: 'snackContent',
+                setSnack:  {
+            			style: { backgroundColor: 'green' },
+            			theme: { colors: { accent: 'white' } },
+            			message: 'Connextion réussie !'
+            		},
+              });
+              dispatch({
+                type: 'showSnackbar',
+                snack: !showSnack
+              });
+            }}>
+  					CLICK TO LOGIN
+  				</Button>
+  			</View>
+  		</View>
+    </>
     )
 }

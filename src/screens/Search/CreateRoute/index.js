@@ -9,18 +9,17 @@ import { colors } from '../../../styles/themes/variables';
 import useInput from '../../../hooks/useInputs';
 
 // Components imorts
+import Banner from '../../../components/Banner'
 import { View, Text } from 'react-native';
 import { TextInput, Button } from 'react-native-paper';
 
-export default function CreateRoute() {  
+export default function CreateRoute() {
     const depart = useInput();
     const arrivee = useInput();
 
     return (
         <>
-            <View style={Style.banner}>
-                <Text style={Style.bannerText}>Créer un itinéraire</Text>
-            </View> 
+            <Banner message="Créer un itinéraire"/>
             <View style={Style.mainContainer}>
                 <View style={Style.form}>
                     <TextInput
@@ -39,9 +38,9 @@ export default function CreateRoute() {
                         dense={true}
                         {...arrivee}
                     />
-                    <Button 
-                        style={Style.searchButton} 
-                        icon="search" 
+                    <Button
+                        style={Style.searchButton}
+                        icon="search"
                         mode="contained">
                         Rechercher
                     </Button>

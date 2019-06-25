@@ -9,6 +9,7 @@ import { colors } from '../../../styles/themes/variables';
 import { useStateValue } from '../../../hooks/state';
 
 // Components imports
+import Banner from '../../../components/Banner'
 import { View, Text, Image } from 'react-native';
 import { Button, TextInput } from 'react-native-paper';
 
@@ -16,9 +17,7 @@ export default function EditAccount() {
     const [{}, dispatch ] = useStateValue();
 	return (
 		<>
-			<View style={Style.banner}>
-				<Text style={Style.bannerText}>Modifier mes informations</Text>
-			</View>
+      <Banner  message="Modifier nes informations"/>
 			<View style={Style.mainContainer}>
 				<View style={Style.imageContainer}>
 					<Image
@@ -40,10 +39,10 @@ export default function EditAccount() {
 					style={Style.input}
 					dense={true}
 				/>
-				<Button 
-					style={Style.saveContainer} 
-					icon="check" 
-					mode="contained" 
+				<Button
+					style={Style.saveContainer}
+					icon="check"
+					mode="contained"
 					onPress={() => dispatch({
 						type: 'switchScreen',
 						tab: 'AccountScreen',
@@ -51,9 +50,9 @@ export default function EditAccount() {
 					})}>
 					Valider
 				</Button>
-				<Button 
-					style={Style.deleteContainer} 
-					icon="delete-forever" 
+				<Button
+					style={Style.deleteContainer}
+					icon="delete-forever"
 					mode="contained">
 					Supprimer mon compte
 				</Button>

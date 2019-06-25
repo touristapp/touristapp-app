@@ -10,14 +10,13 @@ import { useStateValue } from '../../../hooks/state'
 // Components imports
 import { View, Text } from 'react-native';
 import { Button, Card } from 'react-native-paper';
+import Banner from '../../../components/Banner'
 
 export default function ViewHome() {  
     const [{}, dispatch] = useStateValue();
     return (
         <>
-            <View style={Style.banner}>
-                <Text style={Style.bannerText}>Accueil</Text>
-            </View> 
+            <Banner message="Accueil"/>
             <View style={Style.mainContainer}>
                 <Card style={Style.card} elevation={5} onPress={() => dispatch({
 						type: 'switchScreen',
