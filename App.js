@@ -14,7 +14,7 @@ const App = () => {
 	// Define default states here
 	const initialState = {
 		bannerText: "Accueil",
-		isLogged: false,
+		isLogged: true,
 		showSnack: false,
 		snackContent: {
 			style: { backgroundColor: '#000', marginTop: 100 },

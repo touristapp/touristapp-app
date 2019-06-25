@@ -6,6 +6,7 @@ import Style from '../../styles/home';
 
 // Screens imports
 import ViewHome from './ViewHome';
+import MyTravels from './MyTravels';
 import Disconnected from '../Disconnected';
 
 // Hooks imports
@@ -21,6 +22,8 @@ export default function Home() {
         switch(HomeScreen) {
             case 'viewHome':
                 return <ViewHome/>
+            case 'myTravels':
+                return <MyTravels/>
             default:
                 dispatch({
                     type: 'switchScreen',

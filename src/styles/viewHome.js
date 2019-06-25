@@ -6,6 +6,17 @@ export default StyleSheet.create({
         display: 'flex',
         flex: 1,
         backgroundColor: colors.SKY,
-        justifyContent: 'center'
     },
+    card: {
+        marginLeft: 20,
+        marginRight: 20,
+        marginTop: 20,
+        marginBottom: 5
+    },
+    cardCover: {
+        height: 100
+    },
+    cardAction: {
+        height: 40
+    }
 });
