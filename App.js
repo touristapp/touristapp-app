@@ -19,7 +19,9 @@ const App = () => {
 			style: { backgroundColor: 'green' },
 			theme: { colors: { accent: 'white' } }
 		},
-		currentScreen: 'viewAccount'
+		AccountScreen: 'viewAccount',
+		SearchScreen: 'createRoute',
+		HomeScreen: 'home'
 	};
 
 	// Define how states would be updated by some actions
@@ -32,8 +34,8 @@ const App = () => {
 			});
 		case 'switchScreen':
 			return({
-				...state,
-				currentScreen: action.screen
+        ...state,
+			  [action.tab]: action.screen
 			});
 		case 'showSnackbar':
 			return({

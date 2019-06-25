@@ -1,18 +1,43 @@
 // React imports
 import React from 'react';
 
-// Style imports
+// Styles imports
 import Style from '../../styles/home';
 
-// Components imports
-import { View, Text } from 'react-native';
+// Screens imports
+import ViewHome from './ViewHome';
+import Disconnected from '../Disconnected';
 
-export default class Home extends React.Component {
-    render() {
-        return (
-            <View style={Style.mainContainer}>
-                <Text>You are on the Home Page</Text>
-            </View>
-        );
+// Hooks imports
+import { useStateValue } from '../../hooks/state'
+
+// Components imports
+import { View } from 'react-native';
+
+export default function Home() {
+    const [{ isLogged, HomeScreen }, dispatch] = useStateValue();
+
+    renderSwitch = (HomeScreen) => {
+        switch(HomeScreen) {
+            case 'viewHome':
+                return <ViewHome/>
+            default:
+                dispatch({
+                    type: 'switchScreen',
+                    tab: 'HomeScreen',
+                    screen: 'viewHome'
+                })
+        }
     }
+
+    return (
+        <View style={Style.mainContainer}>
+            {isLogged && (
+                this.renderSwitch(HomeScreen)
+            )}
+            {!isLogged && (
+                <Disconnected/>
+            )}
+        </View>
+    )
 }

@@ -20,13 +20,13 @@ import { BottomNavigation, Snackbar } from 'react-native-paper';
 const HomeRoute = () => <Home/>;
 const SearchRoute = () => <Search/>;
 const AccountRoute = () => {
-	// Get the login state defined in App.js
-	const isLogged = useStateValue();
-    if (isLogged[0].isLogged) {
-        return <Account/>
-    } else {
-        return <Login/>
-    }
+	 // Get the login state defined in App.js
+   const [{isLogged}] = useStateValue();
+   if (isLogged) {
+     return <Account/>
+   } else {
+     return <Login/>
+   }
 };
 
 export default function Navigation() {
