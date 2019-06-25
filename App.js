@@ -15,7 +15,8 @@ const App = () => {
 	const initialState = {
 		isLogged: true,
 		AccountScreen: 'viewAccount',
-		SearchScreen: 'createRoute'
+		SearchScreen: 'createRoute',
+		HomeScreen: 'home'
 	};
 
 	// Define how states would be updated by some actions
