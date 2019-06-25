@@ -21,8 +21,8 @@ const HomeRoute = () => <Home/>;
 const SearchRoute = () => <Search/>;
 const AccountRoute = () => {
 	// Get the login state defined in App.js
-	const isLogged = useStateValue(); 
-    if (isLogged[0].isLogged) {
+	const [{isLogged}] = useStateValue();
+    if (isLogged) {
         return <Account/>
     } else {
         return <Login/>

@@ -15,23 +15,27 @@ import { useStateValue } from '../../hooks/state'
 import { View } from 'react-native';
 
 export default function Account() {
-    const [{ isLogged, currentScreen }] = useStateValue();
-
-    renderSwitch = (currentScreen) => {
-        switch(currentScreen) {
+    const [{ isLogged, AccountScreen }, dispatch] = useStateValue();
+    
+    renderSwitch = (AccountScreen) => {
+        switch(AccountScreen) {
             case 'viewAccount':
                 return <ViewAccount/>
             case 'editAccount':
                 return <EditAccount/>
             default:
-                null
+                dispatch({
+                    type: 'switchScreen',
+                    tab: 'AccountScreen',
+                    screen: 'viewAccount'
+                })
         }
     }
 
     return (
         <View style={Style.mainContainer}>
             {isLogged && (
-                this.renderSwitch(currentScreen)
+                this.renderSwitch(AccountScreen)
             )}
         </View>
     )

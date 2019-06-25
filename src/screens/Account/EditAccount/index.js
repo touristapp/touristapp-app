@@ -46,6 +46,7 @@ export default function EditAccount() {
 					mode="contained" 
 					onPress={() => dispatch({
 						type: 'switchScreen',
+						tab: 'AccountScreen',
 						screen: 'viewAccount'
 					})}>
 					Valider
