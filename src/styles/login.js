@@ -35,7 +35,12 @@ export default StyleSheet.create({
     },
     button: {
       marginTop:10,
-      backgroundColor: colors.FIRE,
+      backgroundColor: colors.CARROT,
+      padding: 8,
+    },
+    button2: {
+      marginTop:10,
+      backgroundColor: colors.SEA,
       padding: 8,
     }
 });

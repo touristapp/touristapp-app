@@ -8,7 +8,7 @@ import { colors } from '../../styles/themes/variables';
 import Home from '../../screens/Home';
 import Search from '../../screens/Search';
 import Account from '../../screens/Account';
-import Login from '../../screens/Auth/Login';
+import Auth from '../../screens/Auth';
 
 // Hooks imports
 import { useStateValue } from '../../hooks/state';
@@ -25,7 +25,7 @@ const AccountRoute = () => {
    if (isLogged) {
      return <Account/>
    } else {
-     return <Login/>
+     return <Auth/>
    }
 };
 
@@ -61,7 +61,7 @@ export default function Navigation() {
 		      visible={showSnack}
 		      onDismiss={() => dispatch({
 							type: 'showSnackbar',
-							snack: false
+							showSnack: false
 					})}
 					action={{
 						label: 'Close',
@@ -69,7 +69,7 @@ export default function Navigation() {
 							// onPress on the snackbar
 						}
 					}}
-					duration={500}
+					duration={300}
 					style={snackContent.style}
 					theme={snackContent.theme}
 				>

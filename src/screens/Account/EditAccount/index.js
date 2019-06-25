@@ -3,7 +3,7 @@ import React from 'react';
 
 // Styles imports
 import Style from '../../../styles/editAccount';
-import { colors } from '../../../styles/themes/variables';
+import { colors, snacks } from '../../../styles/themes/variables';
 
 // Hooks imports
 import { useStateValue } from '../../../hooks/state';
@@ -14,7 +14,8 @@ import { View, Text, Image } from 'react-native';
 import { Button, TextInput } from 'react-native-paper';
 
 export default function EditAccount() {
-    const [{}, dispatch ] = useStateValue();
+  const [{showSnack}, dispatch ] = useStateValue();
+
 	return (
 		<>
       <Banner  message="Modifier nes informations"/>
@@ -43,11 +44,25 @@ export default function EditAccount() {
 					style={Style.saveContainer}
 					icon="check"
 					mode="contained"
-					onPress={() => dispatch({
-						type: 'switchScreen',
-						tab: 'AccountScreen',
-						screen: 'viewAccount'
-					})}>
+					onPress={() => {
+            dispatch({
+  						type: 'switchScreen',
+  						tab: 'AccountScreen',
+  						screen: 'viewAccount'
+            });
+            dispatch({
+              type: 'snackContent',
+              setSnack:  {
+                style: snacks.WARNING.style,
+                theme: snacks.WARNING.theme,
+                message: 'Modifications réussies !'
+              },
+            });
+            dispatch({
+              type: 'showSnackbar',
+              snack: !showSnack
+            });
+          }}>
 					Valider
 				</Button>
 				<Button

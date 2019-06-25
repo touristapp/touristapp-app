@@ -14,22 +14,18 @@ import Banner from '../../../components/Banner';
 import { View, Image } from 'react-native';
 import { Title, TextInput, Button } from 'react-native-paper';
 
-export default function Login() {
+export default function Register() {
+    const nickname = useInput();
     const email = useInput();
     const password = useInput();
+    const passwordConfirmation = useInput();
     const [{ showSnack }, dispatch] = useStateValue();
-
-    //console.log(snacks.SUCCESS);
-
-    useEffect(() => {
-      // do something
-    }, [email.value, password.value])
 
     /*// TODO: onClick, connect to DB, check credentials, and store in Storage using tools/asyncstorage.js */
 
     return (
     <>
-      <Banner message="Login"/>
+      <Banner message="Créer un compte"/>
   		<View style={Style.main}>
   			<Image source={require('../../../assets/logo-notext.png')} style={Style.image} />
   			<View style={Style.form}>
@@ -37,15 +33,28 @@ export default function Login() {
   				<TextInput
   					style={Style.input}
   					mode='outlined'
+  					label='Nickname'
+  					{...nickname}
+  				/>
+          <TextInput
+  					style={Style.input}
+  					mode='outlined'
   					label='Email'
   					{...email}
   				/>
-  				<TextInput
+          <TextInput
   					style={Style.input}
   					mode='outlined'
   					label='Password'
             secureTextEntry={true}
   					{...password}
+  				/>
+  				<TextInput
+  					style={Style.input}
+  					mode='outlined'
+  					label='Password confirmation'
+            secureTextEntry={true}
+  					{...passwordConfirmation}
   				/>
   				<Button
   					style={Style.button}
@@ -53,15 +62,16 @@ export default function Login() {
   					mode="contained"
   					onPress={() => {
               dispatch({
-    						type: 'isLogged',
-    						status: true
-  					  });
+    						type: 'switchScreen',
+    						tab: 'AuthScreen',
+    						screen: 'login'
+              });
               dispatch({
                 type: 'snackContent',
                 setSnack:  {
             			style: snacks.SUCCESS.style,
                   theme: snacks.SUCCESS.theme,
-            			message: 'Connexion réussie !'
+            			message: 'Compte créé !'
             		}
               });
               dispatch({
@@ -69,19 +79,8 @@ export default function Login() {
                 snack: !showSnack
               });
             }}>
-            CONNEXION
+  					CRÉER UN COMPTE
   				</Button>
-          <Button
-              style={Style.button2}
-              icon="assignment-ind"
-              mode="contained"
-              onPress={() => dispatch({
-                  type: 'switchScreen',
-                  tab: 'AuthScreen',
-                  screen: 'register'
-              })}>
-              Créer un compte
-          </Button>
   			</View>
   		</View>
     </>

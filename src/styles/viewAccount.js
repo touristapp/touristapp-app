@@ -58,7 +58,7 @@ export default StyleSheet.create({
     },
     disconnect: {
         alignSelf: 'center',
-        backgroundColor: colors.BLOOD,
+        backgroundColor: colors.FIRE,
         padding: 4,
     }
 });

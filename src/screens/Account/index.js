@@ -16,8 +16,8 @@ import { View } from 'react-native';
 
 export default function Account() {
     const [{ isLogged, AccountScreen }, dispatch] = useStateValue();
-    
-    renderSwitch = (AccountScreen) => {
+
+    const renderSwitch = (AccountScreen) => {
         switch(AccountScreen) {
             case 'viewAccount':
                 return <ViewAccount/>
@@ -34,9 +34,9 @@ export default function Account() {
 
     return (
         <View style={Style.mainContainer}>
-            {isLogged && (
-                this.renderSwitch(AccountScreen)
-            )}
+          {isLogged && (
+              renderSwitch(AccountScreen)
+          )}
         </View>
     )
 }

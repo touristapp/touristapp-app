@@ -12,17 +12,17 @@ import { View, Text } from 'react-native';
 import { Button, Card } from 'react-native-paper';
 import Banner from '../../../components/Banner'
 
-export default function ViewHome() {  
+export default function ViewHome() {
     const [{}, dispatch] = useStateValue();
     return (
         <>
             <Banner message="Accueil"/>
             <View style={Style.mainContainer}>
                 <Card style={Style.card} elevation={5} onPress={() => dispatch({
-						type: 'switchScreen',
-						tab: 'HomeScreen',
-						screen: 'myTravels'
-					})}>
+      						type: 'switchScreen',
+      						tab: 'HomeScreen',
+      						screen: 'myTravels'
+      					})}>
                     <Card.Cover source={require('../../../assets/travels.jpg')} style={Style.cardCover} />
                     <Card.Actions style={Style.cardAction}>
                         <Button icon="flight-takeoff">Mes voyages</Button>

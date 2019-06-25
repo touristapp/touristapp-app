@@ -1,6 +1,6 @@
 // React imports
 import React from 'react';
-
+import { Dimensions } from 'react-native';
 // Navigation imports
 import Navigation from './src/components/Navigation';
 
@@ -13,14 +13,10 @@ import { StateProvider } from './src/hooks/state';
 const App = () => {
 	// Define default states here
 	const initialState = {
-		bannerText: "Accueil",
-		isLogged: true,
+		isLogged: false,
 		showSnack: false,
-		snackContent: {
-			style: { backgroundColor: '#000', marginTop: 100 },
-			theme: { colors: { accent: '#fff' } },
-			message: ''
-		},
+		snackContent: { style: {}, theme: {}, message: ''	},
+		AuthScreen: 'viewAuth',
 		AccountScreen: 'viewAccount',
 		SearchScreen: 'createRoute',
 		HomeScreen: 'home'
@@ -29,11 +25,6 @@ const App = () => {
 	// Define how states would be updated by some actions
 	const reducer = (state, action) => {
 		switch (action.type) {
-		case 'bannerText':
-			return ({
-				...state,
-				bannerText: action.setText
-			});
 		case 'isLogged':
 			return ({
 				...state,

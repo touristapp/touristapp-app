@@ -36,7 +36,7 @@ export default StyleSheet.create({
     },
     deleteContainer: {
         alignSelf: 'center',
-        backgroundColor: colors.FIRE,
+        backgroundColor: colors.BLOOD,
         padding: 4,
     }
 });
