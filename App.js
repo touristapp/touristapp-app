@@ -13,7 +13,7 @@ import { StateProvider } from './src/hooks/state';
 const App = () => {
 	// Define default states here
 	const initialState = {
-		isLogged: false,
+		isLogged: true,
 		showSnack: false,
 		snackContent: {
 			style: { backgroundColor: '#000' },
