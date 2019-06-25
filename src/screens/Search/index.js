@@ -24,7 +24,7 @@ export default function Account() {
             default:
                 dispatch({
                     type: 'switchScreen',
-                    tab: 'createRoute',
+                    tab: 'SearchScreen',
                     screen: 'createRoute'
                 })
         }
