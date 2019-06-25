@@ -41,7 +41,7 @@ export default function CreateRoute() {
                     />
                     <Button 
                         style={Style.searchButton} 
-                        icon="check" 
+                        icon="search" 
                         mode="contained">
                         Rechercher
                     </Button>
