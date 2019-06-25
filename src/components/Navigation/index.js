@@ -38,8 +38,6 @@ export default function Navigation() {
     ]);
 		const [{ showSnack, snackContent }, dispatch] = useStateValue();
 
-
-
     useEffect(
 			()=> {
 				//console.log('<<<< index changed >>>>');
@@ -47,7 +45,6 @@ export default function Navigation() {
     )
 
     const _handleIndexChange = index => setIndex(index);
-
     const _renderScene = BottomNavigation.SceneMap({ home: HomeRoute, search: SearchRoute, account: AccountRoute, })
 
     return (
@@ -76,7 +73,7 @@ export default function Navigation() {
 					style={snackContent.style}
 					theme={snackContent.theme}
 				>
-		      Connection réussie !
+		      {snackContent.message}
 		    </Snackbar>
 			</>
     );

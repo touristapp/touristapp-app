@@ -52,9 +52,17 @@ export default function Login() {
   						status: true
 					  });
             dispatch({
+              type: 'snackContent',
+              setSnack:  {
+          			style: { backgroundColor: 'green' },
+          			theme: { colors: { accent: 'white' } },
+          			message: 'Connextion réussie !'
+          		},
+            });
+            dispatch({
               type: 'showSnackbar',
               snack: !showSnack
-            })
+            });
           }}>
 					CLICK TO LOGIN
 				</Button>

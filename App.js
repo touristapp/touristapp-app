@@ -16,8 +16,9 @@ const App = () => {
 		isLogged: false,
 		showSnack: false,
 		snackContent: {
-			style: { backgroundColor: 'green' },
-			theme: { colors: { accent: 'white' } }
+			style: { backgroundColor: '#000' },
+			theme: { colors: { accent: '#fff' } },
+			message: ''
 		},
 		AccountScreen: 'viewAccount',
 		SearchScreen: 'createRoute',
@@ -45,7 +46,7 @@ const App = () => {
 		case 'snackContent':
 			return({
 				...state,
-				setSnack: action.snackContent
+				snackContent: action.setSnack
 			})
 		default:
 			return state;
