@@ -3,10 +3,18 @@ import { colors } from './themes/variables'
 
 export default StyleSheet.create({
     mainContainer: {
-        display: 'flex',
-        flex: 1,
-        backgroundColor: colors.WHITE,
-        justifyContent: 'center'
+      backgroundColor: colors.SKY,
+      display: 'flex',
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    infoContainer: {
+      backgroundColor: '#FFF',
+      paddingHorizontal: 20,
+      paddingTop: 20,
+      paddingBottom: 30,
+      borderRadius: 5,
     },
     imageContainer: {
         justifyContent: 'center',
@@ -53,12 +61,13 @@ export default StyleSheet.create({
         alignSelf: 'center',
         marginTop: 20,
         marginBottom: 10,
-        padding: 4,
         backgroundColor: colors.SKY,
+        padding: 8,
     },
     disconnect: {
+        marginTop:10,
         alignSelf: 'center',
         backgroundColor: colors.FIRE,
-        padding: 4,
+        padding: 8,
     }
 });

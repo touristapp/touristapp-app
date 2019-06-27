@@ -3,7 +3,6 @@ import { colors } from './themes/variables'
 
 export default StyleSheet.create({
     main: {
-      fontFamily: 'Optima',
       backgroundColor: colors.SKY,
       display: 'flex',
       flex: 1,
