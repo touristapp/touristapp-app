@@ -17,9 +17,10 @@ export default function ViewAccount() {
     const [{showSnack}, dispatch ] = useStateValue();
 
     return (
-        <>
-            <Banner message="Mon compte"/>
-            <View style={Style.mainContainer}>
+      <>
+        <Banner message="Mon compte"/>
+          <View style={Style.mainContainer}>
+            <View style={Style.infoContainer}>
                 <View style={Style.imageContainer}>
                     <Image
                         style={Style.profileImage}
@@ -77,6 +78,7 @@ export default function ViewAccount() {
                     Déconnexion
                 </Button>
             </View>
-        </>
+        </View>
+      </>
     )
 }
