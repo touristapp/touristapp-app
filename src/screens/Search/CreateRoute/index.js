@@ -12,12 +12,20 @@ import ENV from '../../../../env';
 // Components imorts
 import Banner from '../../../components/Banner'
 import { Image, ScrollView, View, Text } from 'react-native';
-import { TextInput, Button, RadioButton } from 'react-native-paper';
+import { TextInput, Button } from 'react-native-paper';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
+import RadioForm, {RadioButton, RadioButtonInput, RadioButtonLabel} from 'react-native-simple-radio-button';
+
 
 export default function CreateRoute() {
     const depart = useInput();
     const arrivee = useInput();
+    const transports = [
+      {label: 'Voiture', value: 0},
+      {label: 'Vélo', value: 1},
+      {label: 'Train', value: 2},
+      {label: 'Avion', value: 3},
+    ]
 
     return (
         <>
@@ -147,10 +155,65 @@ export default function CreateRoute() {
                       //renderLeftButton={()  => <Image source={require('../../../assets/logo-notext.png')} />}
                       //renderRightButton={() => <Text>Custom text after the input</Text>}
                     />
+                    <RadioForm
+                      formHorizontal={true}
+                      animation={true}
+                    >
+                      {transports.map((obj, i) =>
+                        <RadioButton labelHorizontal={true} key={i} >
+                          <RadioButtonInput
+                            obj={obj}
+                            index={i}
+                            isSelected={truc => console.log(truc)}
+                            onPress={value => console.log(value)}
+                            borderWidth={1}
+                            buttonInnerColor={'#e74c3c'}
+                            buttonOuterColor={'#2196f3'}
+                            buttonSize={5}
+                            buttonOuterSize={10}
+                            buttonStyle={{}}
+                            buttonWrapStyle={{marginLeft: 10}}
+                          />
+                          <RadioButtonLabel
+                            obj={obj}
+                            index={i}
+                            labelHorizontal={true}
+                            labelStyle={{fontSize: 20, color: '#2ecc71'}}
+                            labelWrapStyle={{}}
+                          />
+                          </RadioButton>
+                      )}
+
+                    </RadioForm>
                   </ScrollView>
+                  <RadioForm
+                    formHorizontal={true}
+                    animation={true}
+                  >
+                    {transports.map((obj, i) => {
+                      <RadioButton labelHorizontal={true} key={i} >
+                        <RadioButtonInput
+                          obj={obj}
+                          index={i}
+                          borderWidth={1}
+                          buttonInnerColor={'#e74c3c'}
+                          buttonOuterColor={'#2196f3'}
+                          buttonSize={40}
+                          buttonOuterSize={80}
+                          buttonStyle={{}}
+                          buttonWrapStyle={{marginLeft: 10}}
+                        />
+                        <RadioButtonLabel
+                          obj={obj}
+                          index={i}
+                          labelHorizontal={true}
+                          labelStyle={{fontSize: 20, color: '#2ecc71'}}
+                          labelWrapStyle={{}}
+                        />
+                        </RadioButton>
+                    })}
 
-                      <RadioButton value="second" />
-
+                  </RadioForm>
                     <Button
                         style={Style.searchButton}
                         icon="search"
