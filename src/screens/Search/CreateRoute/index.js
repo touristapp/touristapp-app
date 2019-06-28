@@ -7,24 +7,24 @@ import { colors } from '../../../styles/themes/variables';
 
 // Hooks imports
 import useInput from '../../../hooks/useInputs';
+import ENV from '../../../../env';
 
 // Components imorts
 import Banner from '../../../components/Banner'
-import { Image, View, Text } from 'react-native';
-import { TextInput, Button } from 'react-native-paper';
+import { Image, ScrollView, View, Text } from 'react-native';
+import { TextInput, Button, RadioButton } from 'react-native-paper';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 
 export default function CreateRoute() {
     const depart = useInput();
     const arrivee = useInput();
-    const homePlace = { description: 'Home', geometry: { location: { lat: 48.8152937, lng: 2.4597668 } }};
-    const workPlace = { description: 'Work', geometry: { location: { lat: 48.8496818, lng: 2.2940881 } }};
 
     return (
         <>
             <Banner message="Créer un itinéraire"/>
-            <View style={Style.mainContainer}>
+            <ScrollView contentContainerStyle={Style.mainContainer}>
                 <View style={Style.form}>
+                  <ScrollView>
                     <GooglePlacesAutocomplete
                       placeholder='Départ'
                       minLength={2} // minimum length of text to search
@@ -42,9 +42,9 @@ export default function CreateRoute() {
 
                       query={{
                         // available options: https://developers.google.com/places/web-service/autocomplete
-                        key: 'AIzaSyBv810yYUKo0eDsnzOEgMlNvZx9Ko42Ze8',
+                        key: ENV.googleMapsApiKey,
                         language: 'fr', // language of the results
-                        types: 'address' // default: 'geocode'
+                        types: '(cities)' // default: 'geocode'
                       }}
 
                       styles={{
@@ -85,6 +85,8 @@ export default function CreateRoute() {
                       //renderLeftButton={()  => <Image source={require('../../../assets/logo-notext.png')} />}
                       //renderRightButton={() => <Text>Custom text after the input</Text>}
                     />
+                  </ScrollView>
+                  <ScrollView>
                     <GooglePlacesAutocomplete
                       placeholder='Arrivée'
                       minLength={2} // minimum length of text to search
@@ -102,7 +104,7 @@ export default function CreateRoute() {
 
                       query={{
                         // available options: https://developers.google.com/places/web-service/autocomplete
-                        key: 'AIzaSyBv810yYUKo0eDsnzOEgMlNvZx9Ko42Ze8',
+                        key: ENV.googleMapsApiKey,
                         language: 'fr', // language of the results
                         types: 'address' // default: 'geocode'
                       }}
@@ -145,6 +147,10 @@ export default function CreateRoute() {
                       //renderLeftButton={()  => <Image source={require('../../../assets/logo-notext.png')} />}
                       //renderRightButton={() => <Text>Custom text after the input</Text>}
                     />
+                  </ScrollView>
+
+                      <RadioButton value="second" />
+
                     <Button
                         style={Style.searchButton}
                         icon="search"
@@ -152,7 +158,7 @@ export default function CreateRoute() {
                         Rechercher
                     </Button>
                 </View>
-            </View>
+            </ScrollView>
         </>
     )
     /*
