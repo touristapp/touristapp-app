@@ -18,7 +18,7 @@ import { View } from 'react-native';
 export default function Home() {
     const [{ isLogged, HomeScreen }, dispatch] = useStateValue();
 
-    renderSwitch = (HomeScreen) => {
+    const renderSwitch = (HomeScreen) => {
         switch(HomeScreen) {
             case 'viewHome':
                 return <ViewHome/>
@@ -35,12 +35,15 @@ export default function Home() {
 
     return (
         <View style={Style.mainContainer}>
-            {isLogged && (
-                this.renderSwitch(HomeScreen)
-            )}
-            {!isLogged && (
-                <Disconnected/>
-            )}
+          {renderSwitch(HomeScreen)}
         </View>
     )
+    /*
+    {isLogged && (
+        this.renderSwitch(HomeScreen)
+    )}
+    {!isLogged && (
+        <Disconnected/>
+    )}
+    */
 }
