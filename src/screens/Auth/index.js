@@ -17,8 +17,6 @@ import { View } from 'react-native';
 export default function Auth() {
     const [{ isLogged, AuthScreen }, dispatch] = useStateValue();
 
-    console.log(`1 : ${AuthScreen}`);
-
     const renderSwitch = (AuthScreen) => {
         switch(AuthScreen) {
             case 'login':
@@ -33,9 +31,6 @@ export default function Auth() {
                 })
         }
     }
-
-    console.log(`2 : ${AuthScreen}`);
-
 
     return (
         <View style={Style.mainContainer}>

@@ -8,6 +8,7 @@ import Style from '../../../styles/login';
 // Hooks imports
 import useInput from '../../../hooks/useInputs';
 import { useStateValue } from '../../../hooks/state'
+import Fetch from '../../../tools/fetch'
 
 // Components imports
 import Banner from '../../../components/Banner';
@@ -19,9 +20,48 @@ export default function Register() {
     const email = useInput();
     const password = useInput();
     const passwordConfirmation = useInput();
-    const [{ showSnack }, dispatch] = useStateValue();
+    const [{ isLogged, showSnack }, dispatch] = useStateValue();
 
-    /*// TODO: onClick, connect to DB, check credentials, and store in Storage using tools/asyncstorage.js */
+    const register = async () => {
+        if (nickname.value != "" && email.value != "" && password.value != "" && passwordConfirmation.value != "") {
+          console.log(password);
+          console.log(passwordConfirmation);
+            if (password.value == passwordConfirmation.value) {
+                if (nickname.value != password.value) {
+                    if (nickname.value.length > 5 && password.value.length > 7) {
+                        if (/\S+@\S+\.\S+/.test(email.value)) {
+                            const url = "https://touristapi.herokuapp.com/api/auth/register";
+                            const body = JSON.stringify({
+                                name: nickname.value,
+                                email: email.value,
+                                password: password.value,
+                                passwordConfirmation : passwordConfirmation.value
+                            });
+                            const response = await Fetch.post(url,body);
+                            dispatch({type: 'switchScreen',tab: 'AuthScreen',screen: 'login'});
+                            dispatch({type: 'showSnackbar',snack: !showSnack});
+                            dispatch({type: 'snackContent', setSnack:{style:snacks.SUCCESS.style,theme: snacks.SUCCESS.theme,message: 'Account successfully created !'}});
+                        } else {
+                          dispatch({type: 'showSnackbar',snack: !showSnack});
+                          dispatch({type: 'snackContent', setSnack:{style:snacks.DANGER.style,theme: snacks.DANGER.theme,message: 'Email is not valid !'}});
+                        }
+                    } else {
+                      dispatch({type: 'showSnackbar',snack: !showSnack});
+                      dispatch({type: 'snackContent', setSnack:{style:snacks.DANGER.style,theme: snacks.DANGER.theme,message: 'Nickname size must be greater than 5 and Password than 7 !'}});
+                    }
+                } else {
+                  dispatch({type: 'showSnackbar',snack: !showSnack});
+                  dispatch({type: 'snackContent', setSnack:{style:snacks.DANGER.style,theme: snacks.DANGER.theme,message: 'Nickname and Password must be different !'}});
+                }
+            } else {
+              dispatch({type: 'showSnackbar',snack: !showSnack});
+              dispatch({type: 'snackContent', setSnack:{style:snacks.DANGER.style,theme: snacks.DANGER.theme,message: 'Passwords must be equals !'}});
+            }
+        } else {
+          dispatch({type: 'showSnackbar',snack: !showSnack});
+          dispatch({type: 'snackContent', setSnack:{style:snacks.DANGER.style,theme: snacks.DANGER.theme,message: 'You must fill all inputs !'}});
+        }
+    }
 
     return (
     <>
@@ -60,7 +100,7 @@ export default function Register() {
   					style={Style.button}
   					icon="send"
   					mode="contained"
-  					onPress={() => {
+  					onPress={register/*() => {
               dispatch({
     						type: 'switchScreen',
     						tab: 'AuthScreen',
@@ -78,7 +118,7 @@ export default function Register() {
                 type: 'showSnackbar',
                 snack: !showSnack
               });
-            }}>
+            }*/}>
   					CRÉER UN COMPTE
   				</Button>
   			</View>
