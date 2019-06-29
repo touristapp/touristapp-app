@@ -7,8 +7,8 @@ import Style from '../../../styles/login';
 
 // Hooks imports
 import useInput from '../../../hooks/useInputs';
-import { useStateValue } from '../../../hooks/state'
-import Fetch from '../../../tools/fetch'
+import { useStateValue } from '../../../hooks/state';
+import { Fetch, Snack } from '../../../tools';
 
 // Components imports
 import Banner from '../../../components/Banner';
@@ -24,8 +24,6 @@ export default function Register() {
 
     const register = async () => {
         if (nickname.value != "" && email.value != "" && password.value != "" && passwordConfirmation.value != "") {
-          console.log(password);
-          console.log(passwordConfirmation);
             if (password.value == passwordConfirmation.value) {
                 if (nickname.value != password.value) {
                     if (nickname.value.length > 5 && password.value.length > 7) {
@@ -39,27 +37,21 @@ export default function Register() {
                             });
                             const response = await Fetch.post(url,body);
                             dispatch({type: 'switchScreen',tab: 'AuthScreen',screen: 'login'});
-                            dispatch({type: 'showSnackbar',snack: !showSnack});
-                            dispatch({type: 'snackContent', setSnack:{style:snacks.SUCCESS.style,theme: snacks.SUCCESS.theme,message: 'Account successfully created !'}});
+                            Snack.success('Account successfully created !',showSnack,dispatch);
                         } else {
-                          dispatch({type: 'showSnackbar',snack: !showSnack});
-                          dispatch({type: 'snackContent', setSnack:{style:snacks.DANGER.style,theme: snacks.DANGER.theme,message: 'Email is not valid !'}});
+                          Snack.danger('Email is not valid !',showSnack,dispatch);
                         }
                     } else {
-                      dispatch({type: 'showSnackbar',snack: !showSnack});
-                      dispatch({type: 'snackContent', setSnack:{style:snacks.DANGER.style,theme: snacks.DANGER.theme,message: 'Nickname size must be greater than 5 and Password than 7 !'}});
+                      Snack.danger('Nickname size must be greater than 5 and Password than 7 !',showSnack,dispatch);
                     }
                 } else {
-                  dispatch({type: 'showSnackbar',snack: !showSnack});
-                  dispatch({type: 'snackContent', setSnack:{style:snacks.DANGER.style,theme: snacks.DANGER.theme,message: 'Nickname and Password must be different !'}});
+                  Snack.danger('Nickname and Password must be different !',showSnack,dispatch);
                 }
             } else {
-              dispatch({type: 'showSnackbar',snack: !showSnack});
-              dispatch({type: 'snackContent', setSnack:{style:snacks.DANGER.style,theme: snacks.DANGER.theme,message: 'Passwords must be equals !'}});
+              Snack.danger('Passwords must be equals !',showSnack,dispatch);
             }
         } else {
-          dispatch({type: 'showSnackbar',snack: !showSnack});
-          dispatch({type: 'snackContent', setSnack:{style:snacks.DANGER.style,theme: snacks.DANGER.theme,message: 'You must fill all inputs !'}});
+          Snack.danger('You must fill all inputs !',showSnack,dispatch);
         }
     }
 
