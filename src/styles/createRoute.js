@@ -1,12 +1,11 @@
-import { StyleSheet } from 'react-native'
+import { StyleSheet, Dimensions } from 'react-native'
 import { colors } from './themes/variables'
 
 export default StyleSheet.create({
     mainContainer: {
-        display: 'flex',
         flex: 1,
         backgroundColor: colors.SKY,
-        justifyContent: 'center'
+        justifyContent: 'center',
     },
     form:  {
         backgroundColor: '#FFF',
