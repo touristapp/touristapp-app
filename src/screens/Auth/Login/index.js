@@ -1,15 +1,9 @@
-// React imports
 import React, { useEffect } from 'react';
-
-// Styles imports
-import { colors, snacks } from '../../../styles/themes/variables';
+import { colors } from '../../../styles/themes/variables';
 import Style from '../../../styles/login';
-
-// Hooks imports
 import useInput from '../../../hooks/useInputs';
 import { useStateValue } from '../../../hooks/state'
-
-// Components imports
+import { Fetch, Snack, Storage } from '../../../tools';
 import Banner from '../../../components/Banner';
 import { View, Image } from 'react-native';
 import { Title, TextInput, Button } from 'react-native-paper';
@@ -17,15 +11,35 @@ import { Title, TextInput, Button } from 'react-native-paper';
 export default function Login() {
     const email = useInput();
     const password = useInput();
-    const [{ showSnack }, dispatch] = useStateValue();
+    const [{ isLogged, showSnack }, dispatch] = useStateValue();
 
-    //console.log(snacks.SUCCESS);
+    useEffect(()=>{
+      Promise.resolve(Storage.retrieve('token'))
+        .then( (token) => {
+          if (token!==undefined && token!==null) dispatch({type: 'isLogged',status: true})
+        });
+    })
 
-    useEffect(() => {
-      // do something
-    }, [email.value, password.value])
-
-    /*// TODO: onClick, connect to DB, check credentials, and store in Storage using tools/asyncstorage.js */
+    const login = async () => {
+        const url = "https://touristapi.herokuapp.com/api/auth/login"
+        const body = JSON.stringify({email: email.value, password: password.value})
+        if(email.value != "" && password.value != "") {
+          const response = await Fetch.post(url, body);
+          if(response.status !== 200) {
+              Snack.danger("Wrong email or password!",showSnack,dispatch);
+          } else {
+              const responseJSON = await response.json()
+              await Storage.store({
+                email: email.value,
+                password: password.value,
+                token: responseJSON.meta.token
+              });
+              dispatch({type: 'isLogged',status: true});
+          }
+        } else {
+            Snack.danger("Nickname and password can't be empty!",showSnack,dispatch);
+        }
+    }
 
     return (
     <>
@@ -51,24 +65,7 @@ export default function Login() {
   					style={Style.button}
   					icon="send"
   					mode="contained"
-  					onPress={() => {
-              dispatch({
-    						type: 'isLogged',
-    						status: true
-  					  });
-              dispatch({
-                type: 'snackContent',
-                setSnack:  {
-            			style: snacks.SUCCESS.style,
-                  theme: snacks.SUCCESS.theme,
-            			message: 'Connexion réussie !'
-            		}
-              });
-              dispatch({
-                type: 'showSnackbar',
-                snack: !showSnack
-              });
-            }}>
+  					onPress={login}>
             CONNEXION
   				</Button>
           <Button
