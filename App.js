@@ -1,6 +1,7 @@
 // React imports
 import React from 'react';
 import { Dimensions } from 'react-native';
+
 // Navigation imports
 import Navigation from './src/components/Navigation';
 
@@ -14,7 +15,9 @@ const App = () => {
 	// Define default states here
 	const initialState = {
 		isLogged: false,
+		isLoading: false,
 		showSnack: false,
+		currentUser: {id:null,name:'',email:'',picture:'',role:'',state:'',updatedAt:'',createdAt:'',VehicleId:''},
 		snackContent: { style: {}, theme: {}, message: ''	},
 		AuthScreen: 'viewAuth',
 		AccountScreen: 'viewAccount',
@@ -44,6 +47,16 @@ const App = () => {
 			return({
 				...state,
 				snackContent: action.setSnack
+			});
+		case 'isLoading':
+			return ({
+				...state,
+				isLoading: action.wait
+			});
+		case 'currentUser':
+			return ({
+				...state,
+				currentUser: action.define
 			})
 		default:
 			return state;

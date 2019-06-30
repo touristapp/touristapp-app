@@ -14,7 +14,7 @@ import Auth from '../../screens/Auth';
 import { useStateValue } from '../../hooks/state';
 
 // Components imports
-import { BottomNavigation, Snackbar } from 'react-native-paper';
+import { BottomNavigation, Snackbar, ActivityIndicator } from 'react-native-paper';
 
 // Routes
 const HomeRoute = () => <Home/>;
@@ -36,7 +36,7 @@ export default function Navigation() {
 		{ key: 'search', title: 'Recherches', icon: 'search' },
 		{ key: 'account', title: 'Mon compte', icon: 'account-circle' }
     ]);
-		const [{ showSnack, snackContent }, dispatch] = useStateValue();
+		const [{ showSnack, snackContent, isLoading }, dispatch] = useStateValue();
 
     useEffect(
 			()=> {
@@ -48,33 +48,33 @@ export default function Navigation() {
     const _renderScene = BottomNavigation.SceneMap({ home: HomeRoute, search: SearchRoute, account: AccountRoute, })
 
     return (
-			<>
-				<BottomNavigation
-						navigationState={{ index, routes }}
-						onIndexChange={_handleIndexChange}
-						renderScene={_renderScene}
-						barStyle={{backgroundColor: colors.COAL}}
-						activeColor={colors.SKY}
-						inactiveColor={colors.WHITE}
-				/>
-				<Snackbar
-		      visible={showSnack}
-		      onDismiss={() => dispatch({
-							type: 'showSnackbar',
-							showSnack: false
-					})}
-					action={{
-						label: 'Close',
-						onPress: () => {
-							// onPress on the snackbar
-						}
-					}}
-					duration={300}
-					style={snackContent.style}
-					theme={snackContent.theme}
-				>
-		      {snackContent.message}
-		    </Snackbar>
-			</>
+        <>
+          <BottomNavigation
+            navigationState={{ index, routes }}
+            onIndexChange={_handleIndexChange}
+            renderScene={_renderScene}
+            barStyle={{backgroundColor: colors.COAL}}
+            activeColor={colors.SKY}
+            inactiveColor={colors.WHITE}
+          />
+          <Snackbar
+          visible={showSnack}
+          onDismiss={() => dispatch({
+              type: 'showSnackbar',
+              showSnack: false
+          })}
+          action={{
+            label: 'Close',
+            onPress: () => {
+              // onPress on the snackbar
+            }
+          }}
+          duration={300}
+          style={snackContent.style}
+          theme={snackContent.theme}
+          >
+          {snackContent.message}
+          </Snackbar>
+        </>
     );
 }

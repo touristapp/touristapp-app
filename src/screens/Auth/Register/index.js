@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 
 // Styles imports
 import { colors } from '../../../styles/themes/variables';
-import Style from '../../../styles/login';
+import Style from '../../../styles/register';
 
 // Hooks imports
 import useInput from '../../../hooks/useInputs';
@@ -12,17 +12,18 @@ import { Fetch, Snack } from '../../../tools';
 
 // Components imports
 import Banner from '../../../components/Banner';
-import { View, Image } from 'react-native';
-import { Title, TextInput, Button } from 'react-native-paper';
+import { View, Image, ScrollView } from 'react-native';
+import { Title, TextInput, Button, ActivityIndicator } from 'react-native-paper';
 
 export default function Register() {
     const nickname = useInput();
     const email = useInput();
     const password = useInput();
     const passwordConfirmation = useInput();
-    const [{ isLogged, showSnack }, dispatch] = useStateValue();
+    const [{ isLogged, showSnack, isLoading }, dispatch] = useStateValue();
 
     const register = async () => {
+        dispatch({type: 'isLoading',wait: true});
         if (nickname.value != "" && email.value != "" && password.value != "" && passwordConfirmation.value != "") {
             if (password.value == passwordConfirmation.value) {
                 if (nickname.value != password.value) {
@@ -36,6 +37,7 @@ export default function Register() {
                                 passwordConfirmation : passwordConfirmation.value
                             });
                             const response = await Fetch.post(url,body);
+                            dispatch({type: 'isLoading',wait: false});
                             dispatch({type: 'switchScreen',tab: 'AuthScreen',screen: 'login'});
                             Snack.success('Account successfully created !',showSnack,dispatch);
                         } else {
@@ -53,12 +55,18 @@ export default function Register() {
         } else {
           Snack.danger('You must fill all inputs !',showSnack,dispatch);
         }
+        dispatch({type: 'isLoading',wait: false});
     }
 
     return (
-    <>
+    <View>
       <Banner message="Créer un compte"/>
-  		<View style={Style.main}>
+  		<ScrollView contentContainerStyle={Style.main}>
+        {isLoading &&
+          <ActivityIndicator style={Style.loader} size='large' animating={true} color={colors.SEA} />
+        }
+        {!isLoading &&
+        <>
   			<Image source={require('../../../assets/logo-notext.png')} style={Style.image} />
   			<View style={Style.form}>
   				<Title style={Style.title}>touristapp</Title>
@@ -89,14 +97,22 @@ export default function Register() {
   					{...passwordConfirmation}
   				/>
   				<Button
-  					style={Style.button}
+  					style={Style.button2}
   					icon="send"
   					mode="contained"
   					onPress={register}>
   					CRÉER UN COMPTE
   				</Button>
+          <Button
+  					style={Style.button}
+  					icon="cancel"
+  					mode="contained"
+  					onPress={()=> dispatch({type: 'switchScreen',tab: 'AuthScreen',screen: 'login'})}>
+  					ANNULER
+  				</Button>
   			</View>
-  		</View>
-    </>
+        </>}
+  		</ScrollView>
+    </View>
     )
 }

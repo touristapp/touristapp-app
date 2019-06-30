@@ -3,10 +3,11 @@ import React from 'react';
 
 // Styles imports
 import Style from '../../../styles/editAccount';
-import { colors, snacks } from '../../../styles/themes/variables';
+import { colors } from '../../../styles/themes/variables';
 
 // Hooks imports
 import { useStateValue } from '../../../hooks/state';
+import { Fetch, Snack, Storage } from '../../../tools';
 
 // Components imports
 import Banner from '../../../components/Banner'
@@ -45,22 +46,11 @@ export default function EditAccount() {
 					icon="check"
 					mode="contained"
 					onPress={() => {
+            Snack.success('Modifications enregistrées !',showSnack,dispatch);
             dispatch({
   						type: 'switchScreen',
   						tab: 'AccountScreen',
   						screen: 'viewAccount'
-            });
-            dispatch({
-              type: 'snackContent',
-              setSnack:  {
-                style: snacks.WARNING.style,
-                theme: snacks.WARNING.theme,
-                message: 'Modifications réussies !'
-              },
-            });
-            dispatch({
-              type: 'showSnackbar',
-              snack: !showSnack
             });
           }}>
 					Valider
