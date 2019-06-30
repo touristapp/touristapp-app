@@ -2,7 +2,7 @@
 import React, { useEffect } from 'react';
 
 // Styles imports
-import { colors, snacks } from '../../../styles/themes/variables';
+import { colors } from '../../../styles/themes/variables';
 import Style from '../../../styles/login';
 
 // Hooks imports

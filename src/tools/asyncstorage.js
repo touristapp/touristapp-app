@@ -14,13 +14,9 @@ export default Storage = {
 
     retrieve: async (itemName) => {
       try {
-        const value = await AsyncStorage.getItem(itemName);
-        if (value !== null) {
-          // We have data!!
-          alert(value);
-        }
+        return await AsyncStorage.getItem(itemName);
       } catch (error) {
-        alert('Sorry, we could not retrieve your data on this device.');
+        return false;
       }
     },
 

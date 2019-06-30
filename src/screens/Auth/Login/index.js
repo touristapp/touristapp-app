@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { colors, snacks } from '../../../styles/themes/variables';
+import { colors } from '../../../styles/themes/variables';
 import Style from '../../../styles/login';
 import useInput from '../../../hooks/useInputs';
 import { useStateValue } from '../../../hooks/state'
@@ -13,26 +13,28 @@ export default function Login() {
     const password = useInput();
     const [{ isLogged, showSnack }, dispatch] = useStateValue();
 
+    useEffect(()=>{
+      Promise.resolve(Storage.retrieve('token'))
+        .then( (token) => {
+          if (token!==undefined && token!==null) dispatch({type: 'isLogged',status: true})
+        });
+    })
+
     const login = async () => {
-        console.log("Logging...");
         const url = "https://touristapi.herokuapp.com/api/auth/login"
         const body = JSON.stringify({email: email.value, password: password.value})
         if(email.value != "" && password.value != "") {
           const response = await Fetch.post(url, body);
           if(response.status !== 200) {
-              console.log("Not logged");
               Snack.danger("Wrong email or password!",showSnack,dispatch);
           } else {
               const responseJSON = await response.json()
-              console.log("Logged !");
-              console.log(responseJSON);
               await Storage.store({
                 email: email.value,
                 password: password.value,
                 token: responseJSON.meta.token
               });
               dispatch({type: 'isLogged',status: true});
-              console.log(isLogged);
           }
         } else {
             Snack.danger("Nickname and password can't be empty!",showSnack,dispatch);

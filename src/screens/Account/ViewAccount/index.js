@@ -6,7 +6,7 @@ import Style from '../../../styles/viewAccount';
 
 // Hooks imports
 import { useStateValue } from '../../../hooks/state';
-import { snacks } from '../../../styles/themes/variables';
+import { Storage, Snack } from '../../../tools';
 
 // Components imorts
 import Banner from '../../../components/Banner'
@@ -15,6 +15,15 @@ import { Button } from 'react-native-paper';
 
 export default function ViewAccount() {
     const [{showSnack}, dispatch ] = useStateValue();
+
+    const logout = () => {
+      dispatch({
+          type: 'isLogged',
+          status: false
+      });
+      Snack.warning('Logged out !',showSnack,dispatch);
+      Storage.clear();
+    }
 
     return (
       <>
@@ -57,24 +66,7 @@ export default function ViewAccount() {
                     style={Style.disconnect}
                     icon="exit-to-app"
                     mode="contained"
-                    onPress={() => {
-                      dispatch({
-                        type: 'isLogged',
-                        status: false
-                    });
-                    dispatch({
-                      type: 'snackContent',
-                      setSnack:  {
-                  			style: snacks.DANGER.style,
-                        theme: snacks.DANGER.theme,
-                        message: 'Déconnexion réussie !'
-                      },
-                    });
-                    dispatch({
-                      type: 'showSnackbar',
-                      snack: !showSnack
-                    });
-                  }}>
+                    onPress={logout}>
                     Déconnexion
                 </Button>
             </View>
