@@ -16,7 +16,8 @@
     "react-native-simple-radio-button": "^2.7.3",
     "react-native-vector-icons": "^6.5.0",
     "react-router-dom": "^5.0.1",
-    "react-router-native": "^5.0.1"
+    "react-router-native": "^5.0.1",
+    "watchman": "^1.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.4.5",

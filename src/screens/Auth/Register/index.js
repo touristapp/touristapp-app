@@ -92,25 +92,7 @@ export default function Register() {
   					style={Style.button}
   					icon="send"
   					mode="contained"
-  					onPress={register/*() => {
-              dispatch({
-    						type: 'switchScreen',
-    						tab: 'AuthScreen',
-    						screen: 'login'
-              });
-              dispatch({
-                type: 'snackContent',
-                setSnack:  {
-            			style: snacks.SUCCESS.style,
-                  theme: snacks.SUCCESS.theme,
-            			message: 'Compte créé !'
-            		}
-              });
-              dispatch({
-                type: 'showSnackbar',
-                snack: !showSnack
-              });
-            }*/}>
+  					onPress={register}>
   					CRÉER UN COMPTE
   				</Button>
   			</View>
