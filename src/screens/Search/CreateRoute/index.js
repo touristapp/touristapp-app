@@ -7,7 +7,8 @@ import { colors } from '../../../styles/themes/variables';
 
 // Hooks imports
 import useInput from '../../../hooks/useInputs';
-import { useStateValue } from '../../../hooks/state'
+import { useStateValue } from '../../../hooks/state';
+import ENV from '../../../env';
 
 
 // Components imorts
@@ -21,11 +22,11 @@ export default function CreateRoute() {
     fetchData = async () =>{
         //alert('Fetching!')
         alert(`Fetching data from ${depart.value} to ${arrivee.value}`)
-        const data = await fetch(`https://maps.googleapis.com/maps/api/directions/json?origin=${depart.value}&destination=${arrivee.value}&key=${process.env.GOOGLE_MAPS_API_KEY}`
+        const data = await fetch(`https://maps.googleapis.com/maps/api/directions/json?origin=${depart.value}&destination=${arrivee.value}&key=${ENV.googleMapsApiKey}`
         , {
                 headers: {
                     "Content-Type": "application/x-www-form-urlencoded",
-                    // "Authorization": GOOGLE_MAPS_API_KEY,
+                    // "Authorization": ENV.googleMapsApiKey,
                 },
                 method: "GET"
         })
