@@ -23,9 +23,14 @@ export default function Login() {
               console.log("Not logged");
               Snack.danger("Wrong email or password!",showSnack,dispatch);
           } else {
-              console.log("Logged !");
               const responseJSON = await response.json()
-              await Storage.store(email, password, responseJSON.meta.token);
+              console.log("Logged !");
+              console.log(responseJSON);
+              await Storage.store({
+                email: email.value,
+                password: password.value,
+                token: responseJSON.meta.token
+              });
               dispatch({type: 'isLogged',status: true});
               console.log(isLogged);
           }
