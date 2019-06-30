@@ -74,10 +74,10 @@ export default function ViewAccount() {
                     <Text style={Style.boldCenteredText}>{currentUser.VehicleId}</Text>
                     <View style={Style.subCarContainer}>
                         <Text>
-                            Consommation :
+                            Consommation
                         </Text>
                         <Text>
-                            Carburant :
+                            Carburant
                         </Text>
                     </View>
                 </View>

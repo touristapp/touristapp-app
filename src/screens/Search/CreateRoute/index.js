@@ -1,5 +1,5 @@
 // React imports
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 // Styles imports
 import Style from '../../../styles/createRoute';
@@ -20,12 +20,15 @@ import RadioForm, {RadioButton, RadioButtonInput, RadioButtonLabel} from 'react-
 export default function CreateRoute() {
     const depart = useInput();
     const arrivee = useInput();
+    const [index, setIndex] = useState(0);
     const transports = [
       {label: 'Voiture', value: 0},
       {label: 'Vélo', value: 1},
       {label: 'Train', value: 2},
       {label: 'Avion', value: 3},
     ]
+
+    const onPressRadio = value => setIndex(value);
 
     return (
         <>
@@ -160,66 +163,40 @@ export default function CreateRoute() {
                       animation={true}
                     >
                       {transports.map((obj, i) =>
-                        <RadioButton labelHorizontal={true} key={i} >
+                        <RadioButton labelHorizontal={true} style={{borderWidth:1, borderRadius:5, borderColor: 'grey', marginHorizontal: 2, paddingHorizontal: 10, flex:1, backgroundColor:colors.WHITE}} key={i}
+                        onPress={onPressRadio}>
                           <RadioButtonInput
                             obj={obj}
                             index={i}
-                            isSelected={truc => console.log(truc)}
-                            onPress={value => console.log(value)}
+                            isSelected={index === i}
+                            onPress={onPressRadio}
                             borderWidth={1}
-                            buttonInnerColor={'#e74c3c'}
-                            buttonOuterColor={'#2196f3'}
-                            buttonSize={5}
-                            buttonOuterSize={10}
+                            buttonInnerColor={colors.FIRE}
+                            buttonOuterColor={index === i ? colors.SEA : colors.COAL}
+                            buttonSize={8}
+                            buttonOuterSize={15}
                             buttonStyle={{}}
-                            buttonWrapStyle={{marginLeft: 10}}
+                            buttonWrapStyle={{marginVertical: 10}}
                           />
                           <RadioButtonLabel
                             obj={obj}
                             index={i}
+                            onPress={onPressRadio}
                             labelHorizontal={true}
-                            labelStyle={{fontSize: 20, color: '#2ecc71'}}
-                            labelWrapStyle={{}}
+                            labelStyle={{fontSize: 16, color: colors.SEA}}
+                            labelWrapStyle={{marginVertical: 10}}
                           />
                           </RadioButton>
                       )}
 
                     </RadioForm>
                   </ScrollView>
-                  <RadioForm
-                    formHorizontal={true}
-                    animation={true}
-                  >
-                    {transports.map((obj, i) => {
-                      <RadioButton labelHorizontal={true} key={i} >
-                        <RadioButtonInput
-                          obj={obj}
-                          index={i}
-                          borderWidth={1}
-                          buttonInnerColor={'#e74c3c'}
-                          buttonOuterColor={'#2196f3'}
-                          buttonSize={40}
-                          buttonOuterSize={80}
-                          buttonStyle={{}}
-                          buttonWrapStyle={{marginLeft: 10}}
-                        />
-                        <RadioButtonLabel
-                          obj={obj}
-                          index={i}
-                          labelHorizontal={true}
-                          labelStyle={{fontSize: 20, color: '#2ecc71'}}
-                          labelWrapStyle={{}}
-                        />
-                        </RadioButton>
-                    })}
-
-                  </RadioForm>
-                    <Button
-                        style={Style.searchButton}
-                        icon="search"
-                        mode="contained">
-                        Rechercher
-                    </Button>
+                  <Button
+                      style={Style.searchButton}
+                      icon="search"
+                      mode="contained">
+                      Rechercher
+                  </Button>
                 </View>
             </ScrollView>
         </>
