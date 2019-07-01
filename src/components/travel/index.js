@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Style from '../../styles/myTravels';
+import Style from '../../styles/travel';
 
 import { View, Text, Image, TouchableOpacity, Alert } from 'react-native';
 import { Title } from 'react-native-paper';
