@@ -7,7 +7,7 @@ import Style from '../../styles/home';
 // Screens imports
 import ViewHome from './ViewHome';
 import MyTravels from './MyTravels';
-import Disconnected from '../Disconnected';
+import MyStats from './MyStats'
 
 // Hooks imports
 import { useStateValue } from '../../hooks/state'
@@ -24,6 +24,8 @@ export default function Home() {
                 return <ViewHome/>
             case 'myTravels':
                 return <MyTravels/>
+            case 'myStats':
+                return <MyStats/>
             default:
                 dispatch({
                     type: 'switchScreen',
