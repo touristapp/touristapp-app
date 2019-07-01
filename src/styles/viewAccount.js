@@ -46,16 +46,14 @@ export default StyleSheet.create({
         marginTop: 20,
         marginLeft: 50,
         marginRight: 50,
-        padding: 5
+        paddingBottom: 10,
     },
     subCarContainer: {
         display: 'flex',
         flexDirection: 'row',
-        marginTop: 20,
-        marginBottom: 20,
-        marginLeft: 10,
-        marginRight: 10,
-        justifyContent: 'space-between'
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+        justifyContent: 'space-between',
     },
     edit: {
         alignSelf: 'center',
