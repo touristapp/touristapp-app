@@ -30,6 +30,23 @@ export default function CreateRoute() {
 
     const onPressRadio = value => setIndex(value);
 
+    fetchData = async () =>{
+      //alert('Fetching!')
+       alert(`Fetching data from ${depart.value} to ${arrivee.value} using ${ENV.googleMapsApiKey}`)
+      const data = await fetch(`https://maps.googleapis.com/maps/api/directions/json?origin=${depart.value}&destination=${arrivee.value}&key=${ENV.googleMapsApiKey}`
+      , {
+              headers: {
+                  "Content-Type": "application/x-www-form-urlencoded",
+                  "Authorization": ENV.googleMapsApiKey,
+              },
+              method: "GET"
+      })
+       const json = await data.json()
+       //return json;
+       console.log(json);
+       
+  }
+
     return (
         <>
             <Banner message="Créer un itinéraire"/>
@@ -194,7 +211,8 @@ export default function CreateRoute() {
                   <Button
                       style={Style.searchButton}
                       icon="search"
-                      mode="contained">
+                      mode="contained"
+                      onPress= {fetchData}>
                       Rechercher
                   </Button>
                 </View>
