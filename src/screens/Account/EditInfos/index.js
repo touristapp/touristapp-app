@@ -14,7 +14,7 @@ import Banner from '../../../components/Banner'
 import { View, Text, Image } from 'react-native';
 import { Button, TextInput } from 'react-native-paper';
 
-export default function EditAccount() {
+export default function EditInfos() {
   const [{showSnack}, dispatch ] = useStateValue();
 
 	return (
