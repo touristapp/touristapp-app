@@ -18,6 +18,7 @@ const App = () => {
 		isLoading: false,
 		showSnack: false,
 		currentUser: {id:null,name:'',email:'',picture:'',role:'',state:'',updatedAt:'',createdAt:'',VehicleId:''},
+		userVehicle: {id:null,name:'',conso:'',FuelId:'',updatedAt:'',createdAt:''},
 		snackContent: { style: {}, theme: {}, message: ''	},
 		AuthScreen: 'viewAuth',
 		AccountScreen: 'viewAccount',
