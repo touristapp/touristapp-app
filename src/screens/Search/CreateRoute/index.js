@@ -8,7 +8,7 @@ import { colors } from '../../../styles/themes/variables';
 // Hooks imports
 import useInput from '../../../hooks/useInputs';
 import { useStateValue } from '../../../hooks/state';
-import ENV from '../../../env';
+import ENV from '../../../../env';
 
 
 // Components imorts
@@ -20,20 +20,19 @@ export default function CreateRoute() {
     const arrivee = useInput();
 
     fetchData = async () =>{
-        //alert('Fetching!')
-        alert(`Fetching data from ${depart.value} to ${arrivee.value}`)
-        const data = await fetch(`https://maps.googleapis.com/maps/api/directions/json?origin=${depart.value}&destination=${arrivee.value}&key=${ENV.googleMapsApiKey}`
-        , {
-                headers: {
-                    "Content-Type": "application/x-www-form-urlencoded",
-                    // "Authorization": ENV.googleMapsApiKey,
-                },
-                method: "GET"
-        })
-        return data;
-        console.log(data)
-
-    }
+      //alert('Fetching!')
+       alert(`Fetching data from ${depart.value} to ${arrivee.value} using ${ENV.googleMapsApiKey}`)
+      const data = await fetch(`https://maps.googleapis.com/maps/api/directions/json?origin=${depart.value}&destination=${arrivee.value}&key=${ENV.googleMapsApiKey}`
+      , {
+              headers: {
+                  "Content-Type": "application/x-www-form-urlencoded",
+                  "Authorization": ENV.googleMapsApiKey,
+              },
+              method: "GET"
+      })
+       const json = await data.json()
+       return json;
+  }
 
     return (
         <>
