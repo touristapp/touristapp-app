@@ -2,24 +2,21 @@ import { StyleSheet } from 'react-native'
 import { colors } from './themes/variables'
 
 export default StyleSheet.create({
-    loader: {
-      display: 'flex',
-      flex: 1,
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
     main: {
       backgroundColor: colors.SKY,
       display: 'flex',
-      flex: 1,
       alignItems: 'center',
       justifyContent: 'center',
+      paddingBottom: 50,
+    },
+    loader: {
+      marginTop: 200,
     },
     image: {
       width: 200,
       height: 200,
-      marginBottom: 20,
-      marginTop: -100,
+      marginBottom: 5,
+      marginTop: -43,
       alignSelf: 'center',
     },
     form:  {

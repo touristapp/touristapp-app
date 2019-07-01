@@ -3,28 +3,29 @@ import { colors } from './themes/variables'
 
 export default StyleSheet.create({
     mainContainer: {
-        display: 'flex',
-        flex: 1,
-        backgroundColor: colors.WHITE,
-        justifyContent: 'center'
+      backgroundColor: colors.SKY,
+      display: 'flex',
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
     },
-    banner: {
-        height: 50,
-        backgroundColor: colors.COAL,
-        justifyContent: 'center'
-    },
-    bannerText: {
-        color: colors.WHITE,
-        textAlign: 'center',
-        fontSize: 20
+    infoContainer: {
+      display: 'flex',
+      flexDirection:'column',
+      justifyContent: 'center',
+      backgroundColor: '#FFF',
+      width: 340,
+      marginBottom: 20,
+      borderRadius: 5,
+      marginTop: 20,
     },
     imageContainer: {
+        marginTop: 20,
         justifyContent: 'center',
-        paddingBottom: 20
     },
     profileImage: {
-        width: 150, 
-        height: 150, 
+        width: 150,
+        height: 150,
         alignSelf: 'center',
         borderRadius: 4,
         borderWidth: 1,
@@ -41,34 +42,49 @@ export default StyleSheet.create({
         textAlign: 'center'
     },
     carContainer: {
+        width: 300,
         borderRadius: 4,
         borderWidth: 1,
+        alignSelf: 'center',
         borderColor: colors.COAL,
         backgroundColor: colors.CREAM,
         marginTop: 20,
-        marginLeft: 50,
-        marginRight: 50,
-        padding: 5
+        paddingVertical: 10,
     },
     subCarContainer: {
         display: 'flex',
         flexDirection: 'row',
-        marginTop: 20,
-        marginBottom: 20,
-        marginLeft: 10,
-        marginRight: 10,
-        justifyContent: 'space-between'
+        paddingVertical: 10,
+        justifyContent: 'space-around',
+        paddingHorizontal: 10,
     },
-    edit: {
+    editInfos: {
         alignSelf: 'center',
-        marginTop: 20,
-        marginBottom: 10,
-        padding: 4,
-        backgroundColor: colors.SKY,
+        width: 300,
+        marginTop: 10,
+        backgroundColor: colors.SEA,
+        padding: 8,
+    },
+    editVehicle: {
+        width: 300,
+        alignSelf: 'center',
+        marginTop: 10,
+        backgroundColor: colors.COAL,
+        padding: 8,
+    },
+    editPassword: {
+        width: 300,
+        alignSelf: 'center',
+        marginTop: 10,
+        backgroundColor: colors.BLOOD,
+        padding: 8,
     },
     disconnect: {
-        alignSelf: 'center',
-        backgroundColor: colors.BLOOD,
-        padding: 4,
+      width: 300,
+      alignSelf: 'center',
+      marginTop:10,
+      marginBottom: 20,
+      backgroundColor: colors.FIRE,
+      padding: 8,
     }
 });

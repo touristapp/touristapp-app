@@ -17,7 +17,7 @@ import { View } from 'react-native';
 export default function Account() {
     const [{ isLogged, SearchScreen }, dispatch] = useStateValue();
 
-    renderSwitch = (SearchScreen) => {
+    const renderSwitch = (SearchScreen) => {
         switch(SearchScreen) {
             case 'createRoute':
                 return <CreateRoute/>
@@ -32,12 +32,15 @@ export default function Account() {
 
     return (
         <View style={Style.mainContainer}>
-            {isLogged && (
-                this.renderSwitch(SearchScreen)
-            )}
-            {!isLogged && (
-                <Disconnected/>
-            )}
+              {renderSwitch(SearchScreen)}
         </View>
     )
+    /*
+    {isLogged && (
+        this.renderSwitch(SearchScreen)
+    )}
+    {!isLogged && (
+        <Disconnected/>
+    )}
+    */
 }

@@ -1,32 +1,32 @@
 // React imports
 import React, { useState, useEffect } from 'react';
 
-// Style imports 
+// Style imports
 import { colors } from '../../styles/themes/variables';
 
 // Screens imports
 import Home from '../../screens/Home';
 import Search from '../../screens/Search';
 import Account from '../../screens/Account';
-import Login from '../../screens/Auth/Login';
+import Auth from '../../screens/Auth';
 
 // Hooks imports
 import { useStateValue } from '../../hooks/state';
 
 // Components imports
-import { BottomNavigation } from 'react-native-paper';
+import { BottomNavigation, Snackbar, ActivityIndicator } from 'react-native-paper';
 
 // Routes
 const HomeRoute = () => <Home/>;
 const SearchRoute = () => <Search/>;
 const AccountRoute = () => {
-	// Get the login state defined in App.js
-	const [{isLogged}] = useStateValue();
-    if (isLogged) {
-        return <Account/>
-    } else {
-        return <Login/>
-    }
+	 // Get the login state defined in App.js
+   const [{isLogged}] = useStateValue();
+   if (isLogged) {
+     return <Account/>
+   } else {
+     return <Auth/>
+   }
 };
 
 export default function Navigation() {
@@ -36,25 +36,45 @@ export default function Navigation() {
 		{ key: 'search', title: 'Recherches', icon: 'search' },
 		{ key: 'account', title: 'Mon compte', icon: 'account-circle' }
     ]);
+		const [{ showSnack, snackContent, isLoading }, dispatch] = useStateValue();
 
     useEffect(
-		()=> {
-			//console.log('<<<< index changed >>>>');
-		}, [index]
+			()=> {
+				//console.log('<<<< index changed >>>>');
+			}, [index]
     )
 
     const _handleIndexChange = index => setIndex(index);
-
     const _renderScene = BottomNavigation.SceneMap({ home: HomeRoute, search: SearchRoute, account: AccountRoute, })
 
     return (
-		<BottomNavigation
-			navigationState={{ index, routes }}
-			onIndexChange={_handleIndexChange}
-			renderScene={_renderScene}
-			barStyle={{backgroundColor: colors.COAL}}
-			activeColor={colors.SKY}
-			inactiveColor={colors.WHITE}
-		/>
+        <>
+          <BottomNavigation
+            navigationState={{ index, routes }}
+            onIndexChange={_handleIndexChange}
+            renderScene={_renderScene}
+            barStyle={{backgroundColor: colors.COAL}}
+            activeColor={colors.SKY}
+            inactiveColor={colors.WHITE}
+          />
+          <Snackbar
+          visible={showSnack}
+          onDismiss={() => dispatch({
+              type: 'showSnackbar',
+              showSnack: false
+          })}
+          action={{
+            label: 'Close',
+            onPress: () => {
+              // onPress on the snackbar
+            }
+          }}
+          duration={300}
+          style={snackContent.style}
+          theme={snackContent.theme}
+          >
+          {snackContent.message}
+          </Snackbar>
+        </>
     );
 }

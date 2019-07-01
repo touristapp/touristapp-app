@@ -1,68 +1,142 @@
 // React imports
-import React from 'react';
+import React, { useEffect } from 'react';
 
 // Styles imports
 import Style from '../../../styles/viewAccount';
+import { colors } from '../../../styles/themes/variables';
 
 // Hooks imports
 import { useStateValue } from '../../../hooks/state';
+import { Fetch, Storage, Snack } from '../../../tools';
 
 // Components imorts
-import { View, Text, Image } from 'react-native';
-import { Button } from 'react-native-paper';
+import Banner from '../../../components/Banner'
+import { View, Text, Image, ScrollView } from 'react-native';
+import { Button, ActivityIndicator } from 'react-native-paper';
 
 export default function ViewAccount() {
-    const [{}, dispatch ] = useStateValue();
-    
+    const [{showSnack, isLoading, currentUser, userVehicle}, dispatch ] = useStateValue();
+
+    useEffect(() => {
+        Promise.resolve(Storage.retrieve('token'))
+          .then( async (token) => {
+            dispatch({type:'isLoading',wait:true});
+            if (token!==undefined && token!==null) {
+              dispatch({type: 'isLoading',wait: true});
+              const url = "https://touristapi.herokuapp.com/api/auth/authorize"
+              const body = JSON.stringify({token: token})
+              const response = await Fetch.post(url, body);
+              const json = Promise.resolve(response.json()).then(async res =>{
+                dispatch({type:'isLoading',wait:true});
+                if(response.status === 200) {
+                  const user = await Fetch.get(
+                    `https://touristapi.herokuapp.com/api/user/${res.data.decoded.id}`,
+                    token
+                  );
+                  const jsonUser = Promise.resolve(user.json()).then(async rs =>{
+                    dispatch({type:'isLoading',wait:true});
+                    if(response.status === 200) {
+                      const vehicle = await Fetch.get(
+                        `https://touristapi.herokuapp.com/api/vehicle/${rs.data.VehicleId}`,
+                        token
+                      );
+                      const jsonVehicle = Promise.resolve(vehicle.json()).then(async r =>{
+                        dispatch({type: 'isLoading',wait: false});
+                        dispatch({type: 'currentUser',define: rs.data})
+                        dispatch({type: 'userVehicle',setVehicle: r.data})
+                        console.log();
+                      })
+                    }
+                  });
+                }
+              });
+            }
+          }).catch(err=>dispatch({type: 'isLoading',wait:false}));
+    }, []);
+
+    const logout = () => {
+      dispatch({
+          type: 'isLogged',
+          status: false
+      });
+      Snack.warning('Logged out !',showSnack,dispatch);
+      Storage.clear();
+    }
+
     return (
-        <>
-            <View style={Style.banner}>
-                <Text style={Style.bannerText}>Mon compte</Text>
-            </View>
-            <View style={Style.mainContainer}>                    
+      <>
+        <Banner message="Mon compte"/>
+        <ScrollView contentContainerStyle={Style.mainContainer}>
+          {isLoading && currentUser.picture==='' &&
+            <ActivityIndicator size='large' animating={true} color={colors.SEA} />
+          }
+          {!isLoading &&
+            <>
+            <View style={Style.infoContainer}>
                 <View style={Style.imageContainer}>
-                    <Image
-                        style={Style.profileImage}
-                        source={{uri: 'https://avatars1.githubusercontent.com/u/1349186?s=180&v=4'}}
-                    />
+                  <Image
+                      style={Style.profileImage}
+                      source={{uri: currentUser.picture}}
+                  />
                 </View>
                 <View>
-                    <Text style={Style.boldCenteredText}>Majdi</Text>
-                    <Text style={Style.email}>majdi.toumi@mhirba.com</Text>
+                    <Text style={Style.boldCenteredText}>{currentUser.name}</Text>
+                    <Text style={Style.email}>{currentUser.email}</Text>
                 </View>
                 <View style={Style.carContainer}>
-                    <Text style={Style.boldCenteredText}>Ma voiture</Text>
+                    <Text style={Style.boldCenteredText}>Vehicle{currentUser.VehicleId}</Text>
                     <View style={Style.subCarContainer}>
                         <Text>
-                            7L/100km
+                            Consommation
                         </Text>
                         <Text>
-                            Diesel
+                            Carburant
                         </Text>
                     </View>
                 </View>
-                <Button 
-                    style={Style.edit} 
-                    icon="edit" 
-                    mode="contained" 
+                <Button
+                    style={Style.editInfos}
+                    icon="edit"
+                    mode="contained"
                     onPress={() => dispatch({
                         type: 'switchScreen',
                         tab: 'AccountScreen',
                         screen: 'editAccount'
                     })}>
-                    Editer mes informations
+                    Modifier mes informations
                 </Button>
-                <Button 
-                    style={Style.disconnect} 
-                    icon="exit-to-app" 
-                    mode="contained" 
+                <Button
+                    style={Style.editVehicle}
+                    icon="directions-car"
+                    mode="contained"
                     onPress={() => dispatch({
-                        type: 'isLogged',
-                        status: false
+                        type: 'switchScreen',
+                        tab: 'AccountScreen',
+                        screen: 'editAccount'
                     })}>
+                    Modifier mon véhicule
+                </Button>
+                <Button
+                    style={Style.editPassword}
+                    icon="lock"
+                    mode="contained"
+                    onPress={() => dispatch({
+                        type: 'switchScreen',
+                        tab: 'AccountScreen',
+                        screen: 'editAccount'
+                    })}>
+                    Modifier mon mot de passe
+                </Button>
+                <Button
+                    style={Style.disconnect}
+                    icon="exit-to-app"
+                    mode="contained"
+                    onPress={logout}>
                     Déconnexion
                 </Button>
             </View>
-        </>
+            </>}
+        </ScrollView>
+      </>
     )
 }

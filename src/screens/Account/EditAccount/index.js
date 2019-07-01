@@ -7,18 +7,19 @@ import { colors } from '../../../styles/themes/variables';
 
 // Hooks imports
 import { useStateValue } from '../../../hooks/state';
+import { Fetch, Snack, Storage } from '../../../tools';
 
 // Components imports
+import Banner from '../../../components/Banner'
 import { View, Text, Image } from 'react-native';
 import { Button, TextInput } from 'react-native-paper';
 
 export default function EditAccount() {
-    const [{}, dispatch ] = useStateValue();
+  const [{showSnack}, dispatch ] = useStateValue();
+
 	return (
 		<>
-			<View style={Style.banner}>
-				<Text style={Style.bannerText}>Modifier mes informations</Text>
-			</View>
+      <Banner  message="Modifier nes informations"/>
 			<View style={Style.mainContainer}>
 				<View style={Style.imageContainer}>
 					<Image
@@ -40,20 +41,23 @@ export default function EditAccount() {
 					style={Style.input}
 					dense={true}
 				/>
-				<Button 
-					style={Style.saveContainer} 
-					icon="check" 
-					mode="contained" 
-					onPress={() => dispatch({
-						type: 'switchScreen',
-						tab: 'AccountScreen',
-						screen: 'viewAccount'
-					})}>
+				<Button
+					style={Style.saveContainer}
+					icon="check"
+					mode="contained"
+					onPress={() => {
+            Snack.success('Modifications enregistrées !',showSnack,dispatch);
+            dispatch({
+  						type: 'switchScreen',
+  						tab: 'AccountScreen',
+  						screen: 'viewAccount'
+            });
+          }}>
 					Valider
 				</Button>
-				<Button 
-					style={Style.deleteContainer} 
-					icon="delete-forever" 
+				<Button
+					style={Style.deleteContainer}
+					icon="delete-forever"
 					mode="contained">
 					Supprimer mon compte
 				</Button>
