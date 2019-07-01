@@ -71,27 +71,35 @@ export default function Register() {
   			<View style={Style.form}>
   				<Title style={Style.title}>touristapp</Title>
   				<TextInput
-  					style={Style.input}
+            style={Style.input}
+            autoCapitalize = 'none'
+            autoCorrect = {false}
   					mode='outlined'
   					label='Nickname'
   					{...nickname}
   				/>
           <TextInput
   					style={Style.input}
-  					mode='outlined'
+            autoCapitalize = 'none'
+            autoCorrect = {false}
+            mode='outlined'
   					label='Email'
   					{...email}
   				/>
           <TextInput
   					style={Style.input}
-  					mode='outlined'
+            autoCapitalize = 'none'
+            autoCorrect = {false}
+            mode='outlined'
   					label='Password'
             secureTextEntry={true}
   					{...password}
   				/>
   				<TextInput
   					style={Style.input}
-  					mode='outlined'
+            autoCapitalize = 'none'
+            autoCorrect = {false}
+            mode='outlined'
   					label='Password confirmation'
             secureTextEntry={true}
   					{...passwordConfirmation}

@@ -70,7 +70,9 @@ export default function Login() {
           			<View style={Style.form}>
           				<Title style={Style.title}>touristapp</Title>
           				<TextInput
-          					style={Style.input}
+                    style={Style.input}
+                    autoCapitalize = 'none'
+                    autoCorrect = {false}
           					mode='outlined'
           					label='Email'
           					{...email}
@@ -78,7 +80,9 @@ export default function Login() {
           				<TextInput
           					style={Style.input}
           					mode='outlined'
-          					label='Password'
+                    label='Password'
+                    autoCapitalize = 'none'
+                    autoCorrect = {false}
                     secureTextEntry={true}
           					{...password}
           				/>
