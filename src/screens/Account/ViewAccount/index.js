@@ -43,8 +43,8 @@ export default function ViewAccount() {
                       const jsonVehicle = Promise.resolve(vehicle.json()).then(async r =>{
                         dispatch({type: 'isLoading',wait: false});
                         dispatch({type: 'currentUser',define: rs.data})
-                        dispatch({type: 'userVehicle',setVehicle: r.data})
-                        console.log();
+                        if (r!==null) dispatch({type: 'userVehicle',setVehicle: r.data})
+                        console.log(r);
                       })
                     }
                   });
@@ -68,9 +68,9 @@ export default function ViewAccount() {
         <Banner message="Mon compte"/>
         <ScrollView contentContainerStyle={Style.mainContainer}>
           {isLoading && currentUser.picture==='' &&
-            <ActivityIndicator size='large' animating={true} color={colors.SEA} />
+            <ActivityIndicator size='large' animating={true} color={colors.SEA} style={{marginVertical: 100}}/>
           }
-          {!isLoading &&
+          {!isLoading && currentUser.picture!=='' &&
             <>
             <View style={Style.infoContainer}>
                 <View style={Style.imageContainer}>
@@ -78,6 +78,9 @@ export default function ViewAccount() {
                       style={Style.profileImage}
                       source={{uri: currentUser.picture}}
                   />
+                  <Button icon="add-a-photo" mode="contained" style={Style.buttonPhoto} onPress={() => console.log('Pressed')}>
+                    Modifier
+                  </Button>
                 </View>
                 <View>
                     <Text style={Style.boldCenteredText}>{currentUser.name}</Text>
@@ -101,7 +104,7 @@ export default function ViewAccount() {
                     onPress={() => dispatch({
                         type: 'switchScreen',
                         tab: 'AccountScreen',
-                        screen: 'editAccount'
+                        screen: 'editInfos'
                     })}>
                     Modifier mes informations
                 </Button>
@@ -112,7 +115,7 @@ export default function ViewAccount() {
                     onPress={() => dispatch({
                         type: 'switchScreen',
                         tab: 'AccountScreen',
-                        screen: 'editAccount'
+                        screen: 'editVehicle'
                     })}>
                     Modifier mon véhicule
                 </Button>
@@ -123,7 +126,7 @@ export default function ViewAccount() {
                     onPress={() => dispatch({
                         type: 'switchScreen',
                         tab: 'AccountScreen',
-                        screen: 'editAccount'
+                        screen: 'editPassword'
                     })}>
                     Modifier mon mot de passe
                 </Button>

@@ -28,8 +28,6 @@ import RadioForm, {
 } from "react-native-simple-radio-button";
 
 export default function CreateRoute() {
-  const depart = useInput();
-  const arrivee = useInput();
   const [index, setIndex] = useState(0);
   const transports = [
     { label: "Voiture", value: 0 },
@@ -47,14 +45,12 @@ export default function CreateRoute() {
   fetchData = async () => {
     //alert('Fetching!')
     alert(
-      `Fetching data from ${depart.value} to ${arrivee.value} using ${
-        ENV.googleMapsApiKey
-      }`
+      `Fetching data from ${addressDescDepart} to ${addressDescArrivee} }`
     );
     const data = await fetch(
       `https://maps.googleapis.com/maps/api/directions/json?origin=${
-        depart.value
-      }&destination=${arrivee.value}&key=${ENV.googleMapsApiKey}`,
+        addressDescDepart
+      }&destination=${addressDescArrivee}&key=${ENV.googleMapsApiKey}`,
       {
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
@@ -221,7 +217,7 @@ export default function CreateRoute() {
               // available options: https://developers.google.com/places/web-service/autocomplete
               key: ENV.googleMapsApiKey,
               language: "fr", // language of the results
-              types: "address" // default: 'geocode'
+              types: '(cities)' // default: 'geocode'
             }}
             styles={{
               textInputContainer: {
@@ -305,7 +301,7 @@ export default function CreateRoute() {
               // available options: https://developers.google.com/places/web-service/autocomplete
               key: ENV.googleMapsApiKey,
               language: "fr", // language of the results
-              types: "address" // default: 'geocode'
+              types: '(cities)' // default: 'geocode'
             }}
             styles={{
               textInputContainer: {

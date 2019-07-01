@@ -58,6 +58,11 @@ const App = () => {
 			return ({
 				...state,
 				currentUser: action.define
+			});
+		case 'userVehicle':
+			return ({
+				...state,
+				userVehicle: action.setVehicle
 			})
 		default:
 			return state;
