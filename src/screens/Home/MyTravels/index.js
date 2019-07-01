@@ -6,7 +6,7 @@ import Style from '../../../styles/myTravels';
 
 // Components imports
 import { View, Text } from 'react-native';
-import Travel from '../../../components/myTravel'
+import Travel from '../../../components/travel'
 
 export default function MyTravels() {  
     return (
