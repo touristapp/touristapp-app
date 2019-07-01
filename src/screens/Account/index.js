@@ -6,7 +6,9 @@ import Style from '../../styles/account';
 
 // Screens imports
 import ViewAccount from './ViewAccount';
-import EditAccount from './EditAccount';
+import EditInfos from './EditInfos';
+import EditVehicle from './EditVehicle';
+import EditPassword from './EditPassword';
 
 // Hooks imports
 import { useStateValue } from '../../hooks/state'
@@ -21,8 +23,12 @@ export default function Account() {
         switch(AccountScreen) {
             case 'viewAccount':
                 return <ViewAccount/>
-            case 'editAccount':
-                return <EditAccount/>
+            case 'editInfos':
+                return <EditInfos/>
+            case 'editVehicle':
+                return <EditVehicle/>
+            case 'editPassword':
+                return <EditPassword/>
             default:
                 dispatch({
                     type: 'switchScreen',

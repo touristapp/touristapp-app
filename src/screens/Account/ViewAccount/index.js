@@ -18,6 +18,7 @@ export default function ViewAccount() {
     const [{showSnack, isLoading, currentUser, userVehicle}, dispatch ] = useStateValue();
 
     useEffect(() => {
+      if(currentUser.id===null) {
         Promise.resolve(Storage.retrieve('token'))
           .then( async (token) => {
             dispatch({type:'isLoading',wait:true});
@@ -44,7 +45,6 @@ export default function ViewAccount() {
                         dispatch({type: 'isLoading',wait: false});
                         dispatch({type: 'currentUser',define: rs.data})
                         if (r!==null) dispatch({type: 'userVehicle',setVehicle: r.data})
-                        console.log(r);
                       })
                     }
                   });
@@ -52,6 +52,7 @@ export default function ViewAccount() {
               });
             }
           }).catch(err=>dispatch({type: 'isLoading',wait:false}));
+        }
     }, []);
 
     const logout = () => {
@@ -87,13 +88,13 @@ export default function ViewAccount() {
                     <Text style={Style.email}>{currentUser.email}</Text>
                 </View>
                 <View style={Style.carContainer}>
-                    <Text style={Style.boldCenteredText}>Vehicle{currentUser.VehicleId}</Text>
+                    <Text style={Style.boldCenteredText}>{userVehicle.name}</Text>
                     <View style={Style.subCarContainer}>
                         <Text>
-                            Consommation
+                            Consommation : {userVehicle.conso}
                         </Text>
                         <Text>
-                            Carburant
+                            FuelId : {userVehicle.FuelId}
                         </Text>
                     </View>
                 </View>
