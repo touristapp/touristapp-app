@@ -28,13 +28,17 @@ export default function ViewHome() {
                         <Button icon="flight-takeoff">Mes voyages</Button>
                     </Card.Actions>
                 </Card>
-                <Card style={Style.card} elevation={5}>
+                <Card style={Style.card} elevation={5} onPress={() => dispatch({
+      						type: 'switchScreen',
+      						tab: 'HomeScreen',
+      						screen: 'mySearches'
+      					})}>
                     <Card.Cover source={require('../../../assets/searchs.jpg')} style={Style.cardCover} />
                     <Card.Actions style={Style.cardAction}>
                         <Button icon="history">Mes recherches</Button>
                     </Card.Actions>
                 </Card>
-                <Card style={Style.card} elevation={5}onPress={() => dispatch({
+                <Card style={Style.card} elevation={5} onPress={() => dispatch({
       						type: 'switchScreen',
       						tab: 'HomeScreen',
       						screen: 'myStats'

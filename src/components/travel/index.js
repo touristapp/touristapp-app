@@ -1,11 +1,11 @@
 import React from 'react';
 
-import Style from '../../styles/myTravels';
+import Style from '../../styles/travel';
 
 import { View, Text, Image, TouchableOpacity, Alert } from 'react-native';
 import { Title } from 'react-native-paper';
 
-const Travel = ({from, to, distance, carbonPrint}) => {
+const Travel = ({from, to, distance, carbonPrint, done = false}) => {
     return (
         <View style={Style.form}>
             <Title style={Style.title}>
@@ -25,6 +25,12 @@ const Travel = ({from, to, distance, carbonPrint}) => {
                     </Text>
                 </View>
             </View>
+            {!done && (
+                <Image
+                    style={Style.doneImage}
+                    source={require('../../assets/not-done.png')}
+                />
+            )}
             <TouchableOpacity style={Style.share} onPress={() => Alert.alert('Oops', 'Partager un voyage est une fonctionnalité qui arrive bientôt :)')}>
                 <View>
                     <Image
