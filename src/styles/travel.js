@@ -37,5 +37,12 @@ export default StyleSheet.create({
     shareImage: {
         width: 25, 
         height: 25,
+    },
+    doneImage: {
+        position: 'absolute',
+        bottom: -2,
+        right: 30,
+        width: 40, 
+        height: 40,
     }
 });
