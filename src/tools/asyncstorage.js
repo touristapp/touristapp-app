@@ -14,9 +14,11 @@ export default Storage = {
 
     retrieve: async (itemName) => {
       try {
-        return await AsyncStorage.getItem(itemName);
-      } catch (error) {
-        return false;
+        let item = await AsyncStorage.getItem(itemName);
+        return item;
+      } catch (err) {
+        alert('Sorry, we could not save your data on this device.');
+        return err;
       }
     },
 
