@@ -45,10 +45,27 @@ export default StyleSheet.create({
         paddingTop: 20,
         paddingBottom: 30,
         height: 70,
-        flexDirection: "row",
-        justifyContent: "space-between",
         marginBottom: 5
 
     },
+
+    cancelButton: {
+        height: 46,
+        marginTop:5,
+        marginLeft: 5,
+        marginRight: 5,
+        backgroundColor: colors.FIRE,
+        padding: 5,
+    },
+
+    textDestination:{
+        marginLeft: 5,
+        fontSize: 15
+    },
+
+    textcancelButton: {
+        textAlign: 'center',
+         color: 'white'
+    }
     
 });

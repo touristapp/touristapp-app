@@ -77,36 +77,34 @@ export default function CreateRoute() {
 
           <View >
             <View style={Style.textInputContainer}>
-              <Text style={{marginLeft: 5}}>Départ :</Text>
               <TouchableOpacity
                 activeOpacity= {0}
                 onPress={() => {
                   setModalDepart(true);
                 }}
               >
-                <Text style={{marginRight: 5}}>
+                <Text style={Style.textDestination}>
                   {" "}
                   {addressDescDepart
                     ? addressDescDepart
-                    : "Ajouter destination"}{" "}
+                    : "Ajouter départ"}{" "}
                 </Text>
               </TouchableOpacity>
             </View>
 
 
             <View style={Style.textInputContainer}>
-              <Text style={{marginLeft: 5}}>Arrivée :</Text>
               <TouchableOpacity
                 activeOpacity= {0}
                 onPress={() => {
                   setModalArrive(true);
                 }}
               >
-                <Text style={{marginRight: 5}}>
+                <Text style={Style.textDestination}>
                   {" "}
                   {addressDescArrivee
                     ? addressDescArrivee
-                    : "Ajouter destination"}{" "}
+                    : "Ajouter arrivée"}{" "}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -173,6 +171,7 @@ export default function CreateRoute() {
           <View style={{ flex: 1 }}>
             <GooglePlacesAutocomplete
               placeholder="Départ"
+              marginTop= {10}
               minLength={2} // minimum length of text to search
               autoFocus={true}
               returnKeyType={"search"} // Can be left out for default return key https://facebook.github.io/react-native/docs/textinput.html#returnkeytype
@@ -196,7 +195,8 @@ export default function CreateRoute() {
 
               styles={{
                 textInputContainer: {
-                  width: "100%"
+                  marginTop: 10,
+                  marginLeft: 5,
                 },
                 description: {
                   fontWeight: "bold"
@@ -205,7 +205,7 @@ export default function CreateRoute() {
                   color: "#1faadb"
                 },
                 textInput: {
-                  flex: 3
+                  flex: 1
                 },
                 listView: {
                   flex: 1
@@ -237,8 +237,10 @@ export default function CreateRoute() {
               debounce={200} // debounce the requests in ms. Set to 0 to remove debounce. By default 0ms.
               //renderLeftButton={()  => <Text>renderLeftButton</Text>}
               renderRightButton={() => (
-                <Button block info onPress={() => setModalDepart(false)}>
-                  <Text style={Style.text2}>Cancel</Text>
+                <Button block info onPress={() => setModalDepart(false)}
+                style={Style.cancelButton}
+                >
+                  <Text style={Style.textcancelButton}>Cancel</Text>
                 </Button>
               )}
             />
@@ -280,7 +282,8 @@ export default function CreateRoute() {
               }}
               styles={{
                 textInputContainer: {
-                  width: "100%"
+                  marginTop: 10,
+                  marginLeft: 5,
                 },
                 description: {
                   fontWeight: "bold"
@@ -321,8 +324,10 @@ export default function CreateRoute() {
               debounce={200} // debounce the requests in ms. Set to 0 to remove debounce. By default 0ms.
               //renderLeftButton={()  => <Text>renderLeftButton</Text>}
               renderRightButton={() => (
-                <Button block info onPress={() => setModalArrive(false)}>
-                  <Text style={Style.text2}>Cancel</Text>
+                <Button block info onPress={() => setModalArrive(false)} 
+                style={Style.cancelButton}
+                >
+                  <Text style={Style.textcancelButton}>Cancel</Text>
                 </Button>
               )}
             />
