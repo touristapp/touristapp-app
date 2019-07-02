@@ -15,53 +15,59 @@ import { View, Text, Image, ScrollView } from 'react-native';
 import { Button, ActivityIndicator } from 'react-native-paper';
 
 export default function ViewAccount() {
-    const [{showSnack, isLoading, currentUser, userVehicle}, dispatch ] = useStateValue();
+    const [{showSnack, isLoading, token, currentUser, userVehicle, vehicleFuel}, dispatch ] = useStateValue();
 
-    useEffect(() => {
-      if(currentUser.id===null) {
-        Promise.resolve(Storage.retrieve('token'))
-          .then( async (token) => {
-            dispatch({type:'isLoading',wait:true});
-            if (token!==undefined && token!==null) {
-              dispatch({type: 'isLoading',wait: true});
-              const url = "https://touristapi.herokuapp.com/api/auth/authorize"
-              const body = JSON.stringify({token: token})
-              const response = await Fetch.post(url, body);
-              const json = Promise.resolve(response.json()).then(async res =>{
-                dispatch({type:'isLoading',wait:true});
-                if(response.status === 200) {
-                  const user = await Fetch.get(
-                    `https://touristapi.herokuapp.com/api/user/${res.data.decoded.id}`,
-                    token
-                  );
-                  const jsonUser = Promise.resolve(user.json()).then(async rs =>{
-                    dispatch({type:'isLoading',wait:true});
-                    if(response.status === 200) {
-                      const vehicle = await Fetch.get(
-                        `https://touristapi.herokuapp.com/api/vehicle/${rs.data.VehicleId}`,
-                        token
-                      );
-                      const jsonVehicle = Promise.resolve(vehicle.json()).then(async r =>{
-                        dispatch({type: 'isLoading',wait: false});
-                        dispatch({type: 'currentUser',define: rs.data})
-                        if (r!==null) dispatch({type: 'userVehicle',setVehicle: r.data})
-                      })
-                    }
-                  });
-                }
-              });
-            }
-          }).catch(err=>dispatch({type: 'isLoading',wait:false}));
-        }
-    }, []);
+    /**
+    * @ AUTHORIZE USER BY CHECKING TOKEN
+    */
+    useEffect(()=> {
+      if (token==='') {
+        Storage.retrieve('token').then( result => {
+          Fetch.authorizeUser(result).then( auth =>
+            dispatch({type: 'token', retrieve: { token: result, data: auth.data } }));
+        });
+      }
+    },[])
 
+    /**
+    * @ FETCH USER DATA
+    */
+    useEffect(()=> {
+      if (token!=='' && currentUser.id===null) {
+        if (!isLoading) dispatch({type: 'isLoading', wait: true});
+        Fetch.getCurrentUser(token).then( user =>
+          dispatch({type: 'currentUser', define: user.data}) );
+      }
+    },[token])
+
+    /**
+    * @ FETCH USER VEHICLE
+    */
+    useEffect(()=> {
+      if (token!=='' && userVehicle.id===null) {
+        Fetch.getUserVehicle(currentUser.VehicleId,token).then( vehicle =>
+          dispatch({type: 'userVehicle', setVehicle: vehicle.data}) );
+      }
+    },[currentUser])
+
+    /**
+    * @ FETCH VEHICLE FUEL
+    */
+    useEffect(()=> {
+      if (token!=='' && vehicleFuel.id===null) {
+        Fetch.getVehicleFuel(userVehicle.FuelId,token).then( user =>
+          dispatch({type: 'vehicleFuel', setFuel: user.data}) );
+        if (isLoading) dispatch({type: 'isLoading', wait: false});
+      }
+    },[userVehicle])
+
+    /**
+    * @ LOGOUT
+    */
     const logout = () => {
-      dispatch({
-          type: 'isLogged',
-          status: false
-      });
-      Snack.warning('Logged out !',showSnack,dispatch);
       Storage.clear();
+      Snack.warning('Logged out !',showSnack,dispatch);
+      dispatch({type: 'isLogged',status: false});
     }
 
     return (
@@ -91,10 +97,10 @@ export default function ViewAccount() {
                     <Text style={Style.boldCenteredText}>{userVehicle.name}</Text>
                     <View style={Style.subCarContainer}>
                         <Text>
-                            Consommation : {userVehicle.conso}
+                            Consommation : {userVehicle.conso}L/100
                         </Text>
                         <Text>
-                            FuelId : {userVehicle.FuelId}
+                            {vehicleFuel.name} ({vehicleFuel.carbonFootprint}T/an)
                         </Text>
                     </View>
                 </View>

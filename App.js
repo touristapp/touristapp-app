@@ -17,8 +17,10 @@ const App = () => {
 		isLogged: false,
 		isLoading: false,
 		showSnack: false,
+		token: '',
 		currentUser: {id:null,name:'',email:'',picture:'',role:'',state:'',updatedAt:'',createdAt:'',VehicleId:''},
 		userVehicle: {id:null,name:'',conso:'',FuelId:'',updatedAt:'',createdAt:''},
+		vehicleFuel: {id:null,name:'',carbonFootprint:'',updatedAt:'',createdAt:''},
 		snackContent: { style: {}, theme: {}, message: ''	},
 		AuthScreen: 'viewAuth',
 		AccountScreen: 'viewAccount',
@@ -33,6 +35,11 @@ const App = () => {
 			return ({
 				...state,
 				isLogged: action.status
+			});
+		case 'token':
+			return ({
+				...state,
+				token: action.retrieve
 			});
 		case 'switchScreen':
 			return({
@@ -63,6 +70,11 @@ const App = () => {
 			return ({
 				...state,
 				userVehicle: action.setVehicle
+			});
+		case 'vehicleFuel':
+			return ({
+				...state,
+				vehicleFuel: action.setFuel
 			})
 		default:
 			return state;
