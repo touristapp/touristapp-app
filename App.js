@@ -21,6 +21,7 @@ const App = () => {
 		currentUser: {id:null,name:'',email:'',picture:'',role:'',state:'',updatedAt:'',createdAt:'',VehicleId:''},
 		userVehicle: {id:null,name:'',conso:'',FuelId:'',updatedAt:'',createdAt:''},
 		vehicleFuel: {id:null,name:'',carbonFootprint:'',updatedAt:'',createdAt:''},
+		progress: 0,
 		snackContent: { style: {}, theme: {}, message: ''	},
 		AuthScreen: 'viewAuth',
 		AccountScreen: 'viewAccount',
@@ -61,6 +62,11 @@ const App = () => {
 				...state,
 				isLoading: action.wait
 			});
+		case 'progress':
+			return ({
+				...state,
+				progress: action.load
+			});
 		case 'currentUser':
 			return ({
 				...state,
@@ -84,7 +90,7 @@ const App = () => {
 	// Wrap the App inside the state Context
 	return (
 		<StateProvider initialState={initialState} reducer={reducer}>
-			<Navigation style={{backgroundColor: colors.SKY}}/>
+			<Navigation style={{backgroundColor: colors.SKY, fontFamily:'futur,OPTIMA'}}/>
 		</StateProvider>
 	);
 }

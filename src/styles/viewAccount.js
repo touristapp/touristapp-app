@@ -2,95 +2,102 @@ import { StyleSheet } from 'react-native'
 import { colors } from './themes/variables'
 
 export default StyleSheet.create({
-    mainContainer: {
-      backgroundColor: colors.SKY,
-      display: 'flex',
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-    infoContainer: {
-      display: 'flex',
-      flexDirection:'column',
-      justifyContent: 'center',
-      backgroundColor: '#FFF',
-      width: 340,
-      marginBottom: 20,
-      borderRadius: 5,
-      marginTop: 20,
-    },
-    imageContainer: {
-        marginTop: 20,
-        justifyContent: 'center',
-    },
-    buttonPhoto: {
-      width: 150,
-      backgroundColor: colors.CREAM,
-      alignSelf: 'center',
-      marginBottom:10,
-    },
-    profileImage: {
-        width: 150,
-        height: 150,
-        alignSelf: 'center',
-        borderRadius: 4,
-        borderWidth: 1,
-        borderColor: colors.COAL,
-    },
-    buttonText: {
+      header:{
+        borderBottomWidth: 2,
+        borderColor: colors.WHITE,
+        backgroundColor: colors.SEA,
+        shadowOffset:{  width: 50,  height: 50,  },
+        shadowColor: 'black',
+        shadowOpacity: 1.0,
+        height:160,
+      },
+      avatar: {
+        width: 130,
+        height: 130,
+        borderRadius: 63,
+        borderWidth: 2,
+        borderColor: colors.WHITE,
+        marginBottom:10,
+        alignSelf:'center',
+        position: 'absolute',
+        marginTop:90
+      },
+      name:{
+        fontSize:22,
+        fontFamily: 'Futura medium bt',
+        color:"#FFFFFF",
+        fontWeight:'600',
+      },
+      body:{
+        marginTop:40,
+      },
+      bodyContent: {
+        flex: 1,
+        alignItems: 'center',
+        display:'flex',
+        flexDirection:'column',
+        padding:30,
+      },
+      name:{
+        fontSize:28,
+        color: colors.COAL,
+        fontWeight: "600"
+      },
+      info:{
+        fontSize:20,
+        fontWeight: "500",
+        color: "#696969",
+        marginTop:10
+      },
+      description:{
+        fontSize:16,
+        color: "#696969",
+        marginTop:10,
         textAlign: 'center'
-    },
-    boldCenteredText: {
-        fontWeight: 'bold',
-        textAlign: 'center'
-    },
-    email: {
-        textAlign: 'center'
-    },
-    carContainer: {
-        width: 300,
-        borderRadius: 4,
-        borderWidth: 1,
-        alignSelf: 'center',
-        borderColor: colors.COAL,
-        backgroundColor: colors.CREAM,
-        marginTop: 20,
-        paddingVertical: 10,
-    },
-    subCarContainer: {
-        display: 'flex',
+      },
+      buttonContainer: {
+        marginTop:10,
+        height:45,
         flexDirection: 'row',
-        paddingVertical: 10,
-        justifyContent: 'space-around',
-        paddingHorizontal: 10,
-    },
-    editInfos: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginBottom:20,
+        width:250,
+        borderRadius:30,
+        backgroundColor: "#00BFFF",
+      },
+      editInfos: {
         alignSelf: 'center',
         width: 300,
         marginTop: 5,
         backgroundColor: colors.SEA,
         padding: 8,
-    },
-    editVehicle: {
+      },
+      datarow: {
+        backgroundColor:colors.WHITE,
+      },
+
+      editVehicle: {
+          width: 300,
+          alignSelf: 'center',
+          color: colors.COAL,
+          flex: 1,
+          marginTop: 5,
+          padding: 8,
+      },
+      editPassword: {
+          width: 300,
+          alignSelf: 'center',
+          marginTop: 5,
+          backgroundColor: colors.BLOOD,
+          padding: 8,
+      },
+      disconnect: {
         width: 300,
         alignSelf: 'center',
-        marginTop: 5,
-        backgroundColor: colors.COAL,
+        marginTop:5,
+        marginBottom: 20,
+        backgroundColor: colors.FIRE,
         padding: 8,
-    },
-    editPassword: {
-        width: 300,
-        alignSelf: 'center',
-        marginTop: 5,
-        backgroundColor: colors.BLOOD,
-        padding: 8,
-    },
-    disconnect: {
-      width: 300,
-      alignSelf: 'center',
-      marginTop:5,
-      marginBottom: 20,
-      backgroundColor: colors.FIRE,
-      padding: 8,
-    }
+      }
 });
