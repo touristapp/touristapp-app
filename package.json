@@ -6,6 +6,9 @@
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "test": "jest"
   },
+  "rnpm": {
+      "assets": ["./src/assets/fonts/"]
+  },
   "dependencies": {
     "@react-native-community/async-storage": "^1.5.0",
     "jwt-decode": "^2.2.0",

@@ -12,25 +12,20 @@ import Banner from '../../../components/Banner';
 export default function Login() {
     const email = useInput();
     const password = useInput();
-    const [{ isLogged, showSnack, isLoading }, dispatch] = useStateValue();
-
-    //dispatch({type: 'isLoading',wait: false});
+    const [{ isLogged, showSnack, isLoading, token, progress }, dispatch] = useStateValue();
 
     useEffect(()=>{
-      Promise.resolve(Storage.retrieve('token'))
-        .then( async (token) => {
-          if (token!==undefined && token!==null) {
+        Storage.retrieve('token').then( result => {
+          if (result!==undefined && result!==null) {
             dispatch({type: 'isLoading',wait: true});
-            const url = "https://touristapi.herokuapp.com/api/auth/authorize"
-            const body = JSON.stringify({token: token})
-            const response = await Fetch.post(url, body);
-            if(response.status === 200) {
-              dispatch({type: 'isLoading',wait: false});
-              dispatch({type: 'isLogged',status: true});
-            }
+            Fetch.authorizeUser(result).then( auth =>
+              dispatch({type:'token',retrieve:{token:result, data:auth.data} }));
+            dispatch({type: 'isLogged',status: true});
           }
         });
     })
+
+    useEffect(()=>dispatch({type: 'isLoading',wait: false}),[isLogged])
 
     const login = async () => {
         dispatch({type: 'isLoading',wait: true});
@@ -48,7 +43,6 @@ export default function Login() {
                 password: password.value,
                 token: responseJSON.meta.token
               });
-              dispatch({type: 'isLoading',wait: false});
               dispatch({type: 'isLogged',status: true});
           }
         } else {

@@ -11,6 +11,11 @@ export const colors = {
   GREEN: 'green',
 };
 
+export const fonts = {
+  TITLE: 'Futura',
+  TEXT: 'Optima'
+}
+
 const snackDefault = {
   margin: -2,
   paddingTop: 5,

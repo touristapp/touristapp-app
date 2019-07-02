@@ -1,67 +1,86 @@
-// React imports
 import React from 'react';
-
-// Styles imports
-import Style from '../../../styles/editAccount';
+import { View, Image } from 'react-native';
+import { Button, TextInput, DataTable, Portal, Dialog } from 'react-native-paper';
+import Style from '../../../styles/viewAccount';
 import { colors } from '../../../styles/themes/variables';
-
-// Hooks imports
 import { useStateValue } from '../../../hooks/state';
-import { Fetch, Snack, Storage } from '../../../tools';
 
-// Components imports
-import Banner from '../../../components/Banner'
-import { View, Text, Image } from 'react-native';
-import { Button, TextInput } from 'react-native-paper';
-
-export default function EditInfos() {
-  const [{showSnack}, dispatch ] = useStateValue();
-
-	return (
-		<>
-      <Banner  message="Modifier nes informations"/>
-			<View style={Style.mainContainer}>
-				<View style={Style.imageContainer}>
-					<Image
-						style={Style.profileImage}
-						source={{uri: 'https://avatars1.githubusercontent.com/u/1349186?s=180&v=4'}}
-					/>
-				</View>
-				<TextInput
-					selectionColor={colors.FIRE}
-					mode='outlined'
-					label='Nom'
-					style={Style.input}
-					dense={true}
-				/>
-				<TextInput
-					selectionColor={colors.FIRE}
-					mode='outlined'
-					label='Email'
-					style={Style.input}
-					dense={true}
-				/>
-				<Button
-					style={Style.saveContainer}
-					icon="check"
-					mode="contained"
-					onPress={() => {
-            Snack.success('Modifications enregistrées !',showSnack,dispatch);
-            dispatch({
-  						type: 'switchScreen',
-  						tab: 'AccountScreen',
-  						screen: 'viewAccount'
-            });
-          }}>
-					Valider
-				</Button>
-				<Button
-					style={Style.deleteContainer}
-					icon="delete-forever"
-					mode="contained">
-					Supprimer mon compte
-				</Button>
-			</View>
-		</>
-	)
+const EditInfos = () => {
+  const [{showSnack, currentUser, showDialog}, dispatch ] = useStateValue();
+    return (
+    <>
+      <DataTable.Header style={{backgroundColor:colors.CARROT, marginTop:20, borderTopLeftRadius:20, borderTopRightRadius:20}}>
+        <DataTable.Title style={{marginLeft:10}}>MES INFORMATIONS</DataTable.Title>
+      </DataTable.Header>
+      <DataTable.Row style={Style.datarow}>
+        <DataTable.Cell>Pseudo</DataTable.Cell>
+        <DataTable.Cell>{currentUser.name}</DataTable.Cell>
+      </DataTable.Row>
+      <DataTable.Row style={Style.datarow}>
+        <DataTable.Cell>Email</DataTable.Cell>
+        <DataTable.Cell>{currentUser.email}</DataTable.Cell>
+      </DataTable.Row>
+      <DataTable.Row style={Object.assign({borderBottomRightRadius:20},Style.datarow)}>
+          <Button style={Style.editVehicle} icon="person-pin" color={colors.SEA} mode="text" onPress={()=>dispatch({type:'showDialog',dialog:true})}>Modifier mes informations</Button>
+          <Portal>
+            <Dialog
+               visible={showDialog}
+               onDismiss={()=>dispatch({type:'showDialog',dialog:false})}>
+              <Dialog.Title>Modifier mes informations</Dialog.Title>
+                <Dialog.Content>
+                  <View style={Style.mainContainer}>
+            				<View style={Style.imageContainer}>
+            					<Image
+            						style={Style.profileImage}
+            						source={{uri: 'https://avatars1.githubusercontent.com/u/1349186?s=180&v=4'}}
+            					/>
+            				</View>
+            				<TextInput
+            					selectionColor={colors.FIRE}
+            					mode='outlined'
+            					label='Nom'
+                      value={currentUser.name}
+            					style={Style.input}
+            					dense={true}
+            				/>
+            				<TextInput
+            					selectionColor={colors.FIRE}
+            					mode='outlined'
+                      value={currentUser.email}
+            					label='Email'
+            					style={Style.input}
+            					dense={true}
+            				/>
+                  </View>
+                </Dialog.Content>
+              <Dialog.Actions>
+                <Button
+                  style={Style.deleteButton}
+                  icon="delete-forever"
+                  mode="text"
+                  >
+                  Supprimer mon compte
+                </Button>
+                <Button
+                  style={Style.saveButton}
+                  icon="check"
+                  mode="text"
+                  onPress={() => {
+                    dispatch({type:'showDialog',dialog:false})
+                    Snack.success('Modifications enregistrées !',showSnack,dispatch);
+                  }}>
+                  Valider
+                </Button>
+              </Dialog.Actions>
+            </Dialog>
+          </Portal>
+      </DataTable.Row>
+    </>
+    )
 }
+
+
+
+
+
+export default EditInfos;
