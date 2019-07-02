@@ -17,7 +17,7 @@ import {
   View,
   Text,
   Modal,
-  TouchableHighlight
+  TouchableOpacity
 } from "react-native";
 import { TextInput, Button } from "react-native-paper";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
@@ -77,36 +77,38 @@ export default function CreateRoute() {
 
           <View >
             <View style={Style.textInputContainer}>
-              <Text>Départ :</Text>
-              <TouchableHighlight
+              <Text style={{marginLeft: 5}}>Départ :</Text>
+              <TouchableOpacity
+                activeOpacity= {0}
                 onPress={() => {
                   setModalDepart(true);
                 }}
               >
-                <Text>
+                <Text style={{marginRight: 5}}>
                   {" "}
                   {addressDescDepart
                     ? addressDescDepart
                     : "Ajouter destination"}{" "}
                 </Text>
-              </TouchableHighlight>
+              </TouchableOpacity>
             </View>
 
 
             <View style={Style.textInputContainer}>
-              <Text>Arrivée :</Text>
-              <TouchableHighlight
+              <Text style={{marginLeft: 5}}>Arrivée :</Text>
+              <TouchableOpacity
+                activeOpacity= {0}
                 onPress={() => {
                   setModalArrive(true);
                 }}
               >
-                <Text>
+                <Text style={{marginRight: 5}}>
                   {" "}
                   {addressDescArrivee
                     ? addressDescArrivee
                     : "Ajouter destination"}{" "}
                 </Text>
-              </TouchableHighlight>
+              </TouchableOpacity>
             </View>
           </View>
 
