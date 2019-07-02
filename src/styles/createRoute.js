@@ -7,16 +7,14 @@ export default StyleSheet.create({
         backgroundColor: colors.SKY,
         justifyContent: 'center',
     },
-    banner: {
-        height: 50,
-        backgroundColor: colors.COAL,
-        justifyContent: 'center'
+
+    title: {
+      opacity: 0.6,
+      alignSelf: 'center',
+      fontWeight: 'bold',
+      fontSize: 25
     },
-    bannerText: {
-        color: colors.WHITE,
-        textAlign: 'center',
-        fontSize: 20
-    },
+
     form:  {
         backgroundColor: '#FFF',
         paddingHorizontal: 20,
@@ -44,14 +42,15 @@ export default StyleSheet.create({
         backgroundColor: "#DDE246",
     },
 
-    container: {
-        flex: 1,
-    },
-    
     textInputContainer: {
         backgroundColor: '#FFF',
         height: 70,
         flexDirection: 'row',
+        paddingTop: 15,
+        paddingBottom: 15,
+        paddingLeft: 20,
+        paddingRight: 20,
+        padding: 8
     },
     
     textInput: {
@@ -61,11 +60,10 @@ export default StyleSheet.create({
         borderWidth: 1,
         borderColor: 'grey',
         borderRadius: 5,
-        paddingTop: 4.5,
-        paddingBottom: 4.5,
-        paddingLeft: 10,
-        paddingRight: 10,
-        fontSize: 17,
+        paddingTop: 15,
+        paddingBottom: 15,
+        paddingLeft: 20,
+        paddingRight: 20,
         flex: 1
     },
 });
