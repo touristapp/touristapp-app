@@ -131,7 +131,7 @@ export default function CreateRoute() {
                   buttonSize={8}
                   buttonOuterSize={15}
                   buttonStyle={{}}
-                  buttonWrapStyle={{ marginVertical: 10 }}
+                  buttonWrapStyle={{ marginVertical: 10, marginRight: 5 }}
                 />
                 <RadioButtonLabel
                   obj={obj}
@@ -139,7 +139,7 @@ export default function CreateRoute() {
                   onPress={onPressRadio}
                   labelHorizontal={true}
                   labelStyle={{ fontSize: 16, color: colors.SEA }}
-                  labelWrapStyle={{ marginVertical: 10 }}
+                  labelWrapStyle={{ marginVertical: 5, marginRight: 20 }}
                 />
               </RadioButton>
             ))}
