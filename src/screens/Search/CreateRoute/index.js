@@ -110,7 +110,7 @@ export default function CreateRoute() {
             </View>
           </View>
 
-        </View>
+        
 
         <View>
           <RadioForm formHorizontal={true} animation={true}>
@@ -155,6 +155,7 @@ export default function CreateRoute() {
           >
             Rechercher
             </Button>
+            </View>
         </View>
 
         {/* MODAL DEPART */}

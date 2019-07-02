@@ -9,7 +9,7 @@ export default StyleSheet.create({
     },
 
     title: {
-      opacity: 0.6,
+      opacity: 0.9,
       alignSelf: 'center',
       fontWeight: 'bold',
       fontSize: 25
