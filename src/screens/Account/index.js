@@ -7,15 +7,13 @@ import { colors } from '../../styles/themes/variables';
 
 // Screens imports
 import ViewAccount from './ViewAccount';
-import EditInfos from './EditInfos';
-import EditVehicle from './EditVehicle';
-import EditPassword from './EditPassword';
 
 // Hooks imports
 import { useStateValue } from '../../hooks/state'
 
 // Components imports
 import { View } from 'react-native';
+import { ActivityIndicator } from 'react-native-paper';
 
 export default function Account() {
     const [{ isLogged, AccountScreen, isLoading, progress }, dispatch] = useStateValue();
@@ -26,12 +24,6 @@ export default function Account() {
         switch(AccountScreen) {
             case 'viewAccount':
                 return <ViewAccount/>
-            case 'editInfos':
-                return <EditInfos/>
-            case 'editVehicle':
-                return <EditVehicle/>
-            case 'editPassword':
-                return <EditPassword/>
             default:
                 dispatch({
                     type: 'switchScreen',
@@ -43,6 +35,9 @@ export default function Account() {
 
     return (
         <View style={Style.mainContainer}>
+          {!isLogged &&
+            <ActivityIndicator size='large' animating={true} color={colors.SEA} />
+          }
           {isLogged && (
             renderSwitch(AccountScreen)
           )}

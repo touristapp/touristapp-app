@@ -5,11 +5,15 @@ export default StyleSheet.create({
       header:{
         borderBottomWidth: 2,
         borderColor: colors.WHITE,
-        backgroundColor: colors.SEA,
+        /*backgroundColor: colors.SEA,*/
         shadowOffset:{  width: 50,  height: 50,  },
         shadowColor: 'black',
         shadowOpacity: 1.0,
         height:160,
+      },
+      headerImage: {
+        height: 160,
+        marginTop: -3,
       },
       avatar: {
         width: 130,
@@ -25,7 +29,7 @@ export default StyleSheet.create({
       name:{
         fontSize:22,
         fontFamily: 'Futura medium bt',
-        color:"#FFFFFF",
+        color: colors.CARROT,
         fontWeight:'600',
       },
       body:{

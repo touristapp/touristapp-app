@@ -12,15 +12,20 @@ import { Fetch, Storage, Snack } from '../../../tools';
 // Components imorts
 import Banner from '../../../components/Banner'
 import { View, Text, Image, ScrollView, StyleSheet } from 'react-native';
-import { Button, Caption, ProgressBar, DataTable } from 'react-native-paper';
+import { Button, Caption, Provider, ProgressBar, DataTable } from 'react-native-paper';
+import EditInfos from '../EditInfos';
+import EditVehicle from '../EditVehicle';
+import EditPassword from '../EditPassword';
 
 export default function ViewAccount() {
     const [{showSnack, isLoading, token, currentUser, userVehicle, vehicleFuel, progress}, dispatch ] = useStateValue();
 
     /**
+    * @token
     * @ AUTHORIZE USER BY CHECKING TOKEN
     */
     useEffect(()=> {
+      dispatch({type: 'progress', load: 0})
       dispatch({type: 'isLoading', wait: true});
       if (token==='') {
         Storage.retrieve('token').then( result => {
@@ -33,11 +38,7 @@ export default function ViewAccount() {
     },[])
 
     /**
-    * @ HANDLE PROGRESS BAR
-    */
-    useEffect(()=>dispatch({type:'progress',load:isLoading? progress+0.25 : 0}),[isLoading])
-
-    /**
+    * @currentUser
     * @ FETCH USER DATA
     */
     useEffect(()=> {
@@ -46,10 +47,10 @@ export default function ViewAccount() {
         Fetch.getCurrentUser(token).then( user =>
           dispatch({type: 'currentUser', define: user.data}) );
       }
-      dispatch({type: 'progress', load: progress+0.25})
     },[token])
 
     /**
+    * @userVehicle
     * @ FETCH USER VEHICLE
     */
     useEffect(()=> {
@@ -61,12 +62,13 @@ export default function ViewAccount() {
     },[currentUser])
 
     /**
+    * @vehicleFuel
     * @ FETCH VEHICLE FUEL
     */
     useEffect(()=> {
       if (token!=='' && vehicleFuel.id===null) {
-        Fetch.getVehicleFuel(userVehicle.FuelId,token).then( user => {
-          dispatch({type: 'vehicleFuel', setFuel: user.data});
+        Fetch.getVehicleFuel(userVehicle.FuelId,token).then( fuel => {
+          dispatch({type: 'vehicleFuel', setFuel: fuel.data});
           dispatch({type: 'isLoading', wait: false});
         });
       }
@@ -74,19 +76,26 @@ export default function ViewAccount() {
     },[userVehicle])
 
     /**
+    * @progress
+    * @ HANDLE PROGRESS BAR
+    */
+    useEffect(()=>dispatch({type:'progress',load:isLoading? progress+0.25 : 0}),[isLoading])
+
+    /**
+    * @isLogged
     * @ LOGOUT
     */
     const logout = () => {
       Storage.clear();
       Snack.warning('Logged out !',showSnack,dispatch);
-      dispatch({type: 'isLogged',status: false});
+      dispatch({type: 'resetState'});
     }
 
     return (
-      <>
+      <Provider>
         {isLoading && currentUser.picture!=='' &&
           <View style={{display:'flex',flex:1,justifyContent:'center',alignItems:'center'}}>
-            <Caption style={{color:colors.WHITE,fontSize:18,fontWeight:'bold'}}>Please wait, we prepare your account...</Caption>
+            <Caption style={{color:colors.WHITE,fontSize:18,fontWeight:'bold'}}>Récupération des données...</Caption>
             <ProgressBar progress={progress} color={colors.SEA} style={{width: 300, height:30, borderRadius: 10}}/>
           </View>
         }
@@ -94,30 +103,19 @@ export default function ViewAccount() {
           <>
             <Banner message="Mon compte"/>
             <ScrollView contentContainerStyle={Style.container}>
-                <View style={Style.header}></View>
+                <View style={Style.header}>
+                        <Image style={Style.headerImage} source={require('../../../assets/accountbg_small.png')} />
+                </View>
                 <Image style={Style.avatar} source={{uri: currentUser.picture}}/>
                 <View style={Style.body}>
                   <View style={Style.bodyContent}>
                     <Text style={Style.name}>{currentUser.name}</Text>
 
+                  {/*********** INFORMATIONS **********/}
                     <DataTable style={{marginTop:20,flex:1}}>
-                      <DataTable.Header style={{backgroundColor:colors.CARROT, marginTop:20, borderTopLeftRadius:20, borderTopRightRadius:20}}>
-                        <DataTable.Title style={{marginLeft:10}}>MES INFORMATIONS</DataTable.Title>
-                      </DataTable.Header>
-                      <DataTable.Row style={Style.datarow}>
-                        <DataTable.Cell>Pseudo</DataTable.Cell>
-                        <DataTable.Cell>{currentUser.name}</DataTable.Cell>
-                      </DataTable.Row>
-                      <DataTable.Row style={Style.datarow}>
-                        <DataTable.Cell>Email</DataTable.Cell>
-                        <DataTable.Cell>{currentUser.email}</DataTable.Cell>
-                      </DataTable.Row>
-                      <DataTable.Row style={Object.assign({borderBottomRightRadius:20},Style.datarow)}>
-                        <Button style={Style.editVehicle} icon="person-pin" color={colors.SEA} mode="text" onPress={() => dispatch({ type: 'switchScreen', tab: 'AccountScreen', screen: 'editInfos' })}>
-                            Modifier mes informations
-                        </Button>
-                      </DataTable.Row>
+                      <EditInfos />
 
+                {/*********** VEHICLE **********/}
                       <DataTable.Header style={{backgroundColor:colors.CARROT, marginTop:30, borderTopLeftRadius:20, borderTopRightRadius:20}}>
                         <DataTable.Title style={{marginLeft:10}}>MON VÉHICULE</DataTable.Title>
                       </DataTable.Header>
@@ -137,7 +135,7 @@ export default function ViewAccount() {
                         </Button>
                       </DataTable.Row>
 
-
+                {/*********** PASSWORD **********/}
                       <DataTable.Header style={{backgroundColor:colors.CARROT, marginTop:30, borderTopLeftRadius:20, borderTopRightRadius:20}}>
                         <DataTable.Title>MA CONNEXION</DataTable.Title>
                       </DataTable.Header>
@@ -155,90 +153,13 @@ export default function ViewAccount() {
                             Déconnexion
                         </Button>
                       </DataTable.Row>
-
                     </DataTable>
+
                   </View>
                 </View>
             </ScrollView>
           </>
         }
-      </>
+      </Provider>
     )
 }
-
-/*
-<ScrollView contentContainerStyle={Style.mainContainer}>
-  {isLoading && currentUser.picture==='' &&
-    <ActivityIndicator size='large' animating={true} color={colors.SEA} style={{marginVertical: 100}}/>
-  }
-  {!isLoading && currentUser.picture!=='' &&
-    <>
-    <View style={Style.infoContainer}>
-        <View style={Style.imageContainer}>
-          <Image
-              style={Style.profileImage}
-              source={{uri: currentUser.picture}}
-          />
-          <Button icon="add-a-photo" mode="contained" style={Style.buttonPhoto} onPress={() => console.log('Pressed')}>
-            Modifier
-          </Button>
-        </View>
-        <View>
-            <Text style={Style.boldCenteredText}>{currentUser.name}</Text>
-            <Text style={Style.email}>{currentUser.email}</Text>
-            <Button
-                style={Style.editInfos}
-                icon="edit"
-                mode="contained"
-                onPress={() => dispatch({
-                    type: 'switchScreen',
-                    tab: 'AccountScreen',
-                    screen: 'editInfos'
-                })}>
-                Modifier mes informations
-            </Button>
-            <Button
-                style={Style.editPassword}
-                icon="lock"
-                mode="contained"
-                onPress={() => dispatch({
-                    type: 'switchScreen',
-                    tab: 'AccountScreen',
-                    screen: 'editPassword'
-                })}>
-                Modifier mon mot de passe
-            </Button>
-        </View>
-        <View style={Style.carContainer}>
-            <Text style={Style.boldCenteredText}>{userVehicle.name}</Text>
-            <View style={Style.subCarContainer}>
-                <Text>
-                    Consommation : {userVehicle.conso}L/100
-                </Text>
-                <Text>
-                    {vehicleFuel.name} ({vehicleFuel.carbonFootprint}T/an)
-                </Text>
-            </View>
-            <Button
-                style={Style.editVehicle}
-                icon="directions-car"
-                mode="contained"
-                onPress={() => dispatch({
-                    type: 'switchScreen',
-                    tab: 'AccountScreen',
-                    screen: 'editVehicle'
-                })}>
-                Modifier mon véhicule
-            </Button>
-        </View>
-        <Button
-            style={Style.disconnect}
-            icon="exit-to-app"
-            mode="contained"
-            onPress={logout}>
-            Déconnexion
-        </Button>
-    </View>
-    </>}
-</ScrollView>
-*/

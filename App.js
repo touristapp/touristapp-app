@@ -17,6 +17,7 @@ const App = () => {
 		isLogged: false,
 		isLoading: false,
 		showSnack: false,
+		showDialog: false,
 		token: '',
 		currentUser: {id:null,name:'',email:'',picture:'',role:'',state:'',updatedAt:'',createdAt:'',VehicleId:''},
 		userVehicle: {id:null,name:'',conso:'',FuelId:'',updatedAt:'',createdAt:''},
@@ -52,6 +53,11 @@ const App = () => {
 				...state,
 				showSnack: action.snack
 			});
+		case 'showDialog':
+			return({
+				...state,
+				showDialog: action.dialog
+			});
 		case 'snackContent':
 			return({
 				...state,
@@ -82,6 +88,8 @@ const App = () => {
 				...state,
 				vehicleFuel: action.setFuel
 			})
+		case 'resetState':
+			return initialState;
 		default:
 			return state;
 		}

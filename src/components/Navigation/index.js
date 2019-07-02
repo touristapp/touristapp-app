@@ -69,7 +69,7 @@ export default function Navigation() {
               // onPress on the snackbar
             }
           }}
-          duration={300}
+          duration={500}
           style={snackContent.style}
           theme={snackContent.theme}
           >
