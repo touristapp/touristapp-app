@@ -47,14 +47,12 @@ export default function CreateRoute() {
   fetchData = async () => {
     //alert('Fetching!')
     alert(
-      `Fetching data from ${depart.value} to ${arrivee.value} using ${
-        ENV.googleMapsApiKey
-      }`
+      `Fetching data from ${addressDescDepart} to ${addressDescArrivee}`
     );
     const data = await fetch(
       `https://maps.googleapis.com/maps/api/directions/json?origin=${
-        depart.value
-      }&destination=${arrivee.value}&key=${ENV.googleMapsApiKey}`,
+        addressDescDepart
+      }&destination=${addressDescArrivee}&key=${ENV.googleMapsApiKey}`,
       {
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
@@ -72,29 +70,27 @@ export default function CreateRoute() {
     <>
       {/* PRINCIPALE VIEW */}
 
-      <View style={{
-            flex: 1
-          }} >
-        <Banner message="Créer un itinéraire" />
+      <View style={Style.mainContainer} >
+        <Banner message="Créer un itinéraire"/>
         <View
-          style={{ paddingHorizontal: 20,
-            paddingTop: 20,
-            paddingBottom: 30,
-            borderRadius: 5,
-            marginLeft: 20,
-            marginRight: 20,
-            flex: 1
-          }}
+          // style={{ paddingHorizontal: 20,
+          //   paddingTop: 20,
+          //   paddingBottom: 30,
+          //   borderRadius: 5,
+          //   marginLeft: 20,
+          //   marginRight: 20,
+          //   flex: 1
+          // }}
         >
-          <View style={{ backgroundColor: "green" }}>
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-                backgroundColor: "#DDE246"
-              }}
+          <View >
+            <View style={Style.input}
+              // style={{
+              //   flexDirection: "row",
+              //   justifyContent: "space-between",
+              //   backgroundColor: "#DDE246"
+              // }}
             >
-              <Text>Address :</Text>
+              <Text>Départ :</Text>
               <TouchableHighlight
                 onPress={() => {
                   setModalDepart(true);
@@ -104,21 +100,21 @@ export default function CreateRoute() {
                   {" "}
                   {addressDescDepart
                     ? addressDescDepart
-                    : "Select address"}{" "}
+                    : "Ajouter destination"}{" "}
                 </Text>
               </TouchableHighlight>
             </View>
           </View>
 
-          <View style={{ backgroundColor: "#46E2CF" }}>
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-                backgroundColor: "#D946E2"
-              }}
+          <View >
+            <View style={Style.input}
+              // style={{
+              //   flexDirection: "row",
+              //   justifyContent: "space-between",
+              //   backgroundColor: "#D946E2"
+              // }}
             >
-              <Text>Address :</Text>
+              <Text>Arrivée :</Text>
               <TouchableHighlight
                 onPress={() => {
                   setModalArrive(true);
@@ -128,7 +124,7 @@ export default function CreateRoute() {
                   {" "}
                   {addressDescArrivee
                     ? addressDescArrivee
-                    : "Select address"}{" "}
+                    : "Ajouter destination"}{" "}
                 </Text>
               </TouchableHighlight>
             </View>
@@ -139,15 +135,15 @@ export default function CreateRoute() {
               {transports.map((obj, i) => (
                 <RadioButton
                   labelHorizontal={true}
-                  style={{
-                    borderWidth: 1,
-                    borderRadius: 5,
-                    borderColor: "grey",
-                    marginHorizontal: 2,
-                    paddingHorizontal: 10,
-                    flex: 1,
-                    backgroundColor: colors.WHITE
-                  }}
+                  // style={{
+                  //   borderWidth: 1,
+                  //   borderRadius: 5,
+                  //   borderColor: "grey",
+                  //   marginHorizontal: 2,
+                  //   paddingHorizontal: 10,
+                  //   flex: 1,
+                  //   backgroundColor: colors.WHITE
+                  // }}
                   key={i}
                   onPress={onPressRadio}
                 >
@@ -177,9 +173,9 @@ export default function CreateRoute() {
             </RadioForm>
           </View>
 
-          <View>
+          <View >
             <Button
-              style={Style.searchButton}
+               style={Style.searchButton}
               icon="search"
               mode="contained"
               onPress={fetchData}
@@ -202,8 +198,8 @@ export default function CreateRoute() {
       >
         <View style={{ flex: 1 }}>
           <GooglePlacesAutocomplete
-            placeholder="Search"
-            minLength={0} // minimum length of text to search
+            placeholder="Départ"
+            minLength={2} // minimum length of text to search
             autoFocus={true}
             returnKeyType={"search"} // Can be left out for default return key https://facebook.github.io/react-native/docs/textinput.html#returnkeytype
             keyboardAppearance={"light"} // Can be left out for default keyboardAppearance https://facebook.github.io/react-native/docs/textinput.html#keyboardappearance
@@ -221,8 +217,9 @@ export default function CreateRoute() {
               // available options: https://developers.google.com/places/web-service/autocomplete
               key: ENV.googleMapsApiKey,
               language: "fr", // language of the results
-              types: "address" // default: 'geocode'
+              types: "cities" // default: 'geocode'
             }}
+
             styles={{
               textInputContainer: {
                 width: "100%"
@@ -251,7 +248,7 @@ export default function CreateRoute() {
             GooglePlacesSearchQuery={{
               // available options for GooglePlacesSearch API : https://developers.google.com/places/web-service/search
               rankby: "distance",
-              type: "geocode"
+              type: "cafe"
             }}
             GooglePlacesDetailsQuery={{
               // available options for GooglePlacesDetails API : https://developers.google.com/places/web-service/details
@@ -286,8 +283,8 @@ export default function CreateRoute() {
       >
         <View style={{ flex: 1 }}>
           <GooglePlacesAutocomplete
-            placeholder="Search"
-            minLength={0} // minimum length of text to search
+            placeholder="Arrivée"
+            minLength={2} // minimum length of text to search
             autoFocus={true}
             returnKeyType={"search"} // Can be left out for default return key https://facebook.github.io/react-native/docs/textinput.html#returnkeytype
             keyboardAppearance={"light"} // Can be left out for default keyboardAppearance https://facebook.github.io/react-native/docs/textinput.html#keyboardappearance
@@ -305,7 +302,7 @@ export default function CreateRoute() {
               // available options: https://developers.google.com/places/web-service/autocomplete
               key: ENV.googleMapsApiKey,
               language: "fr", // language of the results
-              types: "address" // default: 'geocode'
+              types: "cities" // default: 'geocode'
             }}
             styles={{
               textInputContainer: {
@@ -335,7 +332,7 @@ export default function CreateRoute() {
             GooglePlacesSearchQuery={{
               // available options for GooglePlacesSearch API : https://developers.google.com/places/web-service/search
               rankby: "distance",
-              type: "geocode"
+              type: "cafe"
             }}
             GooglePlacesDetailsQuery={{
               // available options for GooglePlacesDetails API : https://developers.google.com/places/web-service/details
