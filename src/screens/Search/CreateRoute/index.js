@@ -191,7 +191,7 @@ export default function CreateRoute() {
                 // available options: https://developers.google.com/places/web-service/autocomplete
                 key: ENV.googleMapsApiKey,
                 language: "fr", // language of the results
-                types: "cities" // default: 'geocode'
+                types: '(cities)' // default: 'geocode'
               }}
 
               styles={{
@@ -276,7 +276,7 @@ export default function CreateRoute() {
                 // available options: https://developers.google.com/places/web-service/autocomplete
                 key: ENV.googleMapsApiKey,
                 language: "fr", // language of the results
-                types: "cities" // default: 'geocode'
+                types: '(cities)' // default: 'geocode'
               }}
               styles={{
                 textInputContainer: {
