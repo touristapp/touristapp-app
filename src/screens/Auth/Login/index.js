@@ -14,7 +14,10 @@ export default function Login() {
     const password = useInput();
     const [{ isLogged, showSnack, isLoading, token, progress }, dispatch] = useStateValue();
 
+    useEffect(()=>dispatch({type: 'isLoading',wait: false}),[isLogged])
+
     useEffect(()=>{
+      if (token==='') {
         Storage.retrieve('token').then( result => {
           if (result!==undefined && result!==null) {
             dispatch({type: 'isLoading',wait: true});
@@ -23,32 +26,28 @@ export default function Login() {
             dispatch({type: 'isLogged',status: true});
           }
         });
+      }
     })
 
-    useEffect(()=>dispatch({type: 'isLoading',wait: false}),[isLogged])
-
     const login = async () => {
-        dispatch({type: 'isLoading',wait: true});
-        const url = "https://touristapi.herokuapp.com/api/auth/login"
-        const body = JSON.stringify({email: email.value, password: password.value})
-        if(email.value != "" && password.value != "") {
-          const response = await Fetch.post(url, body);
-          if(response.status !== 200) {
-              Snack.danger("Wrong email or password!",showSnack,dispatch);
-              dispatch({type: 'isLoading',wait: false});
-          } else {
-              const responseJSON = await response.json()
-              await Storage.store({
-                email: email.value,
-                password: password.value,
-                token: responseJSON.meta.token
-              });
-              dispatch({type: 'isLogged',status: true});
-          }
-        } else {
-            Snack.danger("Nickname and password can't be empty!",showSnack,dispatch);
+      if (email.value==='' || password.value==='') return Snack.danger("Tous les champs sont requis !",showSnack,dispatch);
+      dispatch({type: 'isLoading',wait: true});
+      Fetch.login({email:email.value, password:password.value})
+        .then( async response => {
+          if(response.error!==undefined) {
             dispatch({type: 'isLoading',wait: false});
-        }
+            Snack.danger(response.error.message+'!',showSnack,dispatch);
+          } else {
+            await Storage.store({
+              email: email.value,
+              password: password.value,
+              token: response.meta.token
+            })
+            dispatch({type: 'isLoading',wait: false});
+            dispatch({type: 'isLogged',status: true});
+            Snack.success("Connexion réussie !",showSnack,dispatch);
+          }
+      });
     }
 
     return (

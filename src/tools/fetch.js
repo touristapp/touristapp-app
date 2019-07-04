@@ -1,46 +1,29 @@
-export default Fetch = {
-    get: async function(url, auth = null) {
-        try {
-            let response = await fetch(
-                url,
-                {
-                    method: "GET",
-                    headers: {
-                        "Authorization": 'Bearer '+auth
-                    }
-                }
-            );
-            console.log(response);
-            return response
-        } catch (errors) {
-            throw errors;
-        }
-    },
 
-    post: async function(url, body = {}, auth = null) {
-        try {
-            let response = await fetch(
-                url,
-                {
-                    method: "POST",
-                    headers: {
-                        "Accept": "application/json",
-                        "Content-Type": "application/json",
-                        "Authorization": auth
-                    },
-                    body
-                }
-            );
-            return response
-        } catch (errors) {
-            throw errors;
-        }
-    },
+/***************************************/
+/*          FETCH PATTERNS             */
+/***************************************/
 
-    authorizeUser: async function (token) {
-      const url = "https://touristapi.herokuapp.com/api/auth/authorize"
-      const body = JSON.stringify({token: token})
-      try {
+const api = 'https://touristapi.herokuapp.com/api/';
+
+const get = async (url, auth='') => {
+  try {
+      let response = await fetch(
+          url,
+          {
+              method: "GET",
+              headers: {
+                  "Authorization": 'Bearer '+auth.token
+              }
+          }
+      );
+      return response.json();
+  } catch (errors) {
+      throw errors;
+  }
+};
+
+const post = async (url, body={}, auth='') => {
+    try {
         let response = await fetch(
             url,
             {
@@ -48,64 +31,43 @@ export default Fetch = {
                 headers: {
                     "Accept": "application/json",
                     "Content-Type": "application/json",
+                    "Authorization": auth.token
                 },
                 body
             }
         );
         return response.json();
-      } catch (errors) {
-          throw errors;
-      }
+    } catch (errors) {
+        throw errors;
+    }
+};
+
+/***************************************/
+/*              SHORTCUTS              */
+/***************************************/
+
+export default Fetch = {
+    register: async function (body) {
+      return await post(`${api}auth/register`,JSON.stringify(body));
     },
-    getCurrentUser: async (auth) => {
-      const url = `https://touristapi.herokuapp.com/api/user/${auth.data.decoded.id}`
-      try {
-          let response = await fetch(
-              url,
-              {
-                  method: "GET",
-                  headers: {
-                      "Authorization": 'Bearer '+auth.token
-                  }
-              }
-          );
-          return response.json();
-      } catch (errors) {
-          throw errors;
-      }
+
+    login: async function (body) {
+      return await post(`${api}auth/login`,JSON.stringify(body));
     },
-    getUserVehicle: async (vehicleId,auth) => {
-      const url = `https://touristapi.herokuapp.com/api/vehicle/${vehicleId}`
-      try {
-          let response = await fetch(
-              url,
-              {
-                  method: "GET",
-                  headers: {
-                      "Authorization": 'Bearer '+auth.token
-                  }
-              }
-          );
-          return response.json();
-      } catch (errors) {
-          throw errors;
-      }
+
+    authorizeUser: async function (token) {
+      return await post(`${api}auth/authorize`,JSON.stringify({token: token}));
     },
-    getVehicleFuel: async (fuelId,auth) => {
-      const url = `https://touristapi.herokuapp.com/api/vehicle/fuel/${fuelId}`
-      try {
-          let response = await fetch(
-              url,
-              {
-                  method: "GET",
-                  headers: {
-                      "Authorization": 'Bearer '+auth.token
-                  }
-              }
-          );
-          return response.json();
-      } catch (errors) {
-          throw errors;
-      }
+
+    getCurrentUser: async function (auth) {
+      return await get(`${api}user/${auth.data.decoded.id}`,auth);
+    },
+
+    getUserVehicle: async function (vehicleId,auth) {
+      return await get(`${api}vehicle/${vehicleId}`,auth);
+    },
+
+    getVehicleFuel: async function (fuelId,auth) {
+      return await get(`${api}vehicle/fuel/${fuelId}`,auth)
     },
 }
