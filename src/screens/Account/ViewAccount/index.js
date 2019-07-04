@@ -30,10 +30,8 @@ export default function ViewAccount() {
       if (token==='') {
         Storage.retrieve('token').then( result => {
           Fetch.authorizeUser(result).then( auth =>
-            dispatch({type:'token',retrieve:{token:result, data:auth.data} }) );
+            dispatch({type:'token',retrieve:{token:result, data:auth.data} }));
         })
-      } else {
-        dispatch({type: 'isLoading', wait: false});
       }
     },[])
 
@@ -44,7 +42,7 @@ export default function ViewAccount() {
     useEffect(()=> {
       if (token!=='' && currentUser.id===null) {
         if (!isLoading) dispatch({type: 'isLoading', wait: true});
-        Fetch.getCurrentUser(token).then( user =>
+        Fetch.getCurrentUser(token).then( async user =>
           dispatch({type: 'currentUser', define: user.data}) );
       }
     },[token])
@@ -54,11 +52,10 @@ export default function ViewAccount() {
     * @ FETCH USER VEHICLE
     */
     useEffect(()=> {
-      if (token!=='' && userVehicle.id===null) {
+      if (token!=='' && userVehicle.id===null && currentUser.VehicleId!==null) {
         Fetch.getUserVehicle(currentUser.VehicleId,token).then( vehicle =>
           dispatch({type: 'userVehicle', setVehicle: vehicle.data}) );
-      }
-      dispatch({type: 'progress', load: progress+0.25})
+      } else dispatch({type: 'isLoading', wait: false});
     },[currentUser])
 
     /**
@@ -66,29 +63,33 @@ export default function ViewAccount() {
     * @ FETCH VEHICLE FUEL
     */
     useEffect(()=> {
-      if (token!=='' && vehicleFuel.id===null) {
-        Fetch.getVehicleFuel(userVehicle.FuelId,token).then( fuel => {
-          dispatch({type: 'vehicleFuel', setFuel: fuel.data});
-          dispatch({type: 'isLoading', wait: false});
-        });
+      if (token!=='' && vehicleFuel.id===null && currentUser.VehicleId!==null) {
+        Fetch.getVehicleFuel(userVehicle.FuelId,token).then( fuel =>
+          dispatch({type: 'vehicleFuel', setFuel: fuel.data}) );
+        dispatch({type:'progress',load:progress+0.25});
       }
-      dispatch({type: 'progress', load: progress+0.25})
     },[userVehicle])
 
     /**
     * @progress
     * @ HANDLE PROGRESS BAR
     */
-    useEffect(()=>dispatch({type:'progress',load:isLoading? progress+0.25 : 0}),[isLoading])
+    useEffect(()=> {
+      if (progress<1) {
+        console.log('Stopping : '+progress);
+        dispatch({type:'progress',load:progress+0.25});
+      }
+      dispatch({type: 'isLoading', wait: false});
+    },[vehicleFuel]);
 
     /**
     * @isLogged
     * @ LOGOUT
     */
     const logout = () => {
+      dispatch({type: 'resetState'});
       Storage.clear();
       Snack.warning('Logged out !',showSnack,dispatch);
-      dispatch({type: 'resetState'});
     }
 
     return (

@@ -7,6 +7,11 @@ import { useStateValue } from '../../../hooks/state';
 
 const EditInfos = () => {
   const [{showSnack, currentUser, showDialog}, dispatch ] = useStateValue();
+
+  const updateInfos = () => {
+    
+  }
+
     return (
     <>
       <DataTable.Header style={{backgroundColor:colors.CARROT, marginTop:20, borderTopLeftRadius:20, borderTopRightRadius:20}}>
@@ -21,7 +26,7 @@ const EditInfos = () => {
         <DataTable.Cell>{currentUser.email}</DataTable.Cell>
       </DataTable.Row>
       <DataTable.Row style={Object.assign({borderBottomRightRadius:20},Style.datarow)}>
-          <Button style={Style.editVehicle} icon="person-pin" color={colors.SEA} mode="text" onPress={()=>dispatch({type:'showDialog',dialog:true})}>Modifier mes informations</Button>
+          <Button style={Style.editInfos} icon="person-pin" color={colors.SEA} mode="text" onPress={()=>dispatch({type:'showDialog',dialog:true})}>Modifier mes informations</Button>
           <Portal>
             <Dialog
                visible={showDialog}
@@ -53,7 +58,7 @@ const EditInfos = () => {
             				/>
                   </View>
                 </Dialog.Content>
-              <Dialog.Actions>
+              <Dialog.Actions style={Style.actions}>
                 <Button
                   style={Style.deleteButton}
                   icon="delete-forever"

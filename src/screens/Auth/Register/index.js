@@ -29,31 +29,31 @@ export default function Register() {
                 if (nickname.value != password.value) {
                     if (nickname.value.length > 5 && password.value.length > 7) {
                         if (/\S+@\S+\.\S+/.test(email.value)) {
-                            const url = "https://touristapi.herokuapp.com/api/auth/register";
-                            const body = JSON.stringify({
-                                name: nickname.value,
-                                email: email.value,
-                                password: password.value,
-                                passwordConfirmation : passwordConfirmation.value
-                            });
-                            const response = await Fetch.post(url,body);
+
+                            Fetch.register({
+                                  name: nickname.value,
+                                  email: email.value,
+                                  password: password.value,
+                                  passwordConfirmation : passwordConfirmation.value
+                              });
+
                             dispatch({type: 'isLoading',wait: false});
                             dispatch({type: 'switchScreen',tab: 'AuthScreen',screen: 'login'});
-                            Snack.success('Account successfully created !',showSnack,dispatch);
+                            Snack.success('Création du compte réussie  !',showSnack,dispatch);
                         } else {
-                          Snack.danger('Email is not valid !',showSnack,dispatch);
+                          Snack.danger('Email invalide !',showSnack,dispatch);
                         }
                     } else {
-                      Snack.danger('Nickname size must be greater than 5 and Password than 7 !',showSnack,dispatch);
+                      Snack.danger('Nickname doit être > 5, Password doit être > 7 !',showSnack,dispatch);
                     }
                 } else {
-                  Snack.danger('Nickname and Password must be different !',showSnack,dispatch);
+                  Snack.danger('Nickname et Password doivent être differents !',showSnack,dispatch);
                 }
             } else {
-              Snack.danger('Passwords must be equals !',showSnack,dispatch);
+              Snack.danger('Passwords doivent être identiques !',showSnack,dispatch);
             }
         } else {
-          Snack.danger('You must fill all inputs !',showSnack,dispatch);
+          Snack.danger('Tous les champs sont requis !',showSnack,dispatch);
         }
         dispatch({type: 'isLoading',wait: false});
     }

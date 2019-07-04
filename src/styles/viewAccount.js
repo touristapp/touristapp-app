@@ -72,19 +72,16 @@ export default StyleSheet.create({
       },
       editInfos: {
         alignSelf: 'center',
-        width: 300,
         marginTop: 5,
-        backgroundColor: colors.SEA,
         padding: 8,
+        flex: 1,
       },
       datarow: {
         backgroundColor:colors.WHITE,
       },
 
       editVehicle: {
-          width: 300,
           alignSelf: 'center',
-          color: colors.COAL,
           flex: 1,
           marginTop: 5,
           padding: 8,
@@ -95,6 +92,18 @@ export default StyleSheet.create({
           marginTop: 5,
           backgroundColor: colors.BLOOD,
           padding: 8,
+      },
+      actions: {
+        display: 'flex',
+        flexDirection: 'row',
+      },
+      deleteButton: {
+        borderWidth: 1,
+        
+        marginLeft: -50,
+      },
+      saveButton: {
+        marginLeft: 0,
       },
       disconnect: {
         width: 300,
