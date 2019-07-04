@@ -7,13 +7,15 @@ import Style from '../../styles/home';
 // Screens imports
 import ViewHome from './ViewHome';
 import MyTravels from './MyTravels';
-import Disconnected from '../Disconnected';
+import MyStats from './MyStats'
+import MySearches from './mySearches';
 
 // Hooks imports
 import { useStateValue } from '../../hooks/state'
 
 // Components imports
 import { View } from 'react-native';
+
 
 export default function Home() {
     const [{ isLogged, HomeScreen }, dispatch] = useStateValue();
@@ -24,6 +26,10 @@ export default function Home() {
                 return <ViewHome/>
             case 'myTravels':
                 return <MyTravels/>
+            case 'myStats':
+                return <MyStats/>
+            case 'mySearches':
+                return <MySearches/>
             default:
                 dispatch({
                     type: 'switchScreen',

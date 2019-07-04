@@ -12,49 +12,42 @@ import Banner from '../../../components/Banner';
 export default function Login() {
     const email = useInput();
     const password = useInput();
-    const [{ isLogged, showSnack, isLoading }, dispatch] = useStateValue();
+    const [{ isLogged, showSnack, isLoading, token, progress }, dispatch] = useStateValue();
 
-    //dispatch({type: 'isLoading',wait: false});
+    useEffect(()=>dispatch({type: 'isLoading',wait: false}),[isLogged])
 
     useEffect(()=>{
-      Promise.resolve(Storage.retrieve('token'))
-        .then( async (token) => {
-          if (token!==undefined && token!==null) {
+      if (token==='') {
+        Storage.retrieve('token').then( result => {
+          if (result!==undefined && result!==null) {
             dispatch({type: 'isLoading',wait: true});
-            const url = "https://touristapi.herokuapp.com/api/auth/authorize"
-            const body = JSON.stringify({token: token})
-            const response = await Fetch.post(url, body);
-            if(response.status === 200) {
-              dispatch({type: 'isLoading',wait: false});
-              dispatch({type: 'isLogged',status: true});
-            }
+            Fetch.authorizeUser(result).then( auth =>
+              dispatch({type:'token',retrieve:{token:result, data:auth.data} }));
+            dispatch({type: 'isLogged',status: true});
           }
         });
+      }
     })
 
     const login = async () => {
-        dispatch({type: 'isLoading',wait: true});
-        const url = "https://touristapi.herokuapp.com/api/auth/login"
-        const body = JSON.stringify({email: email.value, password: password.value})
-        if(email.value != "" && password.value != "") {
-          const response = await Fetch.post(url, body);
-          if(response.status !== 200) {
-              Snack.danger("Wrong email or password!",showSnack,dispatch);
-              dispatch({type: 'isLoading',wait: false});
-          } else {
-              const responseJSON = await response.json()
-              await Storage.store({
-                email: email.value,
-                password: password.value,
-                token: responseJSON.meta.token
-              });
-              dispatch({type: 'isLoading',wait: false});
-              dispatch({type: 'isLogged',status: true});
-          }
-        } else {
-            Snack.danger("Nickname and password can't be empty!",showSnack,dispatch);
+      if (email.value==='' || password.value==='') return Snack.danger("Tous les champs sont requis !",showSnack,dispatch);
+      dispatch({type: 'isLoading',wait: true});
+      Fetch.login({email:email.value, password:password.value})
+        .then( async response => {
+          if(response.error!==undefined) {
             dispatch({type: 'isLoading',wait: false});
-        }
+            Snack.danger(response.error.message+'!',showSnack,dispatch);
+          } else {
+            await Storage.store({
+              email: email.value,
+              password: password.value,
+              token: response.meta.token
+            })
+            dispatch({type: 'isLoading',wait: false});
+            dispatch({type: 'isLogged',status: true});
+            Snack.success("Connexion réussie !",showSnack,dispatch);
+          }
+      });
     }
 
     return (
@@ -70,7 +63,9 @@ export default function Login() {
           			<View style={Style.form}>
           				<Title style={Style.title}>touristapp</Title>
           				<TextInput
-          					style={Style.input}
+                    style={Style.input}
+                    autoCapitalize = 'none'
+                    autoCorrect = {false}
           					mode='outlined'
           					label='Email'
           					{...email}
@@ -78,7 +73,9 @@ export default function Login() {
           				<TextInput
           					style={Style.input}
           					mode='outlined'
-          					label='Password'
+                    label='Password'
+                    autoCapitalize = 'none'
+                    autoCorrect = {false}
                     secureTextEntry={true}
           					{...password}
           				/>

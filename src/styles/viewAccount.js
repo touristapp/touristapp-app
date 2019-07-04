@@ -2,89 +2,115 @@ import { StyleSheet } from 'react-native'
 import { colors } from './themes/variables'
 
 export default StyleSheet.create({
-    mainContainer: {
-      backgroundColor: colors.SKY,
-      display: 'flex',
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-    infoContainer: {
-      display: 'flex',
-      flexDirection:'column',
-      justifyContent: 'center',
-      backgroundColor: '#FFF',
-      width: 340,
-      marginBottom: 20,
-      borderRadius: 5,
-      marginTop: 20,
-    },
-    imageContainer: {
-        marginTop: 20,
+      header:{
+        borderBottomWidth: 2,
+        borderColor: colors.WHITE,
+        /*backgroundColor: colors.SEA,*/
+        shadowOffset:{  width: 50,  height: 50,  },
+        shadowColor: 'black',
+        shadowOpacity: 1.0,
+        height:160,
+      },
+      headerImage: {
+        height: 160,
+        marginTop: -3,
+      },
+      avatar: {
+        width: 130,
+        height: 130,
+        borderRadius: 63,
+        borderWidth: 2,
+        borderColor: colors.WHITE,
+        marginBottom:10,
+        alignSelf:'center',
+        position: 'absolute',
+        marginTop:90
+      },
+      name:{
+        fontSize:22,
+        fontFamily: 'Futura medium bt',
+        color: colors.CARROT,
+        fontWeight:'600',
+      },
+      body:{
+        marginTop:40,
+      },
+      bodyContent: {
+        flex: 1,
+        alignItems: 'center',
+        display:'flex',
+        flexDirection:'column',
+        padding:30,
+      },
+      name:{
+        fontSize:28,
+        color: colors.COAL,
+        fontWeight: "600"
+      },
+      info:{
+        fontSize:20,
+        fontWeight: "500",
+        color: "#696969",
+        marginTop:10
+      },
+      description:{
+        fontSize:16,
+        color: "#696969",
+        marginTop:10,
+        textAlign: 'center'
+      },
+      buttonContainer: {
+        marginTop:10,
+        height:45,
+        flexDirection: 'row',
         justifyContent: 'center',
-    },
-    profileImage: {
-        width: 150,
-        height: 150,
+        alignItems: 'center',
+        marginBottom:20,
+        width:250,
+        borderRadius:30,
+        backgroundColor: "#00BFFF",
+      },
+      editInfos: {
         alignSelf: 'center',
-        borderRadius: 4,
-        borderWidth: 1,
-        borderColor: colors.COAL,
-    },
-    buttonText: {
-        textAlign: 'center'
-    },
-    boldCenteredText: {
-        fontWeight: 'bold',
-        textAlign: 'center'
-    },
-    email: {
-        textAlign: 'center'
-    },
-    carContainer: {
-        width: 300,
-        borderRadius: 4,
-        borderWidth: 1,
-        alignSelf: 'center',
-        borderColor: colors.COAL,
-        backgroundColor: colors.CREAM,
-        marginTop: 20,
-        paddingVertical: 10,
-    },
-    subCarContainer: {
+        marginTop: 5,
+        padding: 8,
+        flex: 1,
+      },
+      datarow: {
+        backgroundColor:colors.WHITE,
+      },
+
+      editVehicle: {
+          alignSelf: 'center',
+          flex: 1,
+          marginTop: 5,
+          padding: 8,
+      },
+      editPassword: {
+          width: 300,
+          alignSelf: 'center',
+          marginTop: 5,
+          backgroundColor: colors.BLOOD,
+          padding: 8,
+      },
+      actions: {
         display: 'flex',
         flexDirection: 'row',
-        paddingVertical: 10,
-        justifyContent: 'space-around',
-        paddingHorizontal: 10,
-    },
-    editInfos: {
-        alignSelf: 'center',
-        width: 300,
-        marginTop: 10,
-        backgroundColor: colors.SEA,
-        padding: 8,
-    },
-    editVehicle: {
+      },
+      deleteButton: {
+        borderWidth: 1,
+        
+        marginLeft: -50,
+      },
+      saveButton: {
+        marginLeft: 0,
+      },
+      disconnect: {
         width: 300,
         alignSelf: 'center',
-        marginTop: 10,
-        backgroundColor: colors.COAL,
+        marginTop:5,
+        marginBottom: 20,
+        backgroundColor: colors.FIRE,
         padding: 8,
-    },
-    editPassword: {
-        width: 300,
-        alignSelf: 'center',
-        marginTop: 10,
-        backgroundColor: colors.BLOOD,
-        padding: 8,
-    },
-    disconnect: {
-      width: 300,
-      alignSelf: 'center',
-      marginTop:10,
-      marginBottom: 20,
-      backgroundColor: colors.FIRE,
-      padding: 8,
-    }
+      }
 });
