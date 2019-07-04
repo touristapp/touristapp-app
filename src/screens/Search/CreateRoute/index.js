@@ -17,7 +17,7 @@ import {
   View,
   Text,
   Modal,
-  TouchableHighlight
+  TouchableOpacity
 } from "react-native";
 import { TextInput, Button } from "react-native-paper";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
@@ -45,11 +45,11 @@ export default function CreateRoute() {
   fetchData = async () => {
     //alert('Fetching!')
     alert(
-      `Fetching data from ${addressDescDepart} to ${addressDescArrivee} }`
+      `Fetching data from ${addressDescDepart} to ${addressDescArrivee}`
     );
     const data = await fetch(
       `https://maps.googleapis.com/maps/api/directions/json?origin=${
-        addressDescDepart
+      addressDescDepart
       }&destination=${addressDescArrivee}&key=${ENV.googleMapsApiKey}`,
       {
         headers: {
@@ -68,291 +68,273 @@ export default function CreateRoute() {
     <>
       {/* PRINCIPALE VIEW */}
 
-      <View style={{
-            flex: 1
-          }} >
-        <Banner message="Créer un itinéraire" />
-        <View
-          style={{ paddingHorizontal: 20,
-            paddingTop: 20,
-            paddingBottom: 30,
-            borderRadius: 5,
-            marginLeft: 20,
-            marginRight: 20,
-            flex: 1
-          }}
-        >
-          <View style={{ backgroundColor: "green" }}>
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-                backgroundColor: "#DDE246"
-              }}
-            >
-              <Text>Address :</Text>
-              <TouchableHighlight
+      {/* <Banner message= "Créer un itinéraire"/> */}
+      <View style={Style.mainContainer} >
+
+        <View style={Style.form}>
+
+          <Text style={Style.title}>Créer un itinéraire</Text>
+
+          <View >
+            <View style={Style.textInputContainer}>
+              <TouchableOpacity
+                activeOpacity= {0}
                 onPress={() => {
                   setModalDepart(true);
                 }}
               >
-                <Text>
+                <Text style={Style.textDestination}>
                   {" "}
                   {addressDescDepart
                     ? addressDescDepart
-                    : "Select address"}{" "}
+                    : "Ajouter départ"}{" "}
                 </Text>
-              </TouchableHighlight>
+              </TouchableOpacity>
             </View>
-          </View>
 
-          <View style={{ backgroundColor: "#46E2CF" }}>
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-                backgroundColor: "#D946E2"
-              }}
-            >
-              <Text>Address :</Text>
-              <TouchableHighlight
+
+            <View style={Style.textInputContainer}>
+              <TouchableOpacity
+                activeOpacity= {0}
                 onPress={() => {
                   setModalArrive(true);
                 }}
               >
-                <Text>
+                <Text style={Style.textDestination}>
                   {" "}
                   {addressDescArrivee
                     ? addressDescArrivee
-                    : "Select address"}{" "}
+                    : "Ajouter arrivée"}{" "}
                 </Text>
-              </TouchableHighlight>
+              </TouchableOpacity>
             </View>
           </View>
 
-          <View>
-            <RadioForm formHorizontal={true} animation={true}>
-              {transports.map((obj, i) => (
-                <RadioButton
-                  labelHorizontal={true}
-                  style={{
-                    borderWidth: 1,
-                    borderRadius: 5,
-                    borderColor: "grey",
-                    marginHorizontal: 2,
-                    paddingHorizontal: 10,
-                    flex: 1,
-                    backgroundColor: colors.WHITE
-                  }}
-                  key={i}
+        
+
+        <View>
+          <RadioForm formHorizontal={true} animation={true}>
+            {transports.map((obj, i) => (
+              <RadioButton
+                labelHorizontal={true}
+                key={i}
+                onPress={onPressRadio}
+              >
+                <RadioButtonInput
+                  obj={obj}
+                  index={i}
+                  isSelected={index === i}
                   onPress={onPressRadio}
-                >
-                  <RadioButtonInput
-                    obj={obj}
-                    index={i}
-                    isSelected={index === i}
-                    onPress={onPressRadio}
-                    borderWidth={1}
-                    buttonInnerColor={colors.FIRE}
-                    buttonOuterColor={index === i ? colors.SEA : colors.COAL}
-                    buttonSize={8}
-                    buttonOuterSize={15}
-                    buttonStyle={{}}
-                    buttonWrapStyle={{ marginVertical: 10 }}
-                  />
-                  <RadioButtonLabel
-                    obj={obj}
-                    index={i}
-                    onPress={onPressRadio}
-                    labelHorizontal={true}
-                    labelStyle={{ fontSize: 16, color: colors.SEA }}
-                    labelWrapStyle={{ marginVertical: 10 }}
-                  />
-                </RadioButton>
-              ))}
-            </RadioForm>
-          </View>
+                  borderWidth={1}
+                  buttonInnerColor={colors.FIRE}
+                  buttonOuterColor={index === i ? colors.SEA : colors.COAL}
+                  buttonSize={8}
+                  buttonOuterSize={15}
+                  buttonStyle={{}}
+                  buttonWrapStyle={{ marginVertical: 10, marginRight: 5 }}
+                />
+                <RadioButtonLabel
+                  obj={obj}
+                  index={i}
+                  onPress={onPressRadio}
+                  labelHorizontal={true}
+                  labelStyle={{ fontSize: 16, color: colors.SEA }}
+                  labelWrapStyle={{ marginVertical: 5, marginRight: 20 }}
+                />
+              </RadioButton>
+            ))}
+          </RadioForm>
+        </View>
 
-          <View>
-            <Button
-              style={Style.searchButton}
-              icon="search"
-              mode="contained"
-              onPress={fetchData}
-            >
-              Rechercher
+        <View >
+          <Button
+            style={Style.searchButton}
+            icon="search"
+            mode="contained"
+            onPress={fetchData}
+          >
+            Rechercher
             </Button>
+            </View>
+        </View>
+
+        {/* MODAL DEPART */}
+
+
+        <Modal
+          animationType="slide"
+          transparent={false}
+          visible={modalDepart}
+          onRequestClose={() => {
+            Alert.alert("Modal has been closed.");
+          }}
+        >
+          <View style={{ flex: 1 }}>
+            <GooglePlacesAutocomplete
+              placeholder="Départ"
+              marginTop= {10}
+              minLength={2} // minimum length of text to search
+              autoFocus={true}
+              returnKeyType={"search"} // Can be left out for default return key https://facebook.github.io/react-native/docs/textinput.html#returnkeytype
+              keyboardAppearance={"light"} // Can be left out for default keyboardAppearance https://facebook.github.io/react-native/docs/textinput.html#keyboardappearance
+              listViewDisplayed="true" // true/false/undefined
+              fetchDetails={true}
+              renderDescription={row => row.description} // custom description render
+              onPress={(data, details = null) => {
+                // 'details' is provided when fetchDetails = true
+                console.log(data, details);
+                setaddressDescDepart(data.description);
+                setModalDepart(false);
+              }}
+              getDefaultValue={() => ""}
+              query={{
+                // available options: https://developers.google.com/places/web-service/autocomplete
+                key: ENV.googleMapsApiKey,
+                language: "fr", // language of the results
+                types: '(cities)' // default: 'geocode'
+              }}
+
+              styles={{
+                textInputContainer: {
+                  marginTop: 10,
+                  marginLeft: 5,
+                },
+                description: {
+                  fontWeight: "bold"
+                },
+                predefinedPlacesDescription: {
+                  color: "#1faadb"
+                },
+                textInput: {
+                  flex: 1
+                },
+                listView: {
+                  flex: 1
+                }
+              }}
+              //currentLocation={true} // Will add a 'Current location' button at the top of the predefined places list
+              //currentLocationLabel="Current location"
+              //nearbyPlacesAPI='GooglePlacesSearch' // Which API to use: GoogleReverseGeocoding or GooglePlacesSearch
+              GoogleReverseGeocodingQuery={
+                {
+                  // available options for GoogleReverseGeocoding API : https://developers.google.com/maps/documentation/geocoding/intro
+                }
+              }
+              GooglePlacesSearchQuery={{
+                // available options for GooglePlacesSearch API : https://developers.google.com/places/web-service/search
+                rankby: "distance",
+                type: "geocode"
+              }}
+              GooglePlacesDetailsQuery={{
+                // available options for GooglePlacesDetails API : https://developers.google.com/places/web-service/details
+                fields: "formatted_address"
+              }}
+              filterReverseGeocodingByTypes={[
+                "locality",
+                "administrative_area_level_3"
+              ]} // filter the reverse geocoding results by types - ['locality', 'administrative_area_level_3'] if you want to display only cities
+              //predefinedPlaces={}
+
+              debounce={200} // debounce the requests in ms. Set to 0 to remove debounce. By default 0ms.
+              //renderLeftButton={()  => <Text>renderLeftButton</Text>}
+              renderRightButton={() => (
+                <Button block info onPress={() => setModalDepart(false)}
+                style={Style.cancelButton}
+                >
+                  <Text style={Style.textcancelButton}>Cancel</Text>
+                </Button>
+              )}
+            />
           </View>
-        </View>
+        </Modal>
+
+        {/* MODAL ARRIVEE */}
+
+        <Modal
+          animationType="slide"
+          transparent={false}
+          visible={modalArrive}
+          onRequestClose={() => {
+            Alert.alert("Modal has been closed.");
+          }}
+        >
+          <View style={{ flex: 1 }}>
+            <GooglePlacesAutocomplete
+              placeholder="Arrivée"
+              minLength={2} // minimum length of text to search
+              autoFocus={true}
+              returnKeyType={"search"} // Can be left out for default return key https://facebook.github.io/react-native/docs/textinput.html#returnkeytype
+              keyboardAppearance={"light"} // Can be left out for default keyboardAppearance https://facebook.github.io/react-native/docs/textinput.html#keyboardappearance
+              listViewDisplayed="true" // true/false/undefined
+              fetchDetails={true}
+              renderDescription={row => row.description} // custom description render
+              onPress={(data, details = null) => {
+                // 'details' is provided when fetchDetails = true
+                console.log(data, details);
+                setaddressDescArrivee(data.description);
+                setModalArrive(false);
+              }}
+              getDefaultValue={() => ""}
+              query={{
+                // available options: https://developers.google.com/places/web-service/autocomplete
+                key: ENV.googleMapsApiKey,
+                language: "fr", // language of the results
+                types: '(cities)' // default: 'geocode'
+              }}
+              styles={{
+                textInputContainer: {
+                  marginTop: 10,
+                  marginLeft: 5,
+                },
+                description: {
+                  fontWeight: "bold"
+                },
+                predefinedPlacesDescription: {
+                  color: "#1faadb"
+                },
+                textInput: {
+                  flex: 3
+                },
+                listView: {
+                  flex: 1
+                }
+              }}
+              //currentLocation={true} // Will add a 'Current location' button at the top of the predefined places list
+              //currentLocationLabel="Current location"
+              //nearbyPlacesAPI='GooglePlacesSearch' // Which API to use: GoogleReverseGeocoding or GooglePlacesSearch
+              GoogleReverseGeocodingQuery={
+                {
+                  // available options for GoogleReverseGeocoding API : https://developers.google.com/maps/documentation/geocoding/intro
+                }
+              }
+              GooglePlacesSearchQuery={{
+                // available options for GooglePlacesSearch API : https://developers.google.com/places/web-service/search
+                rankby: "distance",
+                type: "geocode"
+              }}
+              GooglePlacesDetailsQuery={{
+                // available options for GooglePlacesDetails API : https://developers.google.com/places/web-service/details
+                fields: "formatted_address"
+              }}
+              filterReverseGeocodingByTypes={[
+                "locality",
+                "administrative_area_level_3"
+              ]} // filter the reverse geocoding results by types - ['locality', 'administrative_area_level_3'] if you want to display only cities
+              //predefinedPlaces={}
+
+              debounce={200} // debounce the requests in ms. Set to 0 to remove debounce. By default 0ms.
+              //renderLeftButton={()  => <Text>renderLeftButton</Text>}
+              renderRightButton={() => (
+                <Button block info onPress={() => setModalArrive(false)} 
+                style={Style.cancelButton}
+                >
+                  <Text style={Style.textcancelButton}>Cancel</Text>
+                </Button>
+              )}
+            />
+          </View>
+        </Modal>
       </View>
-
-      {/* MODAL DEPART */}
-
-      <Modal
-        animationType="slide"
-        transparent={false}
-        visible={modalDepart}
-        onRequestClose={() => {
-          Alert.alert("Modal has been closed.");
-        }}
-      >
-        <View style={{ flex: 1 }}>
-          <GooglePlacesAutocomplete
-            placeholder="Search"
-            minLength={0} // minimum length of text to search
-            autoFocus={true}
-            returnKeyType={"search"} // Can be left out for default return key https://facebook.github.io/react-native/docs/textinput.html#returnkeytype
-            keyboardAppearance={"light"} // Can be left out for default keyboardAppearance https://facebook.github.io/react-native/docs/textinput.html#keyboardappearance
-            listViewDisplayed="true" // true/false/undefined
-            fetchDetails={true}
-            renderDescription={row => row.description} // custom description render
-            onPress={(data, details = null) => {
-              // 'details' is provided when fetchDetails = true
-              console.log(data, details);
-              setaddressDescDepart(data.description);
-              setModalDepart(false);
-            }}
-            getDefaultValue={() => ""}
-            query={{
-              // available options: https://developers.google.com/places/web-service/autocomplete
-              key: ENV.googleMapsApiKey,
-              language: "fr", // language of the results
-              types: '(cities)' // default: 'geocode'
-            }}
-            styles={{
-              textInputContainer: {
-                width: "100%"
-              },
-              description: {
-                fontWeight: "bold"
-              },
-              predefinedPlacesDescription: {
-                color: "#1faadb"
-              },
-              textInput: {
-                flex: 3
-              },
-              listView: {
-                flex: 1
-              }
-            }}
-            //currentLocation={true} // Will add a 'Current location' button at the top of the predefined places list
-            //currentLocationLabel="Current location"
-            //nearbyPlacesAPI='GooglePlacesSearch' // Which API to use: GoogleReverseGeocoding or GooglePlacesSearch
-            GoogleReverseGeocodingQuery={
-              {
-                // available options for GoogleReverseGeocoding API : https://developers.google.com/maps/documentation/geocoding/intro
-              }
-            }
-            GooglePlacesSearchQuery={{
-              // available options for GooglePlacesSearch API : https://developers.google.com/places/web-service/search
-              rankby: "distance",
-              type: "geocode"
-            }}
-            GooglePlacesDetailsQuery={{
-              // available options for GooglePlacesDetails API : https://developers.google.com/places/web-service/details
-              fields: "formatted_address"
-            }}
-            filterReverseGeocodingByTypes={[
-              "locality",
-              "administrative_area_level_3"
-            ]} // filter the reverse geocoding results by types - ['locality', 'administrative_area_level_3'] if you want to display only cities
-            //predefinedPlaces={}
-
-            debounce={200} // debounce the requests in ms. Set to 0 to remove debounce. By default 0ms.
-            //renderLeftButton={()  => <Text>renderLeftButton</Text>}
-            renderRightButton={() => (
-              <Button block info onPress={() => setModalDepart(false)}>
-                <Text style={Style.text2}>Cancel</Text>
-              </Button>
-            )}
-          />
-        </View>
-      </Modal>
-
-      {/* MODAL ARRIVEE */}
-
-      <Modal
-        animationType="slide"
-        transparent={false}
-        visible={modalArrive}
-        onRequestClose={() => {
-          Alert.alert("Modal has been closed.");
-        }}
-      >
-        <View style={{ flex: 1 }}>
-          <GooglePlacesAutocomplete
-            placeholder="Search"
-            minLength={0} // minimum length of text to search
-            autoFocus={true}
-            returnKeyType={"search"} // Can be left out for default return key https://facebook.github.io/react-native/docs/textinput.html#returnkeytype
-            keyboardAppearance={"light"} // Can be left out for default keyboardAppearance https://facebook.github.io/react-native/docs/textinput.html#keyboardappearance
-            listViewDisplayed="true" // true/false/undefined
-            fetchDetails={true}
-            renderDescription={row => row.description} // custom description render
-            onPress={(data, details = null) => {
-              // 'details' is provided when fetchDetails = true
-              console.log(data, details);
-              setaddressDescArrivee(data.description);
-              setModalArrive(false);
-            }}
-            getDefaultValue={() => ""}
-            query={{
-              // available options: https://developers.google.com/places/web-service/autocomplete
-              key: ENV.googleMapsApiKey,
-              language: "fr", // language of the results
-              types: '(cities)' // default: 'geocode'
-            }}
-            styles={{
-              textInputContainer: {
-                width: "100%"
-              },
-              description: {
-                fontWeight: "bold"
-              },
-              predefinedPlacesDescription: {
-                color: "#1faadb"
-              },
-              textInput: {
-                flex: 3
-              },
-              listView: {
-                flex: 1
-              }
-            }}
-            //currentLocation={true} // Will add a 'Current location' button at the top of the predefined places list
-            //currentLocationLabel="Current location"
-            //nearbyPlacesAPI='GooglePlacesSearch' // Which API to use: GoogleReverseGeocoding or GooglePlacesSearch
-            GoogleReverseGeocodingQuery={
-              {
-                // available options for GoogleReverseGeocoding API : https://developers.google.com/maps/documentation/geocoding/intro
-              }
-            }
-            GooglePlacesSearchQuery={{
-              // available options for GooglePlacesSearch API : https://developers.google.com/places/web-service/search
-              rankby: "distance",
-              type: "geocode"
-            }}
-            GooglePlacesDetailsQuery={{
-              // available options for GooglePlacesDetails API : https://developers.google.com/places/web-service/details
-              fields: "formatted_address"
-            }}
-            filterReverseGeocodingByTypes={[
-              "locality",
-              "administrative_area_level_3"
-            ]} // filter the reverse geocoding results by types - ['locality', 'administrative_area_level_3'] if you want to display only cities
-            //predefinedPlaces={}
-
-            debounce={200} // debounce the requests in ms. Set to 0 to remove debounce. By default 0ms.
-            //renderLeftButton={()  => <Text>renderLeftButton</Text>}
-            renderRightButton={() => (
-              <Button block info onPress={() => setModalArrive(false)}>
-                <Text style={Style.text2}>Cancel</Text>
-              </Button>
-            )}
-          />
-        </View>
-      </Modal>
     </>
   );
 }
