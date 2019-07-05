@@ -15,6 +15,14 @@ export default StyleSheet.create({
         height: 160,
         marginTop: -3,
       },
+      container: {
+        display: 'flex',
+        flex: 1,
+        flexDirection:'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingTop: 250,
+      },
       avatar: {
         width: 130,
         height: 130,
@@ -99,7 +107,7 @@ export default StyleSheet.create({
       },
       deleteButton: {
         borderWidth: 1,
-        
+
         marginLeft: -50,
       },
       saveButton: {
