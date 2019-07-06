@@ -1,3 +1,4 @@
+import { returnStatement } from "@babel/types";
 
 /***************************************/
 /*          FETCH PATTERNS             */
@@ -70,4 +71,32 @@ export default Fetch = {
     getVehicleFuel: async function (fuelId,auth) {
       return await get(`${api}vehicle/fuel/${fuelId}`,auth)
     },
+
+    // postPicture: async function (userId, pathPicture) {
+    //   return await post(`${api}user/addImage/${userId}`,auth)
+    // },
+
+    postPicture: async (userId, body, token) => {
+      fetch(`${api}user/addImage/${userId}`, {
+        method: "POST",
+        headers: {
+          // "Accept": "application/json",
+          // "Content-Type": "application/json",
+          "Authorization": 'Bearer ' + token
+        },
+        body: JSON.stringify(body)
+      }).then(
+        res => {
+          console.log("SUCCESS on fetching picture")
+          console.log(body)
+          res.json
+        }
+      ).catch(
+        err => {
+          console.log("ERROR on fetching picture")
+          console.log(body)
+          console.log(err)
+        }
+      )
+    }
 }

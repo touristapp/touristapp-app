@@ -11,11 +11,13 @@ import { Fetch, Storage, Snack } from '../../../tools';
 
 // Components imorts
 import Banner from '../../../components/Banner'
-import { View, Text, Image, ScrollView, StyleSheet } from 'react-native';
+import { View, Text, Image, ScrollView, StyleSheet, Platform } from 'react-native';
 import { Button, Caption, Provider, ProgressBar, DataTable } from 'react-native-paper';
 import EditInfos from '../EditInfos';
 import EditVehicle from '../EditVehicle';
 import EditPassword from '../EditPassword';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import ImagePicker from "react-native-image-picker";
 
 export default function ViewAccount() {
     const [{showSnack, isLoading, token, currentUser, userVehicle, vehicleFuel, progress}, dispatch ] = useStateValue();
@@ -92,6 +94,53 @@ export default function ViewAccount() {
       Snack.warning('Logged out !',showSnack,dispatch);
     }
 
+    const chooseImage = () => {
+      // More info on all the options is below in the API Reference... just some common use cases shown here
+      const options = {
+        title: 'Select Avatar',
+        // customButtons: [{ name: 'fb', title: 'Choose Photo from Facebook' }],
+        storageOptions: {
+          skipBackup: true,
+          path: 'images',
+        },
+      };
+
+      /**
+       * The first arg is the options object for customization (it can also be null or omitted for default options),
+       * The second arg is the callback which sends object: response (more info in the API Reference)
+       */
+      ImagePicker.showImagePicker(options, (response) => {
+        console.log('Response = ', response);
+
+        if (response.didCancel) {
+          console.log('User cancelled image picker');
+        } else if (response.error) {
+          console.log('ImagePicker Error: ', response.error);
+        } else if (response.customButton) {
+          console.log('User tapped custom button: ', response.customButton);
+        } else {
+          console.log("RESPONSE")
+          const pictureFormData  = createFormData(response)._parts[0][1];
+          console.log("-----pictureFormData-----")
+          console.log(pictureFormData)
+          Fetch.postPicture(currentUser.id, pictureFormData, currentUser.token)
+        }
+      });
+    }
+
+    const createFormData = (photo) => {
+      const data = new FormData();
+    
+      data.append("image", {
+        name: photo.fileName,
+        type: photo.type,
+        uri:
+          Platform.OS === "android" ? photo.uri : photo.uri.replace("file://", "")
+      });
+    
+      return data;
+    };
+
     return (
       <Provider>
         {isLoading && currentUser.picture!=='' &&
@@ -107,7 +156,14 @@ export default function ViewAccount() {
                 <View style={Style.header}>
                         <Image style={Style.headerImage} source={require('../../../assets/accountbg_small.png')} />
                 </View>
-                <Image style={Style.avatar} source={{uri: currentUser.picture}}/>
+                {/* TODO: rendre l'image cliquable */}
+                {/* <TouchableOpacity onPress={() => console.log("HELLO")}> */}
+                  <Image style={Style.avatar} source={{uri: currentUser.picture}} />
+                {/* </TouchableOpacity> */}
+                {/* TODO: à associer à l'image */}
+                <Button onPress={chooseImage}>
+                    MODIFIER MON IMAGE
+                </Button>
                 <View style={Style.body}>
                   <View style={Style.bodyContent}>
                     <Text style={Style.name}>{currentUser.name}</Text>
