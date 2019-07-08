@@ -13,4 +13,8 @@ export default StyleSheet.create({
         textAlign: 'center',
         fontSize: 20
     },
+    backButton: {
+        zIndex: 1, 
+        position: 'absolute'
+    }
 });
