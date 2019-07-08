@@ -76,9 +76,9 @@ export default function ViewAccount() {
     */
     useEffect(()=> {
       if (progress<1) {
-        dispatch({type:'progress',load:progress+0.25});
+        return dispatch({type:'progress',load:progress+0.25});
       }
-      dispatch({type: 'isLoading', wait: false});
+      return dispatch({type: 'isLoading', wait: false});
     },[vehicleFuel]);
 
     /**

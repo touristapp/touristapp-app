@@ -87,11 +87,16 @@ export default StyleSheet.create({
       datarow: {
         backgroundColor:colors.WHITE,
       },
-
       editVehicle: {
           alignSelf: 'center',
           flex: 1,
           marginTop: 5,
+          padding: 8,
+      },
+      deleteVehicle: {
+          alignSelf: 'center',
+          flex: 1,
+          marginTop: 1,
           padding: 8,
       },
       editPassword: {
@@ -104,14 +109,14 @@ export default StyleSheet.create({
       actions: {
         display: 'flex',
         flexDirection: 'row',
+        justifyContent:'space-around',
+        paddingBottom: 50,
       },
       deleteButton: {
-        borderWidth: 1,
 
-        marginLeft: -50,
       },
       saveButton: {
-        marginLeft: 0,
+
       },
       disconnect: {
         width: 300,

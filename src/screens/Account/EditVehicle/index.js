@@ -1,25 +1,84 @@
 import React, { useState, useEffect } from 'react';
-import { View, Image } from 'react-native';
-import { Button, TextInput, DataTable, Portal, Dialog, HelperText, Drawer, Divider } from 'react-native-paper';
+import { View, Image, ScrollView, Text } from 'react-native';
+import { Button, TextInput, DataTable, Portal, Dialog, HelperText, Drawer, Divider, List } from 'react-native-paper';
 import Style from '../../../styles/viewAccount';
 import { colors } from '../../../styles/themes/variables';
+import useInput from '../../../hooks/useInputs';
 import { useStateValue } from '../../../hooks/state';
 
 const EditVehicle = () => {
-  const [{showSnack, token, currentUser, showDialog, userVehicle, vehicleFuel, defaultVehicles, defaultFuels}, dispatch ] = useStateValue();
-  const [activeDrawer,setActiveDrawer] = useState('voiture');
+  const [{isLoading, showSnack, token, progress, currentUser, showDialog, userVehicle, vehicleFuel, defaultFuels}, dispatch ] = useStateValue();
+  const [activeFuel,setActiveFuel] = useState(vehicleFuel);
+  const [expandList,setExpandList] = useState(false);
+  const [carbonFootprint,setCarbonFootprint] = useState(0);
+  const newVehicle = useInput(userVehicle.name);
+  const newConso = useInput(userVehicle.conso.toString());
 
+  /**
+  * @defaultFuels
+  * @ FETCHES DEFAULT FUELS AND VEHICLES
+  */
   useEffect(()=>{
-    if (showDialog.which==='vehicle' && defaultVehicles.length===0) {
-      Fetch.getAllVehicles(token).then( res => {
-        for(let i=0;i<4;i++) defaultVehicles.push(res.data[i]);
+    if (defaultFuels.length===0) {
+      Fetch.getAllFuels(token).then( res => {
+        for(let j=0;j<5;j++) {
+          if (res.data[j].name==='diesel' || res.data[j].name==='essence') {
+            defaultFuels.push(res.data[j]);
+          }
+        }
       })
     }
-  },[showDialog])
+  },[])
 
-  const updateVehicleName = char => dispatch({type:'userVehicle',setVehicle:{...state,name:char}});
+  useEffect(()=>{
+    console.log('Fetching again...');
+    Fetch.getUserVehicle(currentUser.VehicleId,token).then( vehicle => {
+      dispatch({type: 'userVehicle', setVehicle: vehicle.data})
+      Fetch.getVehicleFuel(userVehicle.FuelId,token).then( fuel =>
+        dispatch({type: 'vehicleFuel', setFuel: fuel.data}) );
+    });
+  },[isLoading])
 
-    return (
+  /**
+  * @carbonFootprint
+  * @newConso
+  * @ CALCULATES CURRENT CARBON FOOTPRINT
+  */
+  useEffect(()=> {
+      setCarbonFootprint(Math.round(newConso.value*activeFuel.carbonFootprint*100)/100);
+  },[activeFuel]);
+
+  const updateVehicle = () => {
+    dispatch({type: 'isLoading', wait: true});
+    const body = {
+      name: newVehicle.value,
+      FuelId: activeFuel.id,
+      conso: newConso.value,
+    }
+
+    dispatch({type:'progress',load:0.2});
+    if (userVehicle.id===undefined) {
+      console.log('**** CREATE VEHICLE ****');
+      Fetch.createVehicle(body,token).then( res => {
+        console.log(res);
+      })
+    } else {
+      console.log('**** UPDATE VEHICLE ****');
+      dispatch({type:'progress',load:progress+0.2});
+      Fetch.updateVehicle(userVehicle.id,body,token).then( res =>
+        dispatch({type:'progress',load:progress+0.2}));
+      dispatch({type:'showDialog',dialog:{on:false,which:''}})
+      dispatch({type: 'isLoading', wait: false});
+      Snack.success('Modifications enregistrées !',showSnack,dispatch);
+    }
+  }
+
+  const cancel = () => {
+    dispatch({type:'showDialog',dialog:{on:false,which:''}});
+    Snack.warning('Modifications annulées !',showSnack,dispatch);
+  }
+
+  return (
     <>
       <DataTable.Header style={{backgroundColor:colors.CARROT, marginTop:30, borderTopLeftRadius:20, borderTopRightRadius:20}}>
         <DataTable.Title style={{marginLeft:10}}>MON VÉHICULE</DataTable.Title>
@@ -34,12 +93,12 @@ const EditVehicle = () => {
         <DataTable.Row style={Style.datarow}>
           <DataTable.Cell>{userVehicle.name}</DataTable.Cell>
           <DataTable.Cell numeric>{userVehicle.conso} L/100</DataTable.Cell>
-          <DataTable.Cell numeric>{vehicleFuel.carbonFootprint} {vehicleFuel.unit}</DataTable.Cell>
+          <DataTable.Cell numeric>{vehicleFuel.name}</DataTable.Cell>
         </DataTable.Row>
         </>
       }
       <DataTable.Row style={Style.datarow}>
-        <Button style={Style.editVehicle} icon="directions-car" color={colors.SEA} mode="text" onPress={() => -dispatch({type:'showDialog',dialog:{on:true,which:'vehicle'}})}>
+        <Button style={Style.editVehicle} icon="directions-car" color={colors.SEA} mode="text" onPress={() => dispatch({type:'showDialog',dialog:{on:true,which:'vehicle'}})}>
             {currentUser.VehicleId && 'Modifier'}{!currentUser.VehicleId && 'Ajouter'} mon véhicule
         </Button>
         {(showDialog.which === 'vehicle') && (
@@ -49,55 +108,61 @@ const EditVehicle = () => {
                onDismiss={()=>dispatch({type:'showDialog',dialog:{on:false,which:''}})}>
               <Dialog.Title>{currentUser.VehicleId && 'Modifier'}{!currentUser.VehicleId && 'Ajouter'} mon véhicule</Dialog.Title>
                 <Dialog.Content>
-                  <View style={Style.mainContainer}>
-            				<TextInput
-            					selectionColor={colors.FIRE}
-            					mode='outlined'
-            					label='Nom'
-                      onChangeValue={updateVehicleName}
-                      value={userVehicle.name}
-            					style={Style.input}
-            					dense={true}
-            				/>
-                    <Drawer.Section title="Type de véhicule :" style={{borderWidth:1,borderColor:'grey',borderRadius:5,marginTop:5}}>
-                    {defaultVehicles.map( vehicle =>
-                      <Drawer.Item
-                        label={vehicle.name}
-                        active={activeDrawer === `${vehicle.name.toLowerCase()}`}
-                        onPress={() => setActiveDrawer(`${vehicle.name.toLowerCase()}`)}
-                      />
-                    )}
-                   </Drawer.Section>
-            				<TextInput
-            					selectionColor={colors.FIRE}
-            					mode='outlined'
-                      value={`${userVehicle.conso} L/100`}
-            					label='Consommation'
-            					style={Style.input}
-            					dense={true}
-            				/>
-                    <TextInput
-            					selectionColor={colors.FIRE}
-            					mode='outlined'
-                      value={vehicleFuel.name}
-            					label='Fuel'
-            					style={Style.input}
-            					dense={true}
-            				/>
-                    <HelperText
-                      type="info"
-                      visible={true}
-                      style={{borderWidth:1, borderRadius:5, borderColor:'grey', marginTop:5, backgroundColor: colors.CREAM, alignSelf:'center'}}
-                    >
-                      {vehicleFuel.carbonFootprint} {vehicleFuel.unit}
-                    </HelperText>
-                  </View>
+                  <ScrollView>
+                    <View style={Style.mainContainer}>
+              				<TextInput
+              					selectionColor={colors.FIRE}
+              					mode='outlined'
+              					label='Nom'
+              					style={Style.input}
+              					dense={true}
+                        {...newVehicle}
+              				/>
+                        <TextInput
+                					selectionColor={colors.FIRE}
+                					mode='outlined'
+                					label='Consommation'
+                					dense={true}
+                          keyboardType={'numeric'}
+                          {...newConso}
+                				/>
+                      <Text style={{marginBottom:10}}>{'L/100km'}</Text>
+                        <List.Section>
+                          <List.Accordion
+                            title={`Type de fuel`}
+                            style={{backgroundColor:colors.CREAM,opacity:0.7,borderRadius:5,marginVertical:2}}
+                          >
+                            <Drawer.Section>
+                            {defaultFuels.map( (fuel,index) => {
+                              return (
+                                <Drawer.Item
+                                  label={fuel.name}
+                                  key={fuel.id}
+                                  active={activeFuel.name.toLowerCase()===fuel.name.toLowerCase()}
+                                  onPress={() => setActiveFuel(fuel)}
+                                />
+                              )
+                            })}
+                           </Drawer.Section>
+                          </List.Accordion>
+                        </List.Section>
+
+                      <HelperText
+                        type="info"
+                        visible={true}
+                        style={{borderWidth:1, borderRadius:5, borderColor:'grey', marginTop:5, backgroundColor: colors.CREAM, alignSelf:'center', flex:1}}
+                      >
+                          Pour 100km : {carbonFootprint} grammes de CO2
+                      </HelperText>
+                    </View>
+                  </ScrollView>
                 </Dialog.Content>
               <Dialog.Actions style={Style.actions}>
                 <Button
                   style={Style.deleteButton}
                   icon="delete-forever"
                   mode="text"
+                  onPress={cancel}
                   >
                   Annuler
                 </Button>
@@ -105,10 +170,7 @@ const EditVehicle = () => {
                   style={Style.saveButton}
                   icon="check"
                   mode="text"
-                  onPress={() => {
-                    dispatch({type:'showDialog',dialog:{on:false,which:''}})
-                    Snack.success('Modifications enregistrées !',showSnack,dispatch);
-                  }}>
+                  onPress={updateVehicle}>
                   Valider
                 </Button>
               </Dialog.Actions>
@@ -116,20 +178,20 @@ const EditVehicle = () => {
           </Portal>
         )}
       </DataTable.Row>
-      <DataTable.Row style={Style.datarow}>
-        <Button
-          icon="delete-forever"
-          mode="text"
-          >
-          Supprimer mon véhicule
-        </Button>
-      </DataTable.Row>
+      {currentUser.VehicleId &&
+        <DataTable.Row style={Style.datarow}>
+          <Button
+            color={colors.FIRE}
+            style={Style.deleteVehicle}
+            icon="delete-forever"
+            mode="text"
+            >
+            Supprimer mon véhicule
+          </Button>
+        </DataTable.Row>
+      }
     </>
     )
 }
-
-
-
-
 
 export default EditVehicle;

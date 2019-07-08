@@ -31,7 +31,27 @@ const post = async (url, body={}, auth='') => {
                 headers: {
                     "Accept": "application/json",
                     "Content-Type": "application/json",
-                    "Authorization": auth.token
+                    "Authorization": 'Bearer '+auth.token
+                },
+                body
+            }
+        );
+        return response.json();
+    } catch (errors) {
+        throw errors;
+    }
+};
+
+const put = async (url, body={}, auth='') => {
+    try {
+        let response = await fetch(
+            url,
+            {
+                method: "PUT",
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json",
+                    "Authorization": 'Bearer '+auth.token
                 },
                 body
             }
@@ -63,4 +83,7 @@ export default Fetch = {
 
     getAllFuels: async (auth) => get(`${api}fuel`,auth),
 
+    createVehicle: async (body,auth) => post(`${api}vehicle`,JSON.stringify(body),auth),
+
+    updateVehicle: async (vehicleId,body,auth) => put(`${api}vehicle/${vehicleId}`,JSON.stringify(body),auth),
 }

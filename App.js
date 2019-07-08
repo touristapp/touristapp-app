@@ -24,7 +24,6 @@ const App = () => {
 		currentUser: {id:null,name:'',email:'',picture:'',role:'',state:'',updatedAt:'',createdAt:'',VehicleId:''},
 		userVehicle: {id:null,name:'',conso:'',FuelId:'',updatedAt:'',createdAt:''},
 		vehicleFuel: {id:null,name:'',carbonFootprint:'',updatedAt:'',createdAt:''},
-		defaultVehicles: [],
 		defaultFuels: [],
 		AuthScreen: 'viewAuth',
 		AccountScreen: 'viewAccount',
@@ -89,11 +88,6 @@ const App = () => {
 			return ({
 				...state,
 				vehicleFuel: action.setFuel
-			})
-		case 'defaultVehicles':
-			return ({
-				...state,
-				defaultVehicles: action.set
 			})
 		case 'defaultFuels':
 			return ({
