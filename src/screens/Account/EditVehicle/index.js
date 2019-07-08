@@ -11,8 +11,21 @@ const EditVehicle = () => {
   const [activeFuel,setActiveFuel] = useState(vehicleFuel);
   const [expandList,setExpandList] = useState(false);
   const [carbonFootprint,setCarbonFootprint] = useState(0);
-  const newVehicle = useInput(userVehicle.name);
-  const newConso = useInput(userVehicle.conso.toString());
+  const newVehicle = useInput('');
+  const newConso = useInput('');
+
+  /**
+  * @newVehicle
+  * @newConso
+  * @ UPDATES CURRENT VEHICLE NAME AND CONSO
+  */
+  useEffect(()=>{
+    if (userVehicle!==undefined) {
+      console.log(userVehicle);
+      newVehicle.value = userVehicle.name;
+      newConso.value = userVehicle.conso.toString();
+    }
+  })
 
   /**
   * @defaultFuels
@@ -30,8 +43,12 @@ const EditVehicle = () => {
     }
   },[])
 
+  /**
+  * @userVehicle
+  * @vehicleFuel
+  * @ UPDATES USER VEHICLE AND FUEL
+  */
   useEffect(()=>{
-    console.log('Fetching again...');
     Fetch.getUserVehicle(currentUser.VehicleId,token).then( vehicle => {
       dispatch({type: 'userVehicle', setVehicle: vehicle.data})
       Fetch.getVehicleFuel(userVehicle.FuelId,token).then( fuel =>
@@ -45,8 +62,9 @@ const EditVehicle = () => {
   * @ CALCULATES CURRENT CARBON FOOTPRINT
   */
   useEffect(()=> {
-      setCarbonFootprint(Math.round(newConso.value*activeFuel.carbonFootprint*100)/100);
+    if(activeFuel) setCarbonFootprint(Math.round(newConso.value*activeFuel.carbonFootprint*100)/100);
   },[activeFuel]);
+
 
   const updateVehicle = () => {
     dispatch({type: 'isLoading', wait: true});
@@ -56,21 +74,15 @@ const EditVehicle = () => {
       conso: newConso.value,
     }
 
-    dispatch({type:'progress',load:0.2});
-    if (userVehicle.id===undefined) {
-      console.log('**** CREATE VEHICLE ****');
-      Fetch.createVehicle(body,token).then( res => {
-        console.log(res);
-      })
-    } else {
-      console.log('**** UPDATE VEHICLE ****');
+    console.log(body);
+
+    dispatch({type:'progress',load:progress+0.2});
+    Fetch.updateVehicle(currentUser.id,body,token).then( res => {
       dispatch({type:'progress',load:progress+0.2});
-      Fetch.updateVehicle(userVehicle.id,body,token).then( res =>
-        dispatch({type:'progress',load:progress+0.2}));
       dispatch({type:'showDialog',dialog:{on:false,which:''}})
       dispatch({type: 'isLoading', wait: false});
       Snack.success('Modifications enregistrées !',showSnack,dispatch);
-    }
+    });
   }
 
   const cancel = () => {
@@ -83,7 +95,7 @@ const EditVehicle = () => {
       <DataTable.Header style={{backgroundColor:colors.CARROT, marginTop:30, borderTopLeftRadius:20, borderTopRightRadius:20}}>
         <DataTable.Title style={{marginLeft:10}}>MON VÉHICULE</DataTable.Title>
       </DataTable.Header>
-      {currentUser.VehicleId &&
+      {vehicleFuel &&
         <>
         <DataTable.Header style={{backgroundColor:colors.CREAM}}>
           <DataTable.Title>Nom</DataTable.Title>

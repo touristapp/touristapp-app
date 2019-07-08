@@ -83,7 +83,5 @@ export default Fetch = {
 
     getAllFuels: async (auth) => get(`${api}fuel`,auth),
 
-    createVehicle: async (body,auth) => post(`${api}vehicle`,JSON.stringify(body),auth),
-
-    updateVehicle: async (vehicleId,body,auth) => put(`${api}vehicle/${vehicleId}`,JSON.stringify(body),auth),
+    updateVehicle: async (vehicleId,body,auth) => put(`${api}/user/vehicle/${vehicleId}`,JSON.stringify(body),auth),
 }

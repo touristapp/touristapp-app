@@ -56,6 +56,7 @@ export default function ViewAccount() {
         Fetch.getUserVehicle(currentUser.VehicleId,token).then( vehicle =>
           dispatch({type: 'userVehicle', setVehicle: vehicle.data}) );
       } else dispatch({type: 'isLoading', wait: false});
+      dispatch({type:'progress',load:progress+0.25});
     },[currentUser])
 
     /**
@@ -63,11 +64,12 @@ export default function ViewAccount() {
     * @ FETCH VEHICLE FUEL
     */
     useEffect(()=> {
-      if (token!=='' && vehicleFuel.id===null && currentUser.VehicleId!==null) {
+      if (token!=='' || vehicleFuel===undefined || currentUser.VehicleId!==null) {
+        console.log('in the if !');
         Fetch.getVehicleFuel(userVehicle.FuelId,token).then( fuel =>
           dispatch({type: 'vehicleFuel', setFuel: fuel.data}) );
         dispatch({type:'progress',load:progress+0.25});
-      }
+      } else console.log('not in the if !');
     },[userVehicle])
 
     /**
