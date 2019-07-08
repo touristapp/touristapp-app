@@ -21,9 +21,13 @@ export default StyleSheet.create({
         borderRadius: 63,
         borderWidth: 2,
         borderColor: colors.WHITE,
-        marginBottom:10,
-        alignSelf:'center',
-        position: 'absolute',
+      },
+      touchable: {
+        width: 130, 
+        height: 130, 
+        marginBottom:10, 
+        alignSelf:'center', 
+        position: 'absolute', 
         marginTop:90
       },
       name:{

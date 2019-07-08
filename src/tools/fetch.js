@@ -88,8 +88,8 @@ export default Fetch = {
       }
     }
 
-    // postPicture: async (userId, body, token) => {
-    //   await fetch(`${api}user/addImage/${userId}`, {
+    // postPicture: (userId, body, token) => {
+    //   fetch(`${api}user/addImage/${userId}`, {
     //     method: "POST",
     //     headers: {
     //       "Authorization": 'Bearer ' + token

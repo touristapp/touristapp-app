@@ -16,7 +16,7 @@ import { Button, Caption, Provider, ProgressBar, DataTable } from 'react-native-
 import EditInfos from '../EditInfos';
 import EditVehicle from '../EditVehicle';
 import EditPassword from '../EditPassword';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { TouchableOpacity, TouchableHighlight } from 'react-native';
 import ImagePicker from "react-native-image-picker";
 
 export default function ViewAccount() {
@@ -159,14 +159,9 @@ export default function ViewAccount() {
                 <View style={Style.header}>
                         <Image style={Style.headerImage} source={require('../../../assets/accountbg_small.png')} />
                 </View>
-                {/* TODO: rendre l'image cliquable */}
-                {/* <TouchableOpacity onPress={() => console.log("HELLO")}> */}
-                  <Image style={Style.avatar} source={{uri: currentUser.picture}} />
-                {/* </TouchableOpacity> */}
-                {/* TODO: à associer à l'image */}
-                <Button onPress={chooseImage}>
-                    MODIFIER MON IMAGE
-                </Button>
+                <TouchableOpacity style={Style.touchable} onPress = {chooseImage} >
+                    <Image  style={Style.avatar} source={{uri: currentUser.picture}} />
+                </TouchableOpacity>
                 <View style={Style.body}>
                   <View style={Style.bodyContent}>
                     <Text style={Style.name}>{currentUser.name}</Text>
