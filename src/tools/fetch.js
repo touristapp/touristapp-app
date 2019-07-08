@@ -114,7 +114,7 @@ export default Fetch = {
 
     getDirections: async function (addressDescDepart, addressDescArrivee){
         return await fetchDirection(addressDescDepart, addressDescArrivee)
-    }
+    },
   
     updateVehicle: async (vehicleId,body,auth) => put(`${api}/user/vehicle/${vehicleId}`,JSON.stringify(body),auth),
 }
