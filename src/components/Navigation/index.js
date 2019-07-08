@@ -17,7 +17,9 @@ import { useStateValue } from '../../hooks/state';
 import { BottomNavigation, Snackbar, ActivityIndicator } from 'react-native-paper';
 
 // Routes
-const HomeRoute = () => <Home/>;
+const HomeRoute = () =>  {
+  return <Home/>
+};
 const SearchRoute = () => <Search/>;
 const AccountRoute = () => {
 	 // Get the login state defined in App.js
@@ -46,6 +48,24 @@ export default function Navigation() {
 
     const _handleIndexChange = index => setIndex(index);
     const _renderScene = BottomNavigation.SceneMap({ home: HomeRoute, search: SearchRoute, account: AccountRoute, })
+    
+    setMainViews = () => {
+      dispatch({
+        type: 'switchScreen',
+        tab: 'HomeScreen',
+        screen: 'viewHome'
+      }) &&
+      dispatch({
+        type: 'switchScreen',
+        tab: 'AccountScreen',
+        screen: 'viewAccount'
+      }) &&
+      dispatch({
+        type: 'switchScreen',
+        tab: 'SearchScreen',
+        screen: 'createRoute'
+      })
+    }
 
     return (
         <>
@@ -56,6 +76,7 @@ export default function Navigation() {
             barStyle={{backgroundColor: colors.COAL}}
             activeColor={colors.SKY}
             inactiveColor={colors.WHITE}
+            onTabPress={() => setMainViews()}
           />
           <Snackbar
           visible={showSnack}
