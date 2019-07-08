@@ -86,7 +86,7 @@ export default Fetch = {
       catch(err){
         console.log("ERROR on fetching picture", err)
       }
-    }
+    },
 
     // postPicture: (userId, body, token) => {
     //   fetch(`${api}user/addImage/${userId}`, {
@@ -103,4 +103,15 @@ export default Fetch = {
     //     console.log("ERROR on fetching picture", err)
     //   })
     // }
+
+  deletePicture: (fileKey, token) => {
+    fetch(`${api}user/deleteImage/${fileKey}`, {
+      method: "DELETE",
+      headers: {
+        "Authorization": 'Bearer ' + token
+      }})
+      .then( () => console.log(`SUCCESS: image with key ${fileKey} deleted`))
+      .catch( err => console.log(`ERROR in deleting mage with key ${fileKey}: ${err.stack}`))
+    
+  }
 }

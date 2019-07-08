@@ -95,7 +95,7 @@ export default function ViewAccount() {
     }
 
     const chooseImage = () => {
-      // More info on all the options is below in the API Reference... just some common use cases shown here
+      // TODO: names for Menu
       const options = {
         title: 'Select Avatar',
         // customButtons: [{ name: 'fb', title: 'Choose Photo from Facebook' }],
@@ -105,10 +105,6 @@ export default function ViewAccount() {
         },
       };
 
-      /**
-       * The first arg is the options object for customization (it can also be null or omitted for default options),
-       * The second arg is the callback which sends object: response (more info in the API Reference)
-       */
       ImagePicker.showImagePicker(options, (response) => {
         if (response.didCancel) {
           console.log('User cancelled image picker');
@@ -118,14 +114,21 @@ export default function ViewAccount() {
           console.log('User tapped custom button: ', response.customButton);
         } else {
           console.log("Fetching post request to add an image");
-          let user = currentUser;
+          let updatedUser = currentUser;
           Fetch
             .postPicture(currentUser.id, createFormData(response), token.token)
             .then( res => {
-              console.log("SUCCESS in fetching new image");
-              user.picture = res.imageUrl;
-              dispatch({type: 'currentUser', define: user});
-
+              let oldImageUri = currentUser.picture;
+              updatedUser.picture = res.imageUrl;
+              dispatch({type: 'currentUser', define: updatedUser});
+              try{
+                Fetch.deletePicture(oldImageUri.replace("https://touristapps3.s3.eu-west-3.amazonaws.com/", ""), token.token)
+              }
+              catch(err){
+                console.log("ERROR in proceeding to delete image: ", err.message)
+              }
+            })
+            .then( () => {
             })
             .catch(err => console.log(`ERROR in fetching new image: ${err}`));
         }
