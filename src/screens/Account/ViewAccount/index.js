@@ -11,12 +11,11 @@ import { Fetch, Storage, Snack } from '../../../tools';
 
 // Components imorts
 import Banner from '../../../components/Banner'
-import { View, Text, Image, ScrollView, StyleSheet, Platform } from 'react-native';
+import { View, Text, Image, ScrollView, StyleSheet, Platform, TouchableOpacity } from 'react-native';
 import { Button, Caption, Provider, ProgressBar, DataTable } from 'react-native-paper';
 import EditInfos from '../EditInfos';
 import EditVehicle from '../EditVehicle';
 import EditPassword from '../EditPassword';
-import { TouchableOpacity, TouchableHighlight } from 'react-native';
 import ImagePicker from "react-native-image-picker";
 
 export default function ViewAccount() {
@@ -95,10 +94,8 @@ export default function ViewAccount() {
     }
 
     const chooseImage = () => {
-      // TODO: names for Menu
       const options = {
         title: 'Select Avatar',
-        // customButtons: [{ name: 'fb', title: 'Choose Photo from Facebook' }],
         storageOptions: {
           skipBackup: true,
           path: 'images',
@@ -127,8 +124,6 @@ export default function ViewAccount() {
               catch(err){
                 console.log("ERROR in proceeding to delete image: ", err.message)
               }
-            })
-            .then( () => {
             })
             .catch(err => console.log(`ERROR in fetching new image: ${err}`));
         }

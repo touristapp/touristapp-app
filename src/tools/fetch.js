@@ -88,22 +88,6 @@ export default Fetch = {
       }
     },
 
-    // postPicture: (userId, body, token) => {
-    //   fetch(`${api}user/addImage/${userId}`, {
-    //     method: "POST",
-    //     headers: {
-    //       "Authorization": 'Bearer ' + token
-    //     },
-    //     body
-    //   })
-    //   .then(res => {
-    //     return res.json()
-    //   })
-    //   .catch(err => {
-    //     console.log("ERROR on fetching picture", err)
-    //   })
-    // }
-
   deletePicture: (fileKey, token) => {
     fetch(`${api}user/deleteImage/${fileKey}`, {
       method: "DELETE",
