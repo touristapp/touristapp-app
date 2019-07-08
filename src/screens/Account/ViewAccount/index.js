@@ -110,8 +110,6 @@ export default function ViewAccount() {
        * The second arg is the callback which sends object: response (more info in the API Reference)
        */
       ImagePicker.showImagePicker(options, (response) => {
-        console.log('Response = ', response);
-
         if (response.didCancel) {
           console.log('User cancelled image picker');
         } else if (response.error) {
@@ -119,14 +117,20 @@ export default function ViewAccount() {
         } else if (response.customButton) {
           console.log('User tapped custom button: ', response.customButton);
         } else {
-          console.log("RESPONSE")
-          const pictureFormData  = createFormData(response)._parts[0][1];
-          console.log("-----pictureFormData-----")
-          console.log(pictureFormData)
-          Fetch.postPicture(currentUser.id, pictureFormData, currentUser.token)
+          console.log("Fetching post request to add an image");
+          let user = currentUser;
+          Fetch
+            .postPicture(currentUser.id, createFormData(response), token.token)
+            .then( res => {
+              console.log("SUCCESS in fetching new image");
+              user.picture = res.imageUrl;
+              dispatch({type: 'currentUser', define: user});
+
+            })
+            .catch(err => console.log(`ERROR in fetching new image: ${err}`));
         }
-      });
-    }
+    })
+  }
 
     const createFormData = (photo) => {
       const data = new FormData();
@@ -137,7 +141,6 @@ export default function ViewAccount() {
         uri:
           Platform.OS === "android" ? photo.uri : photo.uri.replace("file://", "")
       });
-    
       return data;
     };
 

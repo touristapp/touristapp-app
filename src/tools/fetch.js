@@ -72,31 +72,35 @@ export default Fetch = {
       return await get(`${api}vehicle/fuel/${fuelId}`,auth)
     },
 
-    // postPicture: async function (userId, pathPicture) {
-    //   return await post(`${api}user/addImage/${userId}`,auth)
-    // },
-
     postPicture: async (userId, body, token) => {
-      fetch(`${api}user/addImage/${userId}`, {
-        method: "POST",
-        headers: {
-          // "Accept": "application/json",
-          // "Content-Type": "application/json",
-          "Authorization": 'Bearer ' + token
-        },
-        body: JSON.stringify(body)
-      }).then(
-        res => {
-          console.log("SUCCESS on fetching picture")
-          console.log(body)
-          res.json
-        }
-      ).catch(
-        err => {
-          console.log("ERROR on fetching picture")
-          console.log(body)
-          console.log(err)
-        }
-      )
+      try{
+        let response = await fetch(`${api}user/addImage/${userId}`, {
+          method: "POST",
+          headers: {
+            "Authorization": 'Bearer ' + token
+          },
+          body
+        })
+        return response.json()
+      }
+      catch(err){
+        console.log("ERROR on fetching picture", err)
+      }
     }
+
+    // postPicture: async (userId, body, token) => {
+    //   await fetch(`${api}user/addImage/${userId}`, {
+    //     method: "POST",
+    //     headers: {
+    //       "Authorization": 'Bearer ' + token
+    //     },
+    //     body
+    //   })
+    //   .then(res => {
+    //     return res.json()
+    //   })
+    //   .catch(err => {
+    //     console.log("ERROR on fetching picture", err)
+    //   })
+    // }
 }
