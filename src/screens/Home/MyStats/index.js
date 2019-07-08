@@ -7,13 +7,12 @@ import Style from '../../../styles/myStats';
 // Components imports
 import { View, Text, Image } from 'react-native';
 import { Title } from 'react-native-paper';
+import Banner from '../../../components/Banner';
 
 export default function MyStats() {  
     return (
         <>
-            <View style={Style.banner}>
-                <Text style={Style.bannerText}>Statistiques</Text>
-            </View> 
+            <Banner message="Statistiques" back={true}/> 
             <View style={Style.mainContainer}>
                 <View style={Style.mainForm}>
                     <Image
