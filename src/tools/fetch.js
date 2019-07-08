@@ -31,7 +31,27 @@ const post = async (url, body={}, auth='') => {
                 headers: {
                     "Accept": "application/json",
                     "Content-Type": "application/json",
-                    "Authorization": auth.token
+                    "Authorization": 'Bearer '+auth.token
+                },
+                body
+            }
+        );
+        return response.json();
+    } catch (errors) {
+        throw errors;
+    }
+};
+
+const put = async (url, body={}, auth='') => {
+    try {
+        let response = await fetch(
+            url,
+            {
+                method: "PUT",
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json",
+                    "Authorization": 'Bearer '+auth.token
                 },
                 body
             }
@@ -47,27 +67,21 @@ const post = async (url, body={}, auth='') => {
 /***************************************/
 
 export default Fetch = {
-    register: async function (body) {
-      return await post(`${api}auth/register`,JSON.stringify(body));
-    },
+    register: async (body) => post(`${api}auth/register`,JSON.stringify(body)),
 
-    login: async function (body) {
-      return await post(`${api}auth/login`,JSON.stringify(body));
-    },
+    login: async (body) => post(`${api}auth/login`,JSON.stringify(body)),
 
-    authorizeUser: async function (token) {
-      return await post(`${api}auth/authorize`,JSON.stringify({token: token}));
-    },
+    authorizeUser: async (token) => post(`${api}auth/authorize`,JSON.stringify({token: token})),
 
-    getCurrentUser: async function (auth) {
-      return await get(`${api}user/${auth.data.decoded.id}`,auth);
-    },
+    getCurrentUser: async (auth) => get(`${api}user/${auth.data.decoded.id}`,auth),
 
-    getUserVehicle: async function (vehicleId,auth) {
-      return await get(`${api}vehicle/${vehicleId}`,auth);
-    },
+    getUserVehicle: async (vehicleId,auth) => get(`${api}vehicle/${vehicleId}`,auth),
 
-    getVehicleFuel: async function (fuelId,auth) {
-      return await get(`${api}vehicle/fuel/${fuelId}`,auth)
-    },
+    getVehicleFuel: async (fuelId,auth) => get(`${api}vehicle/fuel/${fuelId}`,auth),
+
+    getAllVehicles: async (auth) => get(`${api}vehicle`,auth),
+
+    getAllFuels: async (auth) => get(`${api}fuel`,auth),
+
+    updateVehicle: async (vehicleId,body,auth) => put(`${api}/user/vehicle/${vehicleId}`,JSON.stringify(body),auth),
 }
