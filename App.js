@@ -27,7 +27,7 @@ const App = () => {
 		AuthScreen: 'viewAuth',
 		AccountScreen: 'viewAccount',
 		SearchScreen: 'createRoute',
-		HomeScreen: 'home'
+		HomeScreen: 'home',
 	};
 
 	// Define how states would be updated by some actions

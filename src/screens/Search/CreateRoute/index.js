@@ -6,11 +6,11 @@ import Style from "../../../styles/createRoute";
 import { colors } from "../../../styles/themes/variables";
 
 // Hooks imports
-import useInput from "../../../hooks/useInputs";
+import { useStateValue } from '../../../hooks/state'
 import ENV from "../../../../env";
 import Fetch from '../../../tools/fetch';
 
-// Components imorts
+// Components imports
 import {
   View,
   Text,
@@ -27,47 +27,35 @@ import RadioForm, {
 
 export default function CreateRoute() {
   const [index, setIndex] = useState(0);
+  const onPressRadio = value => setIndex(value);
   const transports = [
     { label: "Voiture", value: 0 },
     { label: "Vélo", value: 1 },
     { label: "Train", value: 2 },
     { label: "Avion", value: 3 }
   ];
+  const [{ isLogged, showSnack, isLoading, token, progress }, dispatch] = useStateValue();
   const [modalDepart, setModalDepart] = useState("false");
   const [modalArrive, setModalArrive] = useState("false");
   const [addressDescDepart, setaddressDescDepart] = useState(null);
   const [addressDescArrivee, setaddressDescArrivee] = useState(null);
   const [direction, setDirection ] = useState({});
+  
 
   async function fetch() {
     const data = await Fetch.getDirections(addressDescDepart, addressDescArrivee);
     setDirection({data})
-    
+    dispatch({
+      type: 'switchScreen',
+      tab: 'SearchScreen',
+      screen: 'searchResult'
+    })
   }
 
-  const onPressRadio = value => setIndex(value);
-
-  // fetchData = async () => {
-  //   //alert('Fetching!')
-  //   alert(
-  //     `Fetching data from ${addressDescDepart} to ${addressDescArrivee}`
-  //   );
-  //   const data = await fetch(
-  //     `https://maps.googleapis.com/maps/api/directions/json?origin=${
-  //     addressDescDepart
-  //     }&destination=${addressDescArrivee}&key=${ENV.googleMapsApiKey}`,
-  //     {
-  //       headers: {
-  //         "Content-Type": "application/x-www-form-urlencoded",
-  //         Authorization: ENV.googleMapsApiKey
-  //       },
-  //       method: "GET"
-  //     }
-  //   );
-  //     const json = await data.json();
-  //     return json;
-  //   // console.log(json);
-  // };
+  useEffect(()=> {
+    dispatch({type: 'progress', load: 0})
+    dispatch({type: 'isLoading', wait: true});
+  },[])
 
   return (
     <>
@@ -156,8 +144,8 @@ export default function CreateRoute() {
             style={Style.searchButton}
             icon="search"
             mode="contained"
-            onPress= {()=>{fetch()
-              console.log(direction);}}
+            onPress= {()=> fetch()}
+            datan={() => fetch()}
           >
             Rechercher
             </Button>

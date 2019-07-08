@@ -1,5 +1,5 @@
 // React imports
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 // Styles imports
 import Style from "../../../styles/createRoute";
@@ -7,13 +7,14 @@ import { colors } from "../../../styles/themes/variables";
 
 // Components imorts
 import Banner from "../../../components/Banner";
-import { ScrollView } from 'react-native-gesture-handler';
-import { List } from 'react-native-paper';
-import { useStateValue } from '../../../hooks/state';
+import {
+    View
+  } from "react-native";
 
-
-export default function SearchResult() {
-    const [data, setData] = useState(json);
+export default function SearchResult(props) {
+    const fetch = props
+    console.log(fetch);
+    const [data, setData] = useState(null);
     return (
         <>
             {/* Principal View */}
@@ -22,11 +23,11 @@ export default function SearchResult() {
 
                 <Banner message="Résultats"/>
                 <View style={Style.form}>
-                <ScrollView>
+                {/* <ScrollView>
                     <List>
-                        $
+                        
                     </List>
-                </ScrollView>
+                </ScrollView> */}
                 </View>
 
             </View>
