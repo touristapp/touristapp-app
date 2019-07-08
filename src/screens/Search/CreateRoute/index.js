@@ -1,5 +1,5 @@
 // React imports
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 
 // Styles imports
 import Style from "../../../styles/createRoute";
@@ -25,6 +25,8 @@ import RadioForm, {
   RadioButtonLabel
 } from "react-native-simple-radio-button";
 
+export const context = React.createContext(null);
+
 export default function CreateRoute() {
   const [index, setIndex] = useState(0);
   const onPressRadio = value => setIndex(value);
@@ -39,12 +41,12 @@ export default function CreateRoute() {
   const [modalArrive, setModalArrive] = useState("false");
   const [addressDescDepart, setaddressDescDepart] = useState(null);
   const [addressDescArrivee, setaddressDescArrivee] = useState(null);
-  const [direction, setDirection ] = useState({});
-  
+  const [direction, setDirection] = useState({});
+  const value = useContext(direction);
 
   async function fetch() {
     const data = await Fetch.getDirections(addressDescDepart, addressDescArrivee);
-    setDirection({data})
+    setDirection({ data })
     dispatch({
       type: 'switchScreen',
       tab: 'SearchScreen',
@@ -52,13 +54,14 @@ export default function CreateRoute() {
     })
   }
 
-  useEffect(()=> {
-    dispatch({type: 'progress', load: 0})
-    dispatch({type: 'isLoading', wait: true});
-  },[])
+  useEffect(() => {
+    dispatch({ type: 'progress', load: 0 })
+    dispatch({ type: 'isLoading', wait: true });
+  }, [])
 
   return (
     <>
+      <context.Provider value={{name: 'bite'}}>
       {/* PRINCIPALE VIEW */}
 
       {/* <Banner message= "Créer un itinéraire"/> */}
@@ -71,7 +74,7 @@ export default function CreateRoute() {
           <View >
             <View style={Style.textInputContainer}>
               <TouchableOpacity
-                activeOpacity= {0}
+                activeOpacity={0}
                 onPress={() => {
                   setModalDepart(true);
                 }}
@@ -88,7 +91,7 @@ export default function CreateRoute() {
 
             <View style={Style.textInputContainer}>
               <TouchableOpacity
-                activeOpacity= {0}
+                activeOpacity={0}
                 onPress={() => {
                   setModalArrive(true);
                 }}
@@ -103,53 +106,52 @@ export default function CreateRoute() {
             </View>
           </View>
 
-        
 
-        <View>
-          <RadioForm formHorizontal={true} animation={true}>
-            {transports.map((obj, i) => (
-              <RadioButton
-                labelHorizontal={true}
-                key={i}
-                onPress={onPressRadio}
-              >
-                <RadioButtonInput
-                  obj={obj}
-                  index={i}
-                  isSelected={index === i}
-                  onPress={onPressRadio}
-                  borderWidth={1}
-                  buttonInnerColor={colors.FIRE}
-                  buttonOuterColor={index === i ? colors.SEA : colors.COAL}
-                  buttonSize={8}
-                  buttonOuterSize={15}
-                  buttonStyle={{}}
-                  buttonWrapStyle={{ marginVertical: 10, marginRight: 5 }}
-                />
-                <RadioButtonLabel
-                  obj={obj}
-                  index={i}
-                  onPress={onPressRadio}
+
+          <View>
+            <RadioForm formHorizontal={true} animation={true}>
+              {transports.map((obj, i) => (
+                <RadioButton
                   labelHorizontal={true}
-                  labelStyle={{ fontSize: 16, color: colors.SEA }}
-                  labelWrapStyle={{ marginVertical: 5, marginRight: 20 }}
-                />
-              </RadioButton>
-            ))}
-          </RadioForm>
-        </View>
+                  key={i}
+                  onPress={onPressRadio}
+                >
+                  <RadioButtonInput
+                    obj={obj}
+                    index={i}
+                    isSelected={index === i}
+                    onPress={onPressRadio}
+                    borderWidth={1}
+                    buttonInnerColor={colors.FIRE}
+                    buttonOuterColor={index === i ? colors.SEA : colors.COAL}
+                    buttonSize={8}
+                    buttonOuterSize={15}
+                    buttonStyle={{}}
+                    buttonWrapStyle={{ marginVertical: 10, marginRight: 5 }}
+                  />
+                  <RadioButtonLabel
+                    obj={obj}
+                    index={i}
+                    onPress={onPressRadio}
+                    labelHorizontal={true}
+                    labelStyle={{ fontSize: 16, color: colors.SEA }}
+                    labelWrapStyle={{ marginVertical: 5, marginRight: 20 }}
+                  />
+                </RadioButton>
+              ))}
+            </RadioForm>
+          </View>
 
-        <View >
-          <Button
-            style={Style.searchButton}
-            icon="search"
-            mode="contained"
-            onPress= {()=> fetch()}
-            datan={() => fetch()}
-          >
-            Rechercher
+          <View >
+            <Button
+              style={Style.searchButton}
+              icon="search"
+              mode="contained"
+              onPress={() => fetch()}
+            >
+              Rechercher
             </Button>
-            </View>
+          </View>
         </View>
 
         {/* MODAL DEPART */}
@@ -166,7 +168,7 @@ export default function CreateRoute() {
           <View style={{ flex: 1 }}>
             <GooglePlacesAutocomplete
               placeholder="Départ"
-              marginTop= {10}
+              marginTop={10}
               minLength={2} // minimum length of text to search
               autoFocus={true}
               returnKeyType={"search"} // Can be left out for default return key https://facebook.github.io/react-native/docs/textinput.html#returnkeytype
@@ -233,7 +235,7 @@ export default function CreateRoute() {
               //renderLeftButton={()  => <Text>renderLeftButton</Text>}
               renderRightButton={() => (
                 <Button block info onPress={() => setModalDepart(false)}
-                style={Style.cancelButton}
+                  style={Style.cancelButton}
                 >
                   <Text style={Style.textcancelButton}>Cancel</Text>
                 </Button>
@@ -319,8 +321,8 @@ export default function CreateRoute() {
               debounce={200} // debounce the requests in ms. Set to 0 to remove debounce. By default 0ms.
               //renderLeftButton={()  => <Text>renderLeftButton</Text>}
               renderRightButton={() => (
-                <Button block info onPress={() => setModalArrive(false)} 
-                style={Style.cancelButton}
+                <Button block info onPress={() => setModalArrive(false)}
+                  style={Style.cancelButton}
                 >
                   <Text style={Style.textcancelButton}>Cancel</Text>
                 </Button>
@@ -329,6 +331,7 @@ export default function CreateRoute() {
           </View>
         </Modal>
       </View>
+      </context.Provider>
     </>
   );
 }
