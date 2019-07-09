@@ -5,6 +5,7 @@ import ENV from '../../env';
 /***************************************/
 
 const api = 'https://touristapi.herokuapp.com/api/';
+const local = 'http://localhost:8080/api/';
 
 const get = async (url, auth='') => {
   try {
@@ -92,21 +93,27 @@ const fetchDirection = async (addressDescDepart, addressDescArrivee) => {
 /***************************************/
 
 export default Fetch = {
-    register: async (body) => post(`${api}auth/register`,JSON.stringify(body)),
+    register: (body) => post(`${api}auth/register`,JSON.stringify(body)),
 
-    login: async (body) => post(`${api}auth/login`,JSON.stringify(body)),
+    login: (body) => post(`${api}auth/login`,JSON.stringify(body)),
 
-    authorizeUser: async (token) => post(`${api}auth/authorize`,JSON.stringify({token: token})),
+    authorizeUser: (token) => post(`${api}auth/authorize`,JSON.stringify({token: token})),
 
-    getCurrentUser: async (auth) => get(`${api}user/${auth.data.decoded.id}`,auth),
+    getCurrentUser: (auth) => get(`${api}user/${auth.data.decoded.id}`,auth),
 
-    getUserVehicle: async (vehicleId,auth) => get(`${api}vehicle/${vehicleId}`,auth),
+    getUserVehicle: (userId,auth) => get(`${api}vehicle/${userId}`,auth),
 
-    getVehicleFuel: async (fuelId,auth) => get(`${api}vehicle/fuel/${fuelId}`,auth),
+    getVehicleFuel: (vehicleId,auth) => get(`${api}vehicle/fuel/${vehicleId}`,auth),
 
-    getAllVehicles: async (auth) => get(`${api}vehicle`,auth),
+    getAllVehicles: (auth) => get(`${api}vehicle`,auth),
 
-    getAllFuels: async (auth) => get(`${api}fuel`,auth),
+    getAllFuels: (auth) => get(`${api}fuel`,auth),
+  
+    updateInfos: (id,body,auth) => put(`${api}user/${id}`, JSON.stringify(body), auth),
+
+    updateVehicle: (id,body,auth) => put(`${api}user/vehicle/${id}`, JSON.stringify(body), auth),
+
+    updatePassword: (id,body,auth) => put(`${api}user/updatepassword/${id}`, JSON.stringify(body), auth),
 
     getVehicleFuel: async function (fuelId,auth) {
       return await get(`${api}vehicle/fuel/${fuelId}`,auth)
@@ -115,6 +122,4 @@ export default Fetch = {
     getDirections: async function (addressDescDepart, addressDescArrivee){
         return await fetchDirection(addressDescDepart, addressDescArrivee)
     },
-  
-    updateVehicle: async (vehicleId,body,auth) => put(`${api}/user/vehicle/${vehicleId}`,JSON.stringify(body),auth),
 }

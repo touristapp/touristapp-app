@@ -3,13 +3,44 @@ import { View, Image } from 'react-native';
 import { Button, TextInput, DataTable, Portal, Dialog } from 'react-native-paper';
 import Style from '../../../styles/viewAccount';
 import { colors } from '../../../styles/themes/variables';
+import useInput from '../../../hooks/useInputs';
 import { useStateValue } from '../../../hooks/state';
 
 const EditInfos = () => {
-  const [{showSnack, currentUser, showDialog}, dispatch ] = useStateValue();
+  const [{showSnack, token, currentUser, showDialog, progress, isLoading}, dispatch ] = useStateValue();
+  const name = useInput(currentUser.name);
+  const email = useInput(currentUser.email);
 
+  /**
+  * @currentUser
+  * @ UPDATES USER INFOS
+  */
   const updateInfos = () => {
+    dispatch({type: 'isLoading', wait: true});
+    const body = {
+      name: name.value,
+      email: email.value,
+    }
+    dispatch({type:'progress',load:0.5});
+    Fetch.updateInfos(currentUser.id,body,token).then( res => {
+      Fetch.getCurrentUser(token).then( async user => {
+        dispatch({type:'progress',load:progress+0.5});
+        dispatch({type: 'currentUser', define: user.data});
+      })
+      dispatch({type:'showDialog',dialog:{on:false,which:''}})
+      Snack.success('Modifications enregistrées !',showSnack,dispatch);
+      dispatch({type: 'isLoading', wait: false});
+    });
+  }
 
+  /**
+  * @showDialog
+  * @showSnack
+  * @ CLOSES INFOS DIALOG
+  */
+  const cancel = () => {
+    dispatch({type:'showDialog',dialog:{on:false,which:''}});
+    Snack.warning('Modifications annulées !',showSnack,dispatch);
   }
 
     return (
@@ -45,17 +76,17 @@ const EditInfos = () => {
               					selectionColor={colors.FIRE}
               					mode='outlined'
               					label='Nom'
-                        value={currentUser.name}
               					style={Style.input}
               					dense={true}
+                        {...name}
               				/>
               				<TextInput
               					selectionColor={colors.FIRE}
               					mode='outlined'
-                        value={currentUser.email}
               					label='Email'
               					style={Style.input}
               					dense={true}
+                        {...email}
               				/>
                     </View>
                   </Dialog.Content>
@@ -64,17 +95,15 @@ const EditInfos = () => {
                     style={Style.deleteButton}
                     icon="delete-forever"
                     mode="text"
+                    onPress={cancel}
                     >
-                    Supprimer mon compte
+                    Annuler
                   </Button>
                   <Button
                     style={Style.saveButton}
                     icon="check"
                     mode="text"
-                    onPress={() => {
-                      dispatch({type:'showDialog',dialog:{on:false,which:''}})
-                      Snack.success('Modifications enregistrées !',showSnack,dispatch);
-                    }}>
+                    onPress={updateInfos}>
                     Valider
                   </Button>
                 </Dialog.Actions>
@@ -85,9 +114,5 @@ const EditInfos = () => {
     </>
     )
 }
-
-
-
-
 
 export default EditInfos;

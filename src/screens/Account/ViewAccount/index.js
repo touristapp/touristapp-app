@@ -64,12 +64,12 @@ export default function ViewAccount() {
     * @ FETCH VEHICLE FUEL
     */
     useEffect(()=> {
-      if (token!=='' || vehicleFuel===undefined || currentUser.VehicleId!==null) {
-        console.log('in the if !');
-        Fetch.getVehicleFuel(userVehicle.FuelId,token).then( fuel =>
-          dispatch({type: 'vehicleFuel', setFuel: fuel.data}) );
+      if (token!=='' && currentUser.VehicleId!==null) {
+        Fetch.getVehicleFuel(currentUser.VehicleId,token).then( fuel => {
+          dispatch({type: 'vehicleFuel', setFuel: fuel.data})
+        });
         dispatch({type:'progress',load:progress+0.25});
-      } else console.log('not in the if !');
+      }
     },[userVehicle])
 
     /**
@@ -82,16 +82,6 @@ export default function ViewAccount() {
       }
       return dispatch({type: 'isLoading', wait: false});
     },[vehicleFuel]);
-
-    /**
-    * @isLogged
-    * @ LOGOUT
-    */
-    const logout = () => {
-      dispatch({type: 'resetState'});
-      Storage.clear();
-      Snack.warning('Logged out !',showSnack,dispatch);
-    }
 
     return (
       <Provider>
@@ -117,33 +107,13 @@ export default function ViewAccount() {
                 <View style={Style.body}>
                   <View style={Style.bodyContent}>
                     <Text style={Style.name}>{currentUser.name}</Text>
-
-                  {/*********** INFORMATIONS **********/}
                     <DataTable style={{marginTop:20,flex:1}}>
+
                       <EditInfos />
-
-                {/*********** VEHICLE **********/}
                       <EditVehicle />
-                {/*********** PASSWORD **********/}
-                      <DataTable.Header style={{backgroundColor:colors.CARROT, marginTop:30, borderTopLeftRadius:20, borderTopRightRadius:20}}>
-                        <DataTable.Title>MA CONNEXION</DataTable.Title>
-                      </DataTable.Header>
-                      <DataTable.Row style={Style.datarow}>
-                        <DataTable.Cell>Mot de passe</DataTable.Cell>
-                        <DataTable.Cell>●●●●●●●●</DataTable.Cell>
-                      </DataTable.Row>
-                      <DataTable.Row style={Style.datarow}>
-                        <Button style={Style.editVehicle} icon="security" color={colors.SEA} mode="text" onPress={() => dispatch({ type: 'switchScreen', tab: 'AccountScreen', screen: 'editPassword' })}>
-                            Modifier mon mot de passe
-                        </Button>
-                      </DataTable.Row>
-                      <DataTable.Row style={Style.datarow}>
-                        <Button style={Style.editVehicle} icon="remove-circle" color={colors.CARROT} mode="text" onPress={logout}>
-                            Déconnexion
-                        </Button>
-                      </DataTable.Row>
-                    </DataTable>
+                      <EditPassword />
 
+                    </DataTable>
                   </View>
                 </View>
               </>
