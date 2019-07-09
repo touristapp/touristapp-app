@@ -1,3 +1,4 @@
+import ENV from '../../env'; 
 
 /***************************************/
 /*          FETCH PATTERNS             */
@@ -63,6 +64,30 @@ const put = async (url, body={}, auth='') => {
     }
 };
 
+
+const fetchDirection = async (addressDescDepart, addressDescArrivee) => {
+    try {
+            //alert('Fetching!')
+        // alert(
+        //   `Fetching data from ${addressDescDepart} to ${addressDescArrivee}`
+        // );
+        let response = await fetch(
+            `https://maps.googleapis.com/maps/api/directions/json?origin=${
+                addressDescDepart
+                }&destination=${addressDescArrivee}&key=${ENV.googleMapsApiKey}`,
+            {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                    Authorization: ENV.googleMapsApiKey
+                }
+            }
+        );
+        return response.json();
+    } catch (errors) {
+        throw errors;
+    }
+  };
 /***************************************/
 /*              SHORTCUTS              */
 /***************************************/
@@ -83,10 +108,18 @@ export default Fetch = {
     getAllVehicles: (auth) => get(`${api}vehicle`,auth),
 
     getAllFuels: (auth) => get(`${api}fuel`,auth),
+  
+    updateInfos: (id,body,auth) => put(`${api}user/${id}`, JSON.stringify(body), auth),
 
     updateVehicle: (id,body,auth) => put(`${api}user/vehicle/${id}`, JSON.stringify(body), auth),
 
-    updateInfos: (id,body,auth) => put(`${api}user/${id}`, JSON.stringify(body), auth),
-
     updatePassword: (id,body,auth) => put(`${api}user/updatepassword/${id}`, JSON.stringify(body), auth),
+
+    getVehicleFuel: async function (fuelId,auth) {
+      return await get(`${api}vehicle/fuel/${fuelId}`,auth)
+    },
+
+    getDirections: async function (addressDescDepart, addressDescArrivee){
+        return await fetchDirection(addressDescDepart, addressDescArrivee)
+    },
 }

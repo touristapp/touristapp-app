@@ -17,7 +17,9 @@ import { useStateValue } from '../../hooks/state';
 import { BottomNavigation, Snackbar, ActivityIndicator } from 'react-native-paper';
 
 // Routes
-const HomeRoute = () => <Home/>;
+const HomeRoute = () =>  {
+  return <Home/>
+};
 const SearchRoute = () => <Search/>;
 const AccountRoute = () => {
 	 // Get the login state defined in App.js
