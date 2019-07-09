@@ -11,21 +11,8 @@ const EditVehicle = () => {
   const [activeFuel,setActiveFuel] = useState(vehicleFuel);
   const [expandList,setExpandList] = useState(false);
   const [carbonFootprint,setCarbonFootprint] = useState(0);
-  const newVehicle = useInput('');
-  const newConso = useInput('');
-
-  /**
-  * @newVehicle
-  * @newConso
-  * @ UPDATES CURRENT VEHICLE NAME AND CONSO
-  */
-  useEffect(()=>{
-    if (userVehicle!==undefined) {
-      console.log(userVehicle);
-      newVehicle.value = userVehicle.name;
-      newConso.value = userVehicle.conso.toString();
-    }
-  })
+  const newVehicle = useInput(userVehicle.name);
+  const newConso = useInput(userVehicle.conso.toString());
 
   /**
   * @defaultFuels
@@ -44,47 +31,43 @@ const EditVehicle = () => {
   },[])
 
   /**
-  * @userVehicle
-  * @vehicleFuel
-  * @ UPDATES USER VEHICLE AND FUEL
-  */
-  useEffect(()=>{
-    Fetch.getUserVehicle(currentUser.VehicleId,token).then( vehicle => {
-      dispatch({type: 'userVehicle', setVehicle: vehicle.data})
-      Fetch.getVehicleFuel(userVehicle.FuelId,token).then( fuel =>
-        dispatch({type: 'vehicleFuel', setFuel: fuel.data}) );
-    });
-  },[isLoading])
-
-  /**
   * @carbonFootprint
   * @newConso
   * @ CALCULATES CURRENT CARBON FOOTPRINT
   */
-  useEffect(()=> {
-    if(activeFuel) setCarbonFootprint(Math.round(newConso.value*activeFuel.carbonFootprint*100)/100);
-  },[activeFuel]);
+  useEffect(()=> activeFuel ? setCarbonFootprint( Math.round( newConso.value * activeFuel.carbonFootprint * 100) / 100) : null, [activeFuel,newConso]);
 
-
+  /**
+  * @userVehicle
+  * @currentUser
+  * @ UPDATES USER VEHICLE
+  */
   const updateVehicle = () => {
     dispatch({type: 'isLoading', wait: true});
+
     const body = {
+      vehicleId: userVehicle.id || 0,
       name: newVehicle.value,
       FuelId: activeFuel.id,
       conso: newConso.value,
     }
-
-    console.log(body);
-
-    dispatch({type:'progress',load:progress+0.2});
+    dispatch({type:'progress',load:0.5});
     Fetch.updateVehicle(currentUser.id,body,token).then( res => {
-      dispatch({type:'progress',load:progress+0.2});
+      Fetch.getUserVehicle(currentUser.VehicleId,token).then( vehicle => {
+        dispatch({type:'progress',load:progress+0.5});
+        dispatch({type: 'userVehicle', setVehicle: vehicle.data})
+      })
       dispatch({type:'showDialog',dialog:{on:false,which:''}})
-      dispatch({type: 'isLoading', wait: false});
       Snack.success('Modifications enregistrées !',showSnack,dispatch);
+      dispatch({type: 'isLoading', wait: false});
     });
   }
 
+  /**
+  * @showDialog
+  * @showSnack
+  * @ CLOSES VEHICLE DIALOG
+  */
   const cancel = () => {
     dispatch({type:'showDialog',dialog:{on:false,which:''}});
     Snack.warning('Modifications annulées !',showSnack,dispatch);
@@ -95,7 +78,7 @@ const EditVehicle = () => {
       <DataTable.Header style={{backgroundColor:colors.CARROT, marginTop:30, borderTopLeftRadius:20, borderTopRightRadius:20}}>
         <DataTable.Title style={{marginLeft:10}}>MON VÉHICULE</DataTable.Title>
       </DataTable.Header>
-      {vehicleFuel &&
+      {vehicleFuel.id && userVehicle.name!==undefined &&
         <>
         <DataTable.Header style={{backgroundColor:colors.CREAM}}>
           <DataTable.Title>Nom</DataTable.Title>

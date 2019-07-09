@@ -110,7 +110,7 @@ export default StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         justifyContent:'space-around',
-        paddingBottom: 50,
+        paddingBottom: 20,
       },
       deleteButton: {
 
