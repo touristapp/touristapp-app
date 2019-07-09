@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, Image } from 'react-native';
 import { Button, TextInput, DataTable, Portal, Dialog } from 'react-native-paper';
 import Style from '../../../styles/viewAccount';
@@ -11,25 +11,34 @@ const EditInfos = () => {
   const name = useInput(currentUser.name);
   const email = useInput(currentUser.email);
 
+  useEffect(()=>{
+      console.log(showDialog);
+  })
+
   /**
   * @currentUser
   * @ UPDATES USER INFOS
   */
   const updateInfos = () => {
     dispatch({type: 'isLoading', wait: true});
+
+    if (name.value==='' || email.value==='') {
+      Snack.danger('Tous les champs doivent être remplis !',showSnack,dispatch);
+      return dispatch({type: 'isLoading', wait: false});
+    }
+
     const body = {
       name: name.value,
       email: email.value,
     }
+
     dispatch({type:'progress',load:0.5});
-    Fetch.updateInfos(currentUser.id,body,token).then( res => {
-      Fetch.getCurrentUser(token).then( async user => {
-        dispatch({type:'progress',load:progress+0.5});
-        dispatch({type: 'currentUser', define: user.data});
-      })
-      dispatch({type:'showDialog',dialog:{on:false,which:''}})
-      Snack.success('Modifications enregistrées !',showSnack,dispatch);
+    Fetch.updateInfos(currentUser.id,body,token).then( async user => {
+      await dispatch({type: 'currentUser', define: user.data});
+      await dispatch({type:'progress',load:progress+0.5});
+      await dispatch({type:'showDialog',dialog:{on:false,which:''}})
       dispatch({type: 'isLoading', wait: false});
+      Snack.success('Modifications enregistrées !',showSnack,dispatch);
     });
   }
 
@@ -39,7 +48,9 @@ const EditInfos = () => {
   * @ CLOSES INFOS DIALOG
   */
   const cancel = () => {
-    dispatch({type:'showDialog',dialog:{on:false,which:''}});
+    name.value = '';
+    email.value = '';
+    dispatch({type:'showDialog',dialog:{on:false,which:''}})
     Snack.warning('Modifications annulées !',showSnack,dispatch);
   }
 

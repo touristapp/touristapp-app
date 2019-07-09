@@ -24,7 +24,6 @@ const EditInfos = () => {
     }
     dispatch({type:'progress',load:0.5});
     Fetch.updatePassword(currentUser.id,body,token).then( res => {
-      console.log(res);
       if (res.error!==undefined) {
         Snack.danger(res.error,showSnack,dispatch);
         dispatch({type: 'isLoading', wait: false});

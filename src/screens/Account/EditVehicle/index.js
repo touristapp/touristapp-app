@@ -16,7 +16,7 @@ const EditVehicle = () => {
 
   /**
   * @defaultFuels
-  * @ FETCHES DEFAULT FUELS AND VEHICLES
+  * @ FETCHES DEFAULT FUELS AND USERVEHICLE
   */
   useEffect(()=>{
     if (defaultFuels.length===0) {
@@ -45,21 +45,30 @@ const EditVehicle = () => {
   const updateVehicle = () => {
     dispatch({type: 'isLoading', wait: true});
 
+    if (newVehicle.value==='' || newConso.value==='' || activeFuel.id===null) {
+      Snack.danger('Tous les champs doivent être remplis !',showSnack,dispatch);
+      return dispatch({type: 'isLoading', wait: false});
+    }
+
     const body = {
       vehicleId: userVehicle.id || 0,
       name: newVehicle.value,
       FuelId: activeFuel.id,
       conso: newConso.value,
     }
-    dispatch({type:'progress',load:0.5});
-    Fetch.updateVehicle(currentUser.id,body,token).then( res => {
-      Fetch.getUserVehicle(currentUser.VehicleId,token).then( vehicle => {
-        dispatch({type:'progress',load:progress+0.5});
-        dispatch({type: 'userVehicle', setVehicle: vehicle.data})
+
+    dispatch({type:'progress',load:0.33});
+    Fetch.updateVehicle(currentUser.id,body,token).then( async user => {
+      await dispatch({type: 'currentUser', define: user.data})
+      dispatch({type:'progress',load:progress+0.33});
+
+      Fetch.getUserVehicle(user.data.VehicleId,token).then( async vehicle => {
+        await dispatch({type: 'userVehicle', setVehicle: vehicle.data})
+        dispatch({type:'progress',load:progress+0.33});
+        dispatch({type:'showDialog',dialog:{on:false,which:''}})
+        dispatch({type: 'isLoading', wait: false});
+        Snack.success('Modifications enregistrées !',showSnack,dispatch);
       })
-      dispatch({type:'showDialog',dialog:{on:false,which:''}})
-      Snack.success('Modifications enregistrées !',showSnack,dispatch);
-      dispatch({type: 'isLoading', wait: false});
     });
   }
 
@@ -69,6 +78,8 @@ const EditVehicle = () => {
   * @ CLOSES VEHICLE DIALOG
   */
   const cancel = () => {
+    newVehicle.value = '';
+    newConso.value = '';
     dispatch({type:'showDialog',dialog:{on:false,which:''}});
     Snack.warning('Modifications annulées !',showSnack,dispatch);
   }
@@ -78,7 +89,7 @@ const EditVehicle = () => {
       <DataTable.Header style={{backgroundColor:colors.CARROT, marginTop:30, borderTopLeftRadius:20, borderTopRightRadius:20}}>
         <DataTable.Title style={{marginLeft:10}}>MON VÉHICULE</DataTable.Title>
       </DataTable.Header>
-      {vehicleFuel.id && userVehicle.name!==undefined &&
+      {vehicleFuel.id && userVehicle!==undefined &&
         <>
         <DataTable.Header style={{backgroundColor:colors.CREAM}}>
           <DataTable.Title>Nom</DataTable.Title>

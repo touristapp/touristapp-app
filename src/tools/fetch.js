@@ -1,4 +1,4 @@
-import ENV from '../../env'; 
+import ENV from '../../env';
 
 /***************************************/
 /*          FETCH PATTERNS             */
@@ -108,18 +108,15 @@ export default Fetch = {
     getAllVehicles: (auth) => get(`${api}vehicle`,auth),
 
     getAllFuels: (auth) => get(`${api}fuel`,auth),
-  
+
     updateInfos: (id,body,auth) => put(`${api}user/${id}`, JSON.stringify(body), auth),
 
     updateVehicle: (id,body,auth) => put(`${api}user/vehicle/${id}`, JSON.stringify(body), auth),
 
     updatePassword: (id,body,auth) => put(`${api}user/updatepassword/${id}`, JSON.stringify(body), auth),
 
-    getVehicleFuel: async function (fuelId,auth) {
-      return await get(`${api}vehicle/fuel/${fuelId}`,auth)
-    },
+    getVehicleFuel: (fuelId,auth) => get(`${api}vehicle/fuel/${fuelId}`,auth),
 
-    getDirections: async function (addressDescDepart, addressDescArrivee){
-        return await fetchDirection(addressDescDepart, addressDescArrivee)
-    },
+    getDirections: (addressDescDepart, addressDescArrivee) =>
+      fetchDirection( addressDescDepart, addressDescArrivee),
 }
