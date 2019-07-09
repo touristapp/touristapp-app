@@ -17,7 +17,6 @@ const EditInfos = () => {
   * @ UPDATES USER INFOS
   */
   const updatePassword = () => {
-    dispatch({type: 'isLoading', wait: true});
     const body = {
       old_password: oldPassword.value,
       password: password.value,
@@ -25,15 +24,17 @@ const EditInfos = () => {
     }
     dispatch({type:'progress',load:0.5});
     Fetch.updatePassword(currentUser.id,body,token).then( res => {
-      console.log(res.error);
+      console.log(res);
       if (res.error!==undefined) {
-        Snack.danger(res.error.error,showSnack,dispatch);
+        Snack.danger(res.error,showSnack,dispatch);
+        dispatch({type: 'isLoading', wait: false});
       } else {
+        dispatch({type: 'isLoading', wait: true});
         dispatch({type:'progress',load:progress+0.5});
         dispatch({type:'showDialog',dialog:{on:false,which:''}})
-        dispatch({type: 'isLoading', wait: false});
         logout();
         Snack.success('Mot de passe modifié !',showSnack,dispatch);
+        dispatch({type: 'isLoading', wait: false});
       }
     });
   }
