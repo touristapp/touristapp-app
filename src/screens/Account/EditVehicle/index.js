@@ -11,12 +11,12 @@ const EditVehicle = () => {
   const [activeFuel,setActiveFuel] = useState(vehicleFuel);
   const [expandList,setExpandList] = useState(false);
   const [carbonFootprint,setCarbonFootprint] = useState(0);
-  const newVehicle = useInput(userVehicle.name);
-  const newConso = useInput(userVehicle.conso.toString());
+  const newVehicle = userVehicle!==undefined ? useInput(userVehicle.name) : useInput('');
+  const newConso = userVehicle!==undefined ? useInput(userVehicle.conso.toString()) : useInput('');
 
   /**
   * @defaultFuels
-  * @ FETCHES DEFAULT FUELS AND VEHICLES
+  * @ FETCHES DEFAULT FUELS AND USERVEHICLE
   */
   useEffect(()=>{
     if (defaultFuels.length===0) {
@@ -45,23 +45,67 @@ const EditVehicle = () => {
   const updateVehicle = () => {
     dispatch({type: 'isLoading', wait: true});
 
+    if (newVehicle.value==='' || newConso.value==='' || activeFuel.id===null) {
+      Snack.danger('Tous les champs doivent être remplis !',showSnack,dispatch);
+      return dispatch({type: 'isLoading', wait: false});
+    }
+
     const body = {
       vehicleId: userVehicle.id || 0,
       name: newVehicle.value,
       FuelId: activeFuel.id,
       conso: newConso.value,
     }
-    dispatch({type:'progress',load:0.5});
-    Fetch.updateVehicle(currentUser.id,body,token).then( res => {
-      Fetch.getUserVehicle(currentUser.VehicleId,token).then( vehicle => {
-        dispatch({type:'progress',load:progress+0.5});
-        dispatch({type: 'userVehicle', setVehicle: vehicle.data})
-      })
+
+    dispatch({type:'progress',load:0.33});
+    Fetch.updateVehicle(currentUser.id,body,token).then( result => {
+      if (result.data.VehicleId) {
+        dispatch({type: 'currentUser', define: result.data})
+        dispatch({type:'progress',load:progress+0.33});
+        Fetch.getUserVehicle(result.data.VehicleId,token).then( async vehicle => {
+          dispatch({type: 'userVehicle', setVehicle: vehicle.data})
+          Snack.success('Modifications enregistrées !',showSnack,dispatch);
+        })
+      } else {
+        dispatch({type: 'userVehicle', setVehicle: result.data})
+        dispatch({type:'progress',load:progress+0.33});
+        Snack.success('Modifications enregistrées !',showSnack,dispatch);
+      }
+      dispatch({type:'progress',load:progress+0.33});
       dispatch({type:'showDialog',dialog:{on:false,which:''}})
-      Snack.success('Modifications enregistrées !',showSnack,dispatch);
       dispatch({type: 'isLoading', wait: false});
     });
   }
+
+  /**
+  * @userVehicle
+  * @currentUser
+  * @ DELETE VEHICLE AND UPDATES USER VEHICLE
+  */
+  const deleteVehicle = () => {
+    dispatch({type: 'isLoading', wait: true});
+    dispatch({type:'progress',load:0.33});
+
+    Fetch.deleteVehicle(userVehicle.id,token).then( res => {
+      dispatch({type: 'userVehicle', setVehicle: {
+        id:null,name:'',conso:'',FuelId:'',updatedAt:'',createdAt:'' } });
+      dispatch({type: 'currentUser', define: {
+        id: currentUser.id,
+        name: currentUser.name,
+        email: currentUser.email,
+        picture: currentUser.picture,
+        role: currentUser.role,
+        state: currentUser.state,
+        updatedAt: currentUser.updatedAt,
+        createdAt: currentUser.createdAt,
+        VehicleId: null
+      } });
+      dispatch({type:'progress',load:progress+0.33});
+      dispatch({type:'showDialog',dialog:{on:false,which:''}})
+      dispatch({type: 'isLoading', wait: false});
+    });
+  }
+
 
   /**
   * @showDialog
@@ -69,6 +113,8 @@ const EditVehicle = () => {
   * @ CLOSES VEHICLE DIALOG
   */
   const cancel = () => {
+    newVehicle.value = '';
+    newConso.value = '';
     dispatch({type:'showDialog',dialog:{on:false,which:''}});
     Snack.warning('Modifications annulées !',showSnack,dispatch);
   }
@@ -78,7 +124,7 @@ const EditVehicle = () => {
       <DataTable.Header style={{backgroundColor:colors.CARROT, marginTop:30, borderTopLeftRadius:20, borderTopRightRadius:20}}>
         <DataTable.Title style={{marginLeft:10}}>MON VÉHICULE</DataTable.Title>
       </DataTable.Header>
-      {vehicleFuel.id && userVehicle.name!==undefined &&
+      {vehicleFuel!==undefined && userVehicle!==undefined && userVehicle.id!==null &&
         <>
         <DataTable.Header style={{backgroundColor:colors.CREAM}}>
           <DataTable.Title>Nom</DataTable.Title>
@@ -180,6 +226,7 @@ const EditVehicle = () => {
             style={Style.deleteVehicle}
             icon="delete-forever"
             mode="text"
+            onPress={deleteVehicle}
             >
             Supprimer mon véhicule
           </Button>

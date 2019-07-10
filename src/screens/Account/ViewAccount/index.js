@@ -25,9 +25,9 @@ export default function ViewAccount() {
     * @ AUTHORIZE USER BY CHECKING TOKEN
     */
     useEffect(()=> {
-      dispatch({type: 'progress', load: 0})
-      dispatch({type: 'isLoading', wait: true});
       if (token==='') {
+        dispatch({type: 'progress', load: 0})
+        dispatch({type: 'isLoading', wait: true});
         Storage.retrieve('token').then( result => {
           Fetch.authorizeUser(result).then( auth =>
             dispatch({type:'token',retrieve:{token:result, data:auth.data} }));

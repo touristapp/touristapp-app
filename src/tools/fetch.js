@@ -1,4 +1,4 @@
-import ENV from '../../env'; 
+import ENV from '../../env';
 
 /***************************************/
 /*          FETCH PATTERNS             */
@@ -64,6 +64,24 @@ const put = async (url, body={}, auth='') => {
     }
 };
 
+const remove = async (url, auth='') => {
+    try {
+        let response = await fetch(
+            url,
+            {
+                method: "DELETE",
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json",
+                    "Authorization": 'Bearer '+auth.token
+                },
+            }
+        );
+        return response.json();
+    } catch (errors) {
+        throw errors;
+    }
+};
 
 const fetchDirection = async (addressDescDepart, addressDescArrivee) => {
     try {
@@ -93,33 +111,36 @@ const fetchDirection = async (addressDescDepart, addressDescArrivee) => {
 /***************************************/
 
 export default Fetch = {
-    register: (body) => post(`${api}auth/register`,JSON.stringify(body)),
+  /******** AUTH ********/
+  register: (body) => post(`${api}auth/register`,JSON.stringify(body)),
 
-    login: (body) => post(`${api}auth/login`,JSON.stringify(body)),
+  login: (body) => post(`${api}auth/login`,JSON.stringify(body)),
 
-    authorizeUser: (token) => post(`${api}auth/authorize`,JSON.stringify({token: token})),
+  authorizeUser: (token) => post(`${api}auth/authorize`,JSON.stringify({token: token})),
 
-    getCurrentUser: (auth) => get(`${api}user/${auth.data.decoded.id}`,auth),
+  /******** USER ********/
+  getCurrentUser: (auth) => get(`${api}user/${auth.data.decoded.id}`,auth),
 
-    getUserVehicle: (userId,auth) => get(`${api}vehicle/${userId}`,auth),
+  updateInfos: (id,body,auth) => put(`${api}user/${id}`, JSON.stringify(body), auth),
 
-    getVehicleFuel: (vehicleId,auth) => get(`${api}vehicle/fuel/${vehicleId}`,auth),
+  updateVehicle: (id,body,auth) => put(`${api}user/vehicle/${id}`, JSON.stringify(body), auth),
 
-    getAllVehicles: (auth) => get(`${api}vehicle`,auth),
+  updatePassword: (id,body,auth) => put(`${api}user/updatepassword/${id}`, JSON.stringify(body), auth),
 
-    getAllFuels: (auth) => get(`${api}fuel`,auth),
-  
-    updateInfos: (id,body,auth) => put(`${api}user/${id}`, JSON.stringify(body), auth),
+  /******** VEHICLE *******/
+  getUserVehicle: (userId,auth) => get(`${api}vehicle/${userId}`,auth),
 
-    updateVehicle: (id,body,auth) => put(`${api}user/vehicle/${id}`, JSON.stringify(body), auth),
+  getVehicleFuel: (vehicleId,auth) => get(`${api}vehicle/fuel/${vehicleId}`,auth),
 
-    updatePassword: (id,body,auth) => put(`${api}user/updatepassword/${id}`, JSON.stringify(body), auth),
+  getAllVehicles: (auth) => get(`${api}vehicle`,auth),
 
-    getVehicleFuel: async function (fuelId,auth) {
-      return await get(`${api}vehicle/fuel/${fuelId}`,auth)
-    },
+  deleteVehicle: (vehicleId,auth) => remove(`${api}vehicle/${vehicleId}`,auth),
 
-    getDirections: async function (addressDescDepart, addressDescArrivee){
-        return await fetchDirection(addressDescDepart, addressDescArrivee)
-    },
+  /******** FUEL *********/
+  getAllFuels: (auth) => get(`${api}fuel`,auth),
+
+  /******** MAPS *********/
+  getDirections: (addressDescDepart, addressDescArrivee) =>
+      fetchDirection( addressDescDepart, addressDescArrivee),
+
 }
