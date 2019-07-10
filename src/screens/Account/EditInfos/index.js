@@ -11,10 +11,6 @@ const EditInfos = () => {
   const name = useInput(currentUser.name);
   const email = useInput(currentUser.email);
 
-  useEffect(()=>{
-      console.log(showDialog);
-  })
-
   /**
   * @currentUser
   * @ UPDATES USER INFOS

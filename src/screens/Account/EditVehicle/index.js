@@ -11,8 +11,10 @@ const EditVehicle = () => {
   const [activeFuel,setActiveFuel] = useState(vehicleFuel);
   const [expandList,setExpandList] = useState(false);
   const [carbonFootprint,setCarbonFootprint] = useState(0);
-  const newVehicle = useInput(userVehicle.name);
-  const newConso = useInput(userVehicle.conso.toString());
+  console.log('**** USER VEHICLE IN CONSTS ****');
+  console.log(userVehicle);
+  const newVehicle = userVehicle!==undefined ? useInput(userVehicle.name) : useInput('');
+  const newConso = userVehicle!==undefined ? useInput(userVehicle.conso.toString()) : useInput('');
 
   /**
   * @defaultFuels
@@ -58,17 +60,22 @@ const EditVehicle = () => {
     }
 
     dispatch({type:'progress',load:0.33});
-    Fetch.updateVehicle(currentUser.id,body,token).then( async user => {
-      await dispatch({type: 'currentUser', define: user.data})
-      dispatch({type:'progress',load:progress+0.33});
-
-      Fetch.getUserVehicle(user.data.VehicleId,token).then( async vehicle => {
-        await dispatch({type: 'userVehicle', setVehicle: vehicle.data})
+    Fetch.updateVehicle(currentUser.id,body,token).then( result => {
+      if (result.data.VehicleId) {
+        dispatch({type: 'currentUser', define: result.data})
         dispatch({type:'progress',load:progress+0.33});
-        dispatch({type:'showDialog',dialog:{on:false,which:''}})
-        dispatch({type: 'isLoading', wait: false});
+        Fetch.getUserVehicle(result.data.VehicleId,token).then( async vehicle => {
+          dispatch({type: 'userVehicle', setVehicle: vehicle.data})
+          Snack.success('Modifications enregistrées !',showSnack,dispatch);
+        })
+      } else {
+        dispatch({type: 'userVehicle', setVehicle: result.data})
+        dispatch({type:'progress',load:progress+0.33});
         Snack.success('Modifications enregistrées !',showSnack,dispatch);
-      })
+      }
+      dispatch({type:'progress',load:progress+0.33});
+      dispatch({type:'showDialog',dialog:{on:false,which:''}})
+      dispatch({type: 'isLoading', wait: false});
     });
   }
 
@@ -89,7 +96,7 @@ const EditVehicle = () => {
       <DataTable.Header style={{backgroundColor:colors.CARROT, marginTop:30, borderTopLeftRadius:20, borderTopRightRadius:20}}>
         <DataTable.Title style={{marginLeft:10}}>MON VÉHICULE</DataTable.Title>
       </DataTable.Header>
-      {vehicleFuel.id && userVehicle!==undefined &&
+      {vehicleFuel!==undefined && userVehicle!==undefined &&
         <>
         <DataTable.Header style={{backgroundColor:colors.CREAM}}>
           <DataTable.Title>Nom</DataTable.Title>

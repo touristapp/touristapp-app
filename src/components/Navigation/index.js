@@ -40,12 +40,6 @@ export default function Navigation() {
     ]);
 		const [{ showSnack, snackContent, isLoading }, dispatch] = useStateValue();
 
-    useEffect(
-			()=> {
-				//console.log('<<<< index changed >>>>');
-			}, [index]
-    )
-
     const _handleIndexChange = index => setIndex(index);
     const _renderScene = BottomNavigation.SceneMap({ home: HomeRoute, search: SearchRoute, account: AccountRoute, })
 
