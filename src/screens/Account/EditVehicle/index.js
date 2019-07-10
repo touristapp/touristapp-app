@@ -11,8 +11,6 @@ const EditVehicle = () => {
   const [activeFuel,setActiveFuel] = useState(vehicleFuel);
   const [expandList,setExpandList] = useState(false);
   const [carbonFootprint,setCarbonFootprint] = useState(0);
-  console.log('**** USER VEHICLE IN CONSTS ****');
-  console.log(userVehicle);
   const newVehicle = userVehicle!==undefined ? useInput(userVehicle.name) : useInput('');
   const newConso = userVehicle!==undefined ? useInput(userVehicle.conso.toString()) : useInput('');
 
@@ -80,6 +78,36 @@ const EditVehicle = () => {
   }
 
   /**
+  * @userVehicle
+  * @currentUser
+  * @ DELETE VEHICLE AND UPDATES USER VEHICLE
+  */
+  const deleteVehicle = () => {
+    dispatch({type: 'isLoading', wait: true});
+    dispatch({type:'progress',load:0.33});
+
+    Fetch.deleteVehicle(userVehicle.id,token).then( res => {
+      dispatch({type: 'userVehicle', setVehicle: {
+        id:null,name:'',conso:'',FuelId:'',updatedAt:'',createdAt:'' } });
+      dispatch({type: 'currentUser', define: {
+        id: currentUser.id,
+        name: currentUser.name,
+        email: currentUser.email,
+        picture: currentUser.picture,
+        role: currentUser.role,
+        state: currentUser.state,
+        updatedAt: currentUser.updatedAt,
+        createdAt: currentUser.createdAt,
+        VehicleId: null
+      } });
+      dispatch({type:'progress',load:progress+0.33});
+      dispatch({type:'showDialog',dialog:{on:false,which:''}})
+      dispatch({type: 'isLoading', wait: false});
+    });
+  }
+
+
+  /**
   * @showDialog
   * @showSnack
   * @ CLOSES VEHICLE DIALOG
@@ -96,7 +124,7 @@ const EditVehicle = () => {
       <DataTable.Header style={{backgroundColor:colors.CARROT, marginTop:30, borderTopLeftRadius:20, borderTopRightRadius:20}}>
         <DataTable.Title style={{marginLeft:10}}>MON VÉHICULE</DataTable.Title>
       </DataTable.Header>
-      {vehicleFuel!==undefined && userVehicle!==undefined &&
+      {vehicleFuel!==undefined && userVehicle!==undefined && userVehicle.id!==null &&
         <>
         <DataTable.Header style={{backgroundColor:colors.CREAM}}>
           <DataTable.Title>Nom</DataTable.Title>
@@ -198,6 +226,7 @@ const EditVehicle = () => {
             style={Style.deleteVehicle}
             icon="delete-forever"
             mode="text"
+            onPress={deleteVehicle}
             >
             Supprimer mon véhicule
           </Button>
