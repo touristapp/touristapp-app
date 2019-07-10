@@ -35,7 +35,11 @@ const EditVehicle = () => {
   * @newConso
   * @ CALCULATES CURRENT CARBON FOOTPRINT
   */
-  useEffect(()=> activeFuel ? setCarbonFootprint( Math.round( newConso.value * activeFuel.carbonFootprint * 100) / 100) : null, [activeFuel,newConso]);
+  useEffect(()=> {
+    activeFuel ?
+      setCarbonFootprint( Math.round( newConso.value * activeFuel.carbonFootprint * 100) / 100)
+      : null
+    }, [activeFuel,newConso]);
 
   /**
   * @userVehicle
@@ -47,34 +51,34 @@ const EditVehicle = () => {
 
     if (newVehicle.value==='' || newConso.value==='' || activeFuel.id===null) {
       Snack.danger('Tous les champs doivent être remplis !',showSnack,dispatch);
-      return dispatch({type: 'isLoading', wait: false});
-    }
-
-    const body = {
-      vehicleId: userVehicle.id || 0,
-      name: newVehicle.value,
-      FuelId: activeFuel.id,
-      conso: newConso.value,
-    }
-
-    dispatch({type:'progress',load:0.33});
-    Fetch.updateVehicle(currentUser.id,body,token).then( result => {
-      if (result.data.VehicleId) {
-        dispatch({type: 'currentUser', define: result.data})
-        dispatch({type:'progress',load:progress+0.33});
-        Fetch.getUserVehicle(result.data.VehicleId,token).then( async vehicle => {
-          dispatch({type: 'userVehicle', setVehicle: vehicle.data})
-          Snack.success('Modifications enregistrées !',showSnack,dispatch);
-        })
-      } else {
-        dispatch({type: 'userVehicle', setVehicle: result.data})
-        dispatch({type:'progress',load:progress+0.33});
-        Snack.success('Modifications enregistrées !',showSnack,dispatch);
-      }
-      dispatch({type:'progress',load:progress+0.33});
-      dispatch({type:'showDialog',dialog:{on:false,which:''}})
       dispatch({type: 'isLoading', wait: false});
-    });
+    } else {
+      const body = {
+        vehicleId: userVehicle.id || 0,
+        name: newVehicle.value,
+        FuelId: activeFuel.id,
+        conso: newConso.value,
+      }
+
+      dispatch({type:'progress',load:0.33});
+      Fetch.updateVehicle(currentUser.id,body,token).then( result => {
+        if (result.data.VehicleId) {
+          dispatch({type: 'currentUser', define: result.data})
+          dispatch({type:'progress',load:progress+0.33});
+          Fetch.getUserVehicle(result.data.VehicleId,token).then( async vehicle => {
+            dispatch({type: 'userVehicle', setVehicle: vehicle.data})
+            Snack.success('Modifications enregistrées !',showSnack,dispatch);
+          })
+        } else {
+          dispatch({type: 'userVehicle', setVehicle: result.data})
+          dispatch({type:'progress',load:progress+0.33});
+          Snack.success('Modifications enregistrées !',showSnack,dispatch);
+        }
+        dispatch({type:'progress',load:progress+0.33});
+        dispatch({type:'showDialog',dialog:{on:false,which:''}})
+        dispatch({type: 'isLoading', wait: false});
+      });
+    }
   }
 
   /**
@@ -103,6 +107,7 @@ const EditVehicle = () => {
       dispatch({type:'progress',load:progress+0.33});
       dispatch({type:'showDialog',dialog:{on:false,which:''}})
       dispatch({type: 'isLoading', wait: false});
+      Snack.warning('Véhicule supprimé !',showSnack,dispatch);
     });
   }
 
