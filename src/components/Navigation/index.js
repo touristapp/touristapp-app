@@ -17,7 +17,9 @@ import { useStateValue } from '../../hooks/state';
 import { BottomNavigation, Snackbar, ActivityIndicator } from 'react-native-paper';
 
 // Routes
-const HomeRoute = () => <Home/>;
+const HomeRoute = () =>  {
+  return <Home/>
+};
 const SearchRoute = () => <Search/>;
 const AccountRoute = () => {
 	 // Get the login state defined in App.js
@@ -37,12 +39,6 @@ export default function Navigation() {
 		{ key: 'account', title: 'Mon compte', icon: 'account-circle' }
     ]);
 		const [{ showSnack, snackContent, isLoading }, dispatch] = useStateValue();
-
-    useEffect(
-			()=> {
-				//console.log('<<<< index changed >>>>');
-			}, [index]
-    )
 
     const _handleIndexChange = index => setIndex(index);
     const _renderScene = BottomNavigation.SceneMap({ home: HomeRoute, search: SearchRoute, account: AccountRoute, })

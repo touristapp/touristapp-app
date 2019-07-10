@@ -1,15 +1,53 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, Image } from 'react-native';
 import { Button, TextInput, DataTable, Portal, Dialog } from 'react-native-paper';
 import Style from '../../../styles/viewAccount';
 import { colors } from '../../../styles/themes/variables';
+import useInput from '../../../hooks/useInputs';
 import { useStateValue } from '../../../hooks/state';
 
 const EditInfos = () => {
-  const [{showSnack, currentUser, showDialog}, dispatch ] = useStateValue();
+  const [{showSnack, token, currentUser, showDialog, progress, isLoading}, dispatch ] = useStateValue();
+  const name = useInput(currentUser.name);
+  const email = useInput(currentUser.email);
 
+  /**
+  * @currentUser
+  * @ UPDATES USER INFOS
+  */
   const updateInfos = () => {
-    
+    dispatch({type: 'isLoading', wait: true});
+
+    if (name.value==='' || email.value==='') {
+      Snack.danger('Tous les champs doivent être remplis !',showSnack,dispatch);
+      return dispatch({type: 'isLoading', wait: false});
+    }
+
+    const body = {
+      name: name.value,
+      email: email.value,
+    }
+
+    dispatch({type:'progress',load:0.5});
+    Fetch.updateInfos(currentUser.id,body,token).then( async user => {
+      await dispatch({type: 'currentUser', define: user.data});
+      await dispatch({type:'progress',load:progress+0.5});
+      await dispatch({type:'showDialog',dialog:{on:false,which:''}})
+      dispatch({type: 'isLoading', wait: false});
+      Snack.success('Modifications enregistrées !',showSnack,dispatch);
+    });
+  }
+
+  /**
+  * @showDialog
+  * @showSnack
+  * @ CLOSES INFOS DIALOG
+  */
+  const cancel = () => {
+    name.value = '';
+    email.value = '';
+    dispatch({type:'showDialog',dialog:{on:false,which:''}})
+    Snack.warning('Modifications annulées !',showSnack,dispatch);
   }
 
     return (
@@ -26,66 +64,62 @@ const EditInfos = () => {
         <DataTable.Cell>{currentUser.email}</DataTable.Cell>
       </DataTable.Row>
       <DataTable.Row style={Object.assign({borderBottomRightRadius:20},Style.datarow)}>
-          <Button style={Style.editInfos} icon="person-pin" color={colors.SEA} mode="text" onPress={()=>dispatch({type:'showDialog',dialog:true})}>Modifier mes informations</Button>
-          <Portal>
-            <Dialog
-               visible={showDialog}
-               onDismiss={()=>dispatch({type:'showDialog',dialog:false})}>
-              <Dialog.Title>Modifier mes informations</Dialog.Title>
-                <Dialog.Content>
-                  <View style={Style.mainContainer}>
-            				<View style={Style.imageContainer}>
-            					<Image
-            						style={Style.profileImage}
-            						source={{uri: 'https://avatars1.githubusercontent.com/u/1349186?s=180&v=4'}}
-            					/>
-            				</View>
-            				<TextInput
-            					selectionColor={colors.FIRE}
-            					mode='outlined'
-            					label='Nom'
-                      value={currentUser.name}
-            					style={Style.input}
-            					dense={true}
-            				/>
-            				<TextInput
-            					selectionColor={colors.FIRE}
-            					mode='outlined'
-                      value={currentUser.email}
-            					label='Email'
-            					style={Style.input}
-            					dense={true}
-            				/>
-                  </View>
-                </Dialog.Content>
-              <Dialog.Actions style={Style.actions}>
-                <Button
-                  style={Style.deleteButton}
-                  icon="delete-forever"
-                  mode="text"
-                  >
-                  Supprimer mon compte
-                </Button>
-                <Button
-                  style={Style.saveButton}
-                  icon="check"
-                  mode="text"
-                  onPress={() => {
-                    dispatch({type:'showDialog',dialog:false})
-                    Snack.success('Modifications enregistrées !',showSnack,dispatch);
-                  }}>
-                  Valider
-                </Button>
-              </Dialog.Actions>
-            </Dialog>
-          </Portal>
+          <Button style={Style.editInfos} icon="person-pin" color={colors.SEA} mode="text" onPress={()=>dispatch({type:'showDialog',dialog:{on:true,which:'infos'}})}>Modifier mes informations</Button>
+          {(showDialog.which === 'infos') && (
+            <Portal>
+              <Dialog
+                 visible={showDialog.on}
+                 onDismiss={()=>dispatch({type:'showDialog',dialog:{on:false,which:''}})}>
+                <Dialog.Title>Modifier mes informations</Dialog.Title>
+                  <Dialog.Content>
+                    <View style={Style.mainContainer}>
+              				<View style={Style.imageContainer}>
+              					<Image
+              						style={Style.profileImage}
+              						source={{uri: 'https://avatars1.githubusercontent.com/u/1349186?s=180&v=4'}}
+              					/>
+              				</View>
+              				<TextInput
+              					selectionColor={colors.FIRE}
+              					mode='outlined'
+              					label='Nom'
+              					style={Style.input}
+              					dense={true}
+                        {...name}
+              				/>
+              				<TextInput
+              					selectionColor={colors.FIRE}
+              					mode='outlined'
+              					label='Email'
+              					style={Style.input}
+              					dense={true}
+                        {...email}
+              				/>
+                    </View>
+                  </Dialog.Content>
+                <Dialog.Actions style={Style.actions}>
+                  <Button
+                    style={Style.deleteButton}
+                    icon="delete-forever"
+                    mode="text"
+                    onPress={cancel}
+                    >
+                    Annuler
+                  </Button>
+                  <Button
+                    style={Style.saveButton}
+                    icon="check"
+                    mode="text"
+                    onPress={updateInfos}>
+                    Valider
+                  </Button>
+                </Dialog.Actions>
+              </Dialog>
+            </Portal>
+          )}
       </DataTable.Row>
     </>
     )
 }
-
-
-
-
 
 export default EditInfos;

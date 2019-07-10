@@ -15,6 +15,14 @@ export default StyleSheet.create({
         height: 160,
         marginTop: -3,
       },
+      container: {
+        display: 'flex',
+        flex: 1,
+        flexDirection:'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingTop: 250,
+      },
       avatar: {
         width: 130,
         height: 130,
@@ -83,11 +91,16 @@ export default StyleSheet.create({
       datarow: {
         backgroundColor:colors.WHITE,
       },
-
       editVehicle: {
           alignSelf: 'center',
           flex: 1,
           marginTop: 5,
+          padding: 8,
+      },
+      deleteVehicle: {
+          alignSelf: 'center',
+          flex: 1,
+          marginTop: 1,
           padding: 8,
       },
       editPassword: {
@@ -100,14 +113,14 @@ export default StyleSheet.create({
       actions: {
         display: 'flex',
         flexDirection: 'row',
+        justifyContent:'space-around',
+        paddingBottom: 20,
       },
       deleteButton: {
-        borderWidth: 1,
-        
-        marginLeft: -50,
+
       },
       saveButton: {
-        marginLeft: 0,
+
       },
       disconnect: {
         width: 300,
