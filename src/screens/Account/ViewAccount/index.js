@@ -11,11 +11,12 @@ import { Fetch, Storage, Snack } from '../../../tools';
 
 // Components imorts
 import Banner from '../../../components/Banner'
-import { View, Text, Image, ScrollView, StyleSheet } from 'react-native';
+import { View, Text, Image, ScrollView, StyleSheet, Platform, TouchableOpacity } from 'react-native';
 import { Button, Caption, ActivityIndicator, Provider, ProgressBar, DataTable } from 'react-native-paper';
 import EditInfos from '../EditInfos';
 import EditVehicle from '../EditVehicle';
 import EditPassword from '../EditPassword';
+import ImagePicker from "react-native-image-picker";
 
 export default function ViewAccount() {
     const [{showSnack, isLoading, token, currentUser, userVehicle, vehicleFuel, progress}, dispatch ] = useStateValue();
@@ -83,6 +84,65 @@ export default function ViewAccount() {
       return dispatch({type: 'isLoading', wait: false});
     },[vehicleFuel]);
 
+    /**
+    * @isLogged
+    * @ LOGOUT
+    */
+    const logout = () => {
+      dispatch({type: 'resetState'});
+      Storage.clear();
+      Snack.warning('Logged out !',showSnack,dispatch);
+    }
+
+    const chooseImage = () => {
+      const options = {
+        title: 'Select Avatar',
+        storageOptions: {
+          skipBackup: true,
+          path: 'images',
+        },
+      };
+
+      ImagePicker.showImagePicker(options, (response) => {
+        if (response.didCancel) {
+          console.log('User cancelled image picker');
+        } else if (response.error) {
+          console.log('ImagePicker Error: ', response.error);
+        } else if (response.customButton) {
+          console.log('User tapped custom button: ', response.customButton);
+        } else {
+          console.log("Fetching post request to add an image");
+          let updatedUser = currentUser;
+          Fetch
+            .postPicture(currentUser.id, createFormData(response), token.token)
+            .then( res => {
+              let oldImageUri = currentUser.picture;
+              updatedUser.picture = res.imageUrl;
+              dispatch({type: 'currentUser', define: updatedUser});
+              try{
+                Fetch.deletePicture(oldImageUri.replace("https://touristapps3.s3.eu-west-3.amazonaws.com/", ""), token.token)
+              }
+              catch(err){
+                console.log("ERROR in proceeding to delete image: ", err.message)
+              }
+            })
+            .catch(err => console.log(`ERROR in fetching new image: ${err}`));
+        }
+    })
+  }
+
+    const createFormData = (photo) => {
+      const data = new FormData();
+    
+      data.append("image", {
+        name: photo.fileName,
+        type: photo.type,
+        uri:
+          Platform.OS === "android" ? photo.uri : photo.uri.replace("file://", "")
+      });
+      return data;
+    };
+
     return (
       <Provider>
         <Banner message="Mon compte"/>
@@ -103,7 +163,9 @@ export default function ViewAccount() {
                 <View style={Style.header}>
                   <Image style={Style.headerImage} source={require('../../../assets/accountbg_small.png')} />
                 </View>
-                <Image style={Style.avatar} source={{uri: currentUser.picture}}/>
+                <TouchableOpacity style={Style.touchable} onPress = {chooseImage} >
+                    <Image  style={Style.avatar} source={{uri: currentUser.picture}} />
+                </TouchableOpacity>
                 <View style={Style.body}>
                   <View style={Style.bodyContent}>
                     <Text style={Style.name}>{currentUser.name}</Text>

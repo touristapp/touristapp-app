@@ -1,3 +1,4 @@
+import { returnStatement } from "@babel/types";
 import ENV from '../../env';
 
 /***************************************/
@@ -143,4 +144,31 @@ export default Fetch = {
   getDirections: (addressDescDepart, addressDescArrivee) =>
       fetchDirection( addressDescDepart, addressDescArrivee),
 
+  
+    postPicture: async (userId, body, token) => {
+      try{
+        let response = await fetch(`${api}user/addImage/${userId}`, {
+          method: "POST",
+          headers: {
+            "Authorization": 'Bearer ' + token
+          },
+          body
+        })
+        return response.json()
+      }
+      catch(err){
+        console.log("ERROR on fetching picture", err)
+      }
+    },
+
+  deletePicture: (fileKey, token) => {
+    fetch(`${api}user/deleteImage/${fileKey}`, {
+      method: "DELETE",
+      headers: {
+        "Authorization": 'Bearer ' + token
+      }})
+      .then( () => console.log(`SUCCESS: image with key ${fileKey} deleted`))
+      .catch( err => console.log(`ERROR in deleting mage with key ${fileKey}: ${err.stack}`))
+    
+  }
 }
