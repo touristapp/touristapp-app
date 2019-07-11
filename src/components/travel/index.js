@@ -5,9 +5,9 @@ import Style from '../../styles/travel';
 import { View, Text, Image, TouchableOpacity, Alert } from 'react-native';
 import { Title } from 'react-native-paper';
 
-const Travel = ({from, to, distance, carbonPrint, done = false}) => {
+const Travel = ({index, from, to, distance, carbonPrint, done = false}) => {
     return (
-        <View style={Style.form}>
+        <View style={Style.form} key={index}>
             <Title style={Style.title}>
                 {from} - {to}
             </Title>
