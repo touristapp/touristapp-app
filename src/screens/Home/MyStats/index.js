@@ -14,7 +14,7 @@ import Banner from '../../../components/Banner';
 import myTravels from '../../../styles/myTravels';
 
 export default function MyStats() {  
-    const [{myTravels, mySearches}, dispatch ] = useStateValue();
+    const [{myTravels, myTravelsNSearches}, dispatch ] = useStateValue();
 
     return (
         <>
@@ -43,7 +43,7 @@ export default function MyStats() {
                             Recherches effectués
                         </Title>
                         <Text style={Style.textContent}>
-                            {mySearches.length + myTravels.length}
+                            {myTravelsNSearches.length}
                         </Text>
                     </View>
                     <View style={Style.subForm}>

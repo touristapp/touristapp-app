@@ -26,10 +26,10 @@ export default function MySearches() {
     
     async function fetch() {     
         Fetch.getSearches(currentUser.id, token).then(travels => {
-            dispatch({type: 'mySearches', setSearches: travels.data.data})
+            let theSearches = travels.data.data
             Fetch.getTravels(currentUser.id, token).then(travels => {
-                dispatch({type: 'myTravels', setTravels: travels.data.data})
-                array = mySearches.concat(myTravels);
+                let theTravels = travels.data.data
+                array = theSearches.concat(theTravels);
                 dispatch({type: 'myTravelsNSearches', setTravelsNSearches: array})
                 fetchDone = true
             });
