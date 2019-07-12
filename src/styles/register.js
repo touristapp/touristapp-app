@@ -23,7 +23,8 @@ export default StyleSheet.create({
       backgroundColor: '#FFF',
       paddingHorizontal: 20,
       paddingTop: 20,
-      paddingBottom: 30,
+      paddingBottom: 20,
+      marginBottom: 20,
       borderRadius: 5,
     },
     title: {

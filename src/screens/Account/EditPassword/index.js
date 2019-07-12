@@ -83,6 +83,7 @@ const EditInfos = () => {
             					label='Ancien mot de passe'
             					style={Style.input}
             					dense={true}
+                      secureTextEntry={true}
                       {...oldPassword}
             				/>
             				<TextInput
@@ -91,6 +92,7 @@ const EditInfos = () => {
             					label='Mot de passe'
             					style={Style.input}
             					dense={true}
+                      secureTextEntry={true}
                       {...password}
             				/>
                     <TextInput
@@ -99,6 +101,7 @@ const EditInfos = () => {
             					label='Confirmation'
             					style={Style.input}
             					dense={true}
+                      secureTextEntry={true}
                       {...passwordConfirm}
             				/>
                   </View>

@@ -101,6 +101,7 @@ const mapsApi = async (addressDescDepart, addressDescArrivee, vehicle) => {
         throw errors;
     }
   };
+
 /***************************************/
 /*              SHORTCUTS              */
 /***************************************/
@@ -114,7 +115,7 @@ export default Fetch = {
   authorizeUser: (token) => post(`${api}auth/authorize`,JSON.stringify({token: token})),
 
   /******** USER ********/
-  getCurrentUser: (auth) => get(`${api}user/${auth.data.decoded.id}`,auth),
+  getCurrentUser: (auth) => get(`${api}user/${auth.decoded.id}`,auth),
 
   updateInfos: (id,body,auth) => put(`${api}user/${id}`, JSON.stringify(body), auth),
 
@@ -140,35 +141,29 @@ export default Fetch = {
   getDirections: (addressDescDepart, addressDescArrivee, vehicle) =>
       mapsApi( addressDescDepart, addressDescArrivee, vehicle),
 
-  
-    postPicture: async (userId, body, token) => {
-      try{
-        let response = await fetch(`${api}user/addImage/${userId}`, {
-          method: "POST",
-          headers: {
-            "Authorization": 'Bearer ' + token
-          },
-          body
-        })
-        return response.json()
-      }
-      catch(err){
-        console.log("ERROR on fetching picture", err)
-      }
-    },
-
-  deletePicture: (fileKey, token) => {
-    fetch(`${api}user/deleteImage/${fileKey}`, {
-      method: "DELETE",
-      headers: {
-        "Authorization": 'Bearer ' + token
-      }})
-      .then( () => console.log(`SUCCESS: image with key ${fileKey} deleted`))
-      .catch( err => console.log(`ERROR in deleting mage with key ${fileKey}: ${err.stack}`))
-    
+  /******** PICTURES *********/
+  postPicture: async (userId, body, auth) => {
+    try{
+      let response = await fetch(`${api}user/addImage/${userId}`, {
+        method: "POST",
+        headers: {
+          "Authorization": 'Bearer ' + auth.token
+        },
+        body
+      })
+      return response.json()
+    }
+    catch(err){
+      console.log("ERROR on fetching picture", err)
+    }
   },
-  
+
+  deletePicture: (fileKey, auth) => remove(`${api}user/deleteImage/${fileKey}`,auth),
+
+  /******** TRAVEL ************/
   getSearches: async (UserId, auth) => get(`${api}travel/itineraire/${UserId}`, auth),
 
-  getTravels: async (UserId, auth) => get(`${api}travel/voyage/${UserId}`, auth)
+  getTravels: async (UserId, auth) => get(`${api}travel/voyage/${UserId}`, auth),
+
+  createTravel: (body,auth) => post(`${api}travel/`, JSON.stringify(body), auth),
 }

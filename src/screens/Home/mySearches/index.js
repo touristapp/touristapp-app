@@ -10,21 +10,21 @@ import { useStateValue } from '../../../hooks/state';
 
 // Components imports
 import { View, Text } from 'react-native';
-import Travel from '../../../components/travel';
+import Travel from '../../../components/Travel';
 import Banner from '../../../components/Banner';
 
-export default function MySearches() {  
+export default function MySearches() {
     const [{token, currentUser, mySearches, myTravels, myTravelsNSearches}, dispatch ] = useStateValue();
     let fetchDone = false
     let array = []
 
     useEffect(() => {
         if (!fetchDone) {
-            fetch() 
+            fetch()
         }
     }, []);
-    
-    async function fetch() {     
+
+    async function fetch() {
         Fetch.getSearches(currentUser.id, token).then(travels => {
             let theSearches = travels.data.data
             Fetch.getTravels(currentUser.id, token).then(travels => {
@@ -38,7 +38,7 @@ export default function MySearches() {
 
     return (
         <>
-            <Banner message="Mes recherches" back={true}/> 
+            <Banner message="Mes recherches" back={true}/>
             <View style={Style.mainContainer}>
                 {myTravelsNSearches.map((travel, index) => {
                     return (

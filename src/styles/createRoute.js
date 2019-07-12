@@ -6,17 +6,8 @@ export default StyleSheet.create({
       backgroundColor: colors.SKY,
       flexDirection: 'column',
       justifyContent: 'center',
+      marginTop: 0,
       zIndex: 50,
-    },
-    shadow: {
-      shadowColor: 'black',
-      shadowOffset: { width: 0, height: 0 },
-      shadowOpacity: 1,
-      shadowRadius: 5,
-      elevation: 3,
-      zIndex:999,
-      // background color must be set
-      backgroundColor : "#0000" // invisible color
     },
     title: {
       opacity: 0.9,
@@ -30,6 +21,7 @@ export default StyleSheet.create({
         paddingHorizontal: 20,
         paddingTop: 30,
         paddingBottom: 30,
+        marginBottom: 20,
         borderRadius: 5,
         marginLeft: 20,
         marginRight: 20
@@ -77,4 +69,10 @@ export default StyleSheet.create({
       marginTop: 50,
       marginBottom: 10,
     },
+    connectButton: {
+      marginTop:10,
+      backgroundColor: colors.SEA,
+      padding: 8,
+      zIndex: 100,
+    }
 });

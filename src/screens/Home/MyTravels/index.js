@@ -10,7 +10,7 @@ import { useStateValue } from '../../../hooks/state';
 
 // Components imports
 import { View, Text } from 'react-native';
-import Travel from '../../../components/travel';
+import Travel from '../../../components/Travel';
 import Banner from '../../../components/Banner';
 
 export default function MyTravels() {
@@ -19,13 +19,14 @@ export default function MyTravels() {
 
     useEffect(() => {
         if (!fetchDone) {
-            fetch() 
+            fetch()
         }
     }, []);
 
-    
-    async function fetch() {     
+
+    async function fetch() {
         Fetch.getTravels(currentUser.id, token).then(travels => {
+            console.log(travels);
             dispatch({type: 'myTravels', setTravels: travels.data.data})
             fetchDone = true
         });
@@ -33,9 +34,14 @@ export default function MyTravels() {
 
     return (
         <>
-            <Banner message="Mes voyages" back={true}/> 
+            <Banner message="Mes voyages" back={true}/>
             <View style={Style.mainContainer}>
-            {myTravels.map((travel, index) => {
+            {myTravels.length===0 &&
+              <View style={{marginTop: 30}}>
+                <Text>Vous n'avez pas encore enregistré de voyage !</Text>
+              </View>
+            }
+            {myTravels.length>0 && myTravels.map((travel, index) => {
                 return (
                     <Travel key={index} from={travel.departure} to={travel.destination} distance={travel.distance} carbonPrint={travel.carbonFootprint} done={true}/>
                 )

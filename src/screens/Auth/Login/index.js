@@ -14,10 +14,9 @@ export default function Login() {
     const password = useInput();
     const [{ isLogged, showSnack, isLoading, token, progress, switchScreen }, dispatch] = useStateValue();
 
-    useEffect(()=>dispatch({type: 'isLoading',wait: false}),[isLogged])
+    //useEffect(()=>dispatch({type: 'isLoading',wait: false}),[isLogged])
 
     useEffect(()=>{
-      dispatch({type: 'isLoading', wait: false});
       if (token==='') {
         Storage.retrieve('token').then( result => {
           if (result!==undefined && result!==null) {
@@ -34,18 +33,19 @@ export default function Login() {
       if (email.value==='' || password.value==='') return Snack.danger("Tous les champs sont requis !",showSnack,dispatch);
       dispatch({type: 'isLoading',wait: true});
       Fetch.login({email:email.value, password:password.value})
-        .then( async response => {
+        .then( response => {
           if(response.error!==undefined) {
             dispatch({type: 'isLoading',wait: false});
             Snack.danger(response.error.message+'!',showSnack,dispatch);
           } else {
-            await Storage.store({
+            Storage.store({
               email: email.value,
               password: password.value,
               token: response.meta.token
+            }).then( res => {
+              dispatch({type: 'isLoading',wait: false});
+              dispatch({type: 'isLogged',status: true});
             })
-            dispatch({type: 'isLoading',wait: false});
-            dispatch({type: 'isLogged',status: true});
             Snack.success("Connexion réussie !",showSnack,dispatch);
           }
       });

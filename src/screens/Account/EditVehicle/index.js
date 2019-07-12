@@ -75,9 +75,9 @@ const EditVehicle = () => {
           Snack.success('Modifications enregistrées !',showSnack,dispatch);
         }
         dispatch({type:'progress',load:progress+0.33});
-        dispatch({type:'showDialog',dialog:{on:false,which:''}})
         dispatch({type: 'isLoading', wait: false});
       });
+      dispatch({type:'showDialog',dialog:{on:false,which:''}})
     }
   }
 

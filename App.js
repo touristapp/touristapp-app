@@ -21,8 +21,8 @@ const App = () => {
 		showSnack: false,
 		snackContent: { style: {}, theme: {}, message: ''	},
 		showDialog: {on: false, which: ''},
-		currentUser: {id:null,name:'',email:'',picture:'',role:'',state:'',updatedAt:'',createdAt:'',VehicleId:''},
-		userVehicle: {id:null,name:'',conso:'',FuelId:'',updatedAt:'',createdAt:''},
+		currentUser: {id:null,name:'',email:'',picture:'',role:'',state:'',updatedAt:'',createdAt:'',VehicleId:null},
+		userVehicle: {id:null,name:'',conso:'',FuelId:null,updatedAt:'',createdAt:''},
 		vehicleFuel: {id:null,name:'',carbonFootprint:'',updatedAt:'',createdAt:''},
 		journey: {distance: 0, vehicleId: null},
 		defaultFuels: [],
@@ -30,7 +30,7 @@ const App = () => {
 		AuthScreen: 'viewAuth',
 		AccountScreen: 'viewAccount',
 		SearchScreen: 'createRoute',
-		HomeScreen: 'home',
+		HomeScreen: 'search',
 		mySearches: [],
 		myTravels: [],
 		myTravelsNSearches: []
@@ -116,7 +116,7 @@ const App = () => {
 				...state,
 				myTravels: action.setTravels
 			})
-		case 'myTravelsNSearches':
+		case 'myTravelsSearches':
 			return ({
 				...state,
 				myTravelsNSearches: action.setTravelsNSearches
