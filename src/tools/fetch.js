@@ -161,9 +161,9 @@ export default Fetch = {
   deletePicture: (fileKey, auth) => remove(`${api}user/deleteImage/${fileKey}`,auth),
 
   /******** TRAVEL ************/
-  getSearches: async (UserId, auth) => get(`${api}travel/itineraire/${UserId}`, auth),
+  getSearches: (UserId, auth) => get(`${api}travel/itineraire/${UserId}`, auth),
 
-  getTravels: async (UserId, auth) => get(`${api}travel/voyage/${UserId}`, auth),
+  getTravels: (UserId, auth) => get(`${api}travel/voyage/${UserId}`, auth),
 
   createTravel: (body,auth) => post(`${api}travel/`, JSON.stringify(body), auth),
 }

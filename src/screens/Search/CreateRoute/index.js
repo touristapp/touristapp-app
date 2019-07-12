@@ -56,7 +56,7 @@ export default function CreateRoute() {
 
   /**
   * @direction
-  * @ GETS THE CARBON FOOTPRINT OF A TRAVEL
+  * @ GETS THE CARBON FOOTPRINT OF A TRAVEL AND CREATES A NEW SEARCH
   */
   const search = async () => {
     if (addressDescDepart!=='' && addressDescArrivee!=='') {
@@ -93,29 +93,27 @@ export default function CreateRoute() {
             Fetch.getOneVehicle(defaultVehicles[index].label, token).then( myVehicle => {
               Fetch.getVehicleFuel(myVehicle.data.id,token).then( myFuel => {
 
-                // const body = {
-                //   	UserId: currentUser.id,
-                //     departure: addressDescDepart,
-                //     destination: addressDescArrivee,
-                //     carbonFootprint: getCarbonFootprint(
-                //       myFuel.data.carbonFootprint,
-                //       myVehicle.data.conso,
-                //       result.routes[0].legs[0].distance.value/1000
-                //     ),
-                //     distance: Math.round(result.routes[0].legs[0].distance.value/1000),
-                //     duration: result.routes[0].legs[0].duration.value,
-                //     done: false,
-                //     VehicleId: myVehicle.data.id
-                // };
-                //
-                // console.log(body);
-                //
-                // Fetch.createTravel(body, token ).then( travel => {
-                //   console.log(travel);
-                // })
-                //
-                getCarbonFootprint( myFuel.data.carbonFootprint, myVehicle.data.conso, result.routes[0].legs[0].distance.value );
+                const body = {
+                  	UserId: currentUser.id,
+                    departure: addressDescDepart,
+                    destination: addressDescArrivee,
+                    carbonFootprint: getCarbonFootprint(
+                      myFuel.data.carbonFootprint,
+                      myVehicle.data.conso,
+                      result.routes[0].legs[0].distance.value/1000
+                    ),
+                    distance: Math.round(result.routes[0].legs[0].distance.value/1000),
+                    duration: result.routes[0].legs[0].duration.value,
+                    done: false,
+                    VehicleId: myVehicle.data.id
+                };
 
+                Fetch.createTravel(body, token ).then( travel => {
+                  dispatch({type: 'mySearches', setSearches: travel.data.travel});
+                  Snack.success('Recherche ajoutée avec succès !',showSnack,dispatch);
+                })
+
+                getCarbonFootprint( myFuel.data.carbonFootprint, myVehicle.data.conso, result.routes[0].legs[0].distance.value );
               })
             })
           } else {
