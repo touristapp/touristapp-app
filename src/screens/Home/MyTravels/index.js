@@ -26,7 +26,6 @@ export default function MyTravels() {
 
     async function fetch() {
         Fetch.getTravels(currentUser.id, token).then(travels => {
-            console.log(travels);
             dispatch({type: 'myTravels', setTravels: travels.data.data})
             fetchDone = true
         });

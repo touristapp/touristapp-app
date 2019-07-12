@@ -9,43 +9,42 @@ import Fetch from '../../../tools/fetch';
 import { useStateValue } from '../../../hooks/state';
 
 // Components imports
-import { View, Text } from 'react-native';
+import { View, Text, ScrollView } from 'react-native';
 import Travel from '../../../components/Travel';
 import Banner from '../../../components/Banner';
 
-export default function MySearches() {
+const MySearches = () => {
     const [{token, currentUser, mySearches, myTravels, myTravelsNSearches}, dispatch ] = useStateValue();
-    let fetchDone = false
-    let array = []
 
     useEffect(() => {
-        if (!fetchDone) {
-            fetch()
-        }
-    }, []);
-
-    async function fetch() {
+        dispatch({type: 'isLoading', wait: true});
         Fetch.getSearches(currentUser.id, token).then(travels => {
             let theSearches = travels.data.data
             Fetch.getTravels(currentUser.id, token).then(travels => {
                 let theTravels = travels.data.data
-                array = theSearches.concat(theTravels);
-                dispatch({type: 'myTravelsNSearches', setTravelsNSearches: array})
-                fetchDone = true
+                dispatch({type: 'mySearches', setSearches : theSearches})
             });
         });
-    }
+        dispatch({type: 'isLoading', wait: false});
+    },[]);
 
     return (
-        <>
+        <ScrollView>
             <Banner message="Mes recherches" back={true}/>
             <View style={Style.mainContainer}>
-                {myTravelsNSearches.map((travel, index) => {
+                {mySearches.length===0 &&
+                  <View style={{marginTop: 30}}>
+                    <Text>Vous n'avez pas encore enregistré de recherches !</Text>
+                  </View>
+                }
+                {mySearches.length>0 && mySearches.map((travel, index) => {
                     return (
                         <Travel key={index} from={travel.departure} to={travel.destination} distance={travel.distance} carbonPrint={travel.carbonFootprint} done={travel.done}/>
                     )
                 })}
             </View>
-        </>
+        </ScrollView>
     )
 }
+
+export default MySearches;
