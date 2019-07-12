@@ -13,7 +13,6 @@ import { useStateValue } from '../../hooks/state'
 
 // Components imports
 import { View } from 'react-native';
-import SearchResult from './SearchResult';
 
 export default function Account() {
     const [{ isLogged, SearchScreen }, dispatch] = useStateValue();
@@ -22,8 +21,6 @@ export default function Account() {
         switch(SearchScreen) {
             case 'createRoute':
                 return <CreateRoute/>
-            case 'searchResult':
-                return <SearchResult/>
             default:
                 dispatch({
                     type: 'switchScreen',
