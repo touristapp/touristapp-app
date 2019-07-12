@@ -18,7 +18,7 @@ import EditVehicle from '../EditVehicle';
 import EditPassword from '../EditPassword';
 
 export default function ViewAccount() {
-    const [{showSnack, isLoading, token, currentUser, userVehicle, vehicleFuel, progress}, dispatch ] = useStateValue();
+    const [{showSnack, isLoading, token, currentUser, userVehicle, vehicleFuel, progress, switchScreen}, dispatch ] = useStateValue();
 
     /**
     * @token

@@ -1,5 +1,5 @@
 export const colors = {
-  SKY: '#69DFED',
+  SKY: '#7FDFEF',
   SEA: '#1263DC',
   CARROT: '#FF9A39',
   COAL: '#282425',

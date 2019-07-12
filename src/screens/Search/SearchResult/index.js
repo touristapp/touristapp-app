@@ -9,7 +9,7 @@ import { colors } from "../../../styles/themes/variables";
 import Banner from "../../../components/Banner";
 import {
     View
-  } from "react-native";
+  } from "react-native";0
 
 export default function SearchResult(props) {
     const fetch = props

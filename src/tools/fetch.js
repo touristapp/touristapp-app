@@ -83,16 +83,10 @@ const remove = async (url, auth='') => {
     }
 };
 
-const fetchDirection = async (addressDescDepart, addressDescArrivee) => {
+const mapsApi = async (addressDescDepart, addressDescArrivee, vehicle) => {
     try {
-            //alert('Fetching!')
-        // alert(
-        //   `Fetching data from ${addressDescDepart} to ${addressDescArrivee}`
-        // );
         let response = await fetch(
-            `https://maps.googleapis.com/maps/api/directions/json?origin=${
-                addressDescDepart
-                }&destination=${addressDescArrivee}&key=${ENV.googleMapsApiKey}`,
+            `https://maps.googleapis.com/maps/api/directions/json?origin=${addressDescDepart}&destination=${addressDescArrivee}&mode=${vehicle}&key=${ENV.googleMapsApiKey}`,
             {
                 method: "GET",
                 headers: {
@@ -134,13 +128,15 @@ export default Fetch = {
 
   getAllVehicles: (auth) => get(`${api}vehicle`,auth),
 
+  getOneVehicle: (name, auth) => get(`${api}vehicle/name/${name}`,auth),
+
   deleteVehicle: (vehicleId,auth) => remove(`${api}vehicle/${vehicleId}`,auth),
 
   /******** FUEL *********/
   getAllFuels: (auth) => get(`${api}fuel`,auth),
 
   /******** MAPS *********/
-  getDirections: (addressDescDepart, addressDescArrivee) =>
-      fetchDirection( addressDescDepart, addressDescArrivee),
+  getDirections: (addressDescDepart, addressDescArrivee, vehicle) =>
+      mapsApi( addressDescDepart, addressDescArrivee, vehicle),
 
 }

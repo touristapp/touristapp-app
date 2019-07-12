@@ -12,11 +12,12 @@ import Banner from '../../../components/Banner';
 export default function Login() {
     const email = useInput();
     const password = useInput();
-    const [{ isLogged, showSnack, isLoading, token, progress }, dispatch] = useStateValue();
+    const [{ isLogged, showSnack, isLoading, token, progress, switchScreen }, dispatch] = useStateValue();
 
     useEffect(()=>dispatch({type: 'isLoading',wait: false}),[isLogged])
 
     useEffect(()=>{
+      dispatch({type: 'isLoading', wait: false});
       if (token==='') {
         Storage.retrieve('token').then( result => {
           if (result!==undefined && result!==null) {
