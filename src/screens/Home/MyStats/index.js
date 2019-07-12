@@ -4,12 +4,18 @@ import React from 'react';
 // Styles imports
 import Style from '../../../styles/myStats';
 
+// Hooks imports
+import { useStateValue } from '../../../hooks/state';
+
 // Components imports
 import { View, Text, Image } from 'react-native';
 import { Title } from 'react-native-paper';
 import Banner from '../../../components/Banner';
+import myTravels from '../../../styles/myTravels';
 
 export default function MyStats() {  
+    const [{myTravels, myTravelsNSearches}, dispatch ] = useStateValue();
+
     return (
         <>
             <Banner message="Statistiques" back={true}/> 
@@ -29,7 +35,7 @@ export default function MyStats() {
                             Voyages effectués
                         </Title>
                         <Text style={Style.textContent}>
-                            12
+                            {myTravels.length}
                         </Text>
                     </View>
                     <View style={Style.subForm}>
@@ -37,7 +43,7 @@ export default function MyStats() {
                             Recherches effectués
                         </Title>
                         <Text style={Style.textContent}>
-                            31
+                            {myTravelsNSearches.length}
                         </Text>
                     </View>
                     <View style={Style.subForm}>

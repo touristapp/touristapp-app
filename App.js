@@ -31,6 +31,9 @@ const App = () => {
 		AccountScreen: 'viewAccount',
 		SearchScreen: 'createRoute',
 		HomeScreen: 'home',
+		mySearches: [],
+		myTravels: [],
+		myTravelsNSearches: []
 	};
 
 	// Define how states would be updated by some actions
@@ -103,6 +106,21 @@ const App = () => {
 			})
 		case 'resetState':
 			return initialState;
+		case 'mySearches':
+			return ({
+				...state,
+				mySearches: action.setSearches
+			})
+		case 'myTravels':
+			return ({
+				...state,
+				myTravels: action.setTravels
+			})
+		case 'myTravelsNSearches':
+			return ({
+				...state,
+				myTravelsNSearches: action.setTravelsNSearches
+			})
 		default:
 			return state;
 		}

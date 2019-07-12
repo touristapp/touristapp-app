@@ -166,5 +166,9 @@ export default Fetch = {
       .then( () => console.log(`SUCCESS: image with key ${fileKey} deleted`))
       .catch( err => console.log(`ERROR in deleting mage with key ${fileKey}: ${err.stack}`))
     
-  }
+  },
+  
+  getSearches: async (UserId, auth) => get(`${api}travel/itineraire/${UserId}`, auth),
+
+  getTravels: async (UserId, auth) => get(`${api}travel/voyage/${UserId}`, auth)
 }
