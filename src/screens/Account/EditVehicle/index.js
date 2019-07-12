@@ -12,7 +12,7 @@ const EditVehicle = () => {
   const [expandList,setExpandList] = useState(false);
   const [carbonFootprint,setCarbonFootprint] = useState(0);
   const newVehicle = userVehicle!==undefined ? useInput(userVehicle.name) : useInput('');
-  const newConso = userVehicle!==undefined ? useInput(userVehicle.conso.toString()) : useInput('');
+  const newConso = userVehicle.conso!==undefined ? useInput(userVehicle.conso.toString()) : useInput('');
 
   /**
   * @defaultFuels

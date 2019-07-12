@@ -19,7 +19,7 @@ import EditPassword from '../EditPassword';
 import ImagePicker from "react-native-image-picker";
 
 export default function ViewAccount() {
-    const [{showSnack, isLoading, token, currentUser, userVehicle, vehicleFuel, progress}, dispatch ] = useStateValue();
+    const [{showSnack, isLoading, token, currentUser, userVehicle, vehicleFuel, progress, switchScreen}, dispatch ] = useStateValue();
 
     /**
     * @token

@@ -24,7 +24,9 @@ const App = () => {
 		currentUser: {id:null,name:'',email:'',picture:'',role:'',state:'',updatedAt:'',createdAt:'',VehicleId:''},
 		userVehicle: {id:null,name:'',conso:'',FuelId:'',updatedAt:'',createdAt:''},
 		vehicleFuel: {id:null,name:'',carbonFootprint:'',updatedAt:'',createdAt:''},
+		journey: {distance: 0, vehicleId: null},
 		defaultFuels: [],
+		defaultVehicles: [],
 		AuthScreen: 'viewAuth',
 		AccountScreen: 'viewAccount',
 		SearchScreen: 'createRoute',
@@ -93,6 +95,11 @@ const App = () => {
 			return ({
 				...state,
 				defaultFuels: action.set
+			})
+		case 'defaultVehicles':
+			return ({
+				...state,
+				defaultVehicles: action.set
 			})
 		case 'resetState':
 			return initialState;

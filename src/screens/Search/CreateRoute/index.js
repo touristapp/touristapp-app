@@ -8,327 +8,280 @@ import { colors } from "../../../styles/themes/variables";
 // Hooks imports
 import { useStateValue } from '../../../hooks/state'
 import ENV from "../../../../env";
-import Fetch from '../../../tools/fetch';
+import { Fetch, Snack, Vehicles } from '../../../tools';
 
 // Components imports
-import {
-  View,
-  Text,
-  Modal,
-  TouchableOpacity
-} from "react-native";
-import { Button } from "react-native-paper";
+import Banner from '../../../components/Banner'
+import { View, Modal, Image, Text, TouchableOpacity, ScrollView } from "react-native";
+import { Button, ActivityIndicator } from "react-native-paper";
+import Geocoder from 'react-native-geocoding';
+import { getDistance } from 'geolib';
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
-import RadioForm, {
-  RadioButton,
-  RadioButtonInput,
-  RadioButtonLabel
-} from "react-native-simple-radio-button";
+import RadioForm, { RadioButton, RadioButtonInput, RadioButtonLabel } from "react-native-simple-radio-button";
 
 export default function CreateRoute() {
+  const [{ isLogged, showSnack, isLoading, token, progress, showDialog, defaultVehicles, userVehicle }, dispatch] = useStateValue();
+  const [addressDescDepart, setaddressDescDepart] = useState('');
+  const [addressDescArrivee, setaddressDescArrivee] = useState('');
   const [index, setIndex] = useState(0);
-  const onPressRadio = value => setIndex(value);
-  const transports = [
-    { label: "Voiture", value: 0 },
-    { label: "Vélo", value: 1 },
-    { label: "Train", value: 2 },
-    { label: "Avion", value: 3 }
-  ];
-  const [{ isLogged, showSnack, isLoading, token, progress }, dispatch] = useStateValue();
-  const [modalDepart, setModalDepart] = useState("false");
-  const [modalArrive, setModalArrive] = useState("false");
-  const [addressDescDepart, setaddressDescDepart] = useState(null);
-  const [addressDescArrivee, setaddressDescArrivee] = useState(null);
-  const [direction, setDirection ] = useState({});
-  
+  const [direction, setDirection ] = useState(null);
+  const [carbonFootprint, setCarbonFootprint] = useState(null)
+  const transports = [];
 
-  async function fetch() {
-    const data = await Fetch.getDirections(addressDescDepart, addressDescArrivee);
-    setDirection({data})
-    dispatch({
-      type: 'switchScreen',
-      tab: 'SearchScreen',
-      screen: 'searchResult'
-    })
+  Geocoder.init(ENV.googleMapsApiKey);
+
+  /**
+  * @defaultVehicles
+  * @ INITS DEFAULT VEHICLES
+  */
+  useEffect(()=>{
+    if (defaultVehicles!==[]) {
+      Vehicles.map( (vehicle,index) => {
+          transports.push({
+            label: vehicle.name,
+            value: index
+          });
+      });
+
+      if (userVehicle.id!==null) {
+        transports.push({
+          label: userVehicle.name,
+          value: transports.length
+        });
+      }
+      dispatch({type: 'defaultVehicles', set: transports})
+    }
+  },[token])
+
+
+  /**
+  * @direction
+  * @ GETS THE CARBON FOOTPRINT OF A TRAVEL
+  */
+  const search = async () => {
+    if (addressDescDepart!=='' && addressDescArrivee!=='') {
+      dispatch({type: 'isLoading', wait: true});
+      const vehicle = formatVehicle(defaultVehicles[index].label)
+
+      // Maps API doesn't handle flights, so this is manual calculation
+      // THIS IS ONLY AN ESTIMATION
+      if (vehicle==='plane') {
+        const start = await Geocoder.from(addressDescDepart).then( json =>
+          json.results[0].geometry.location );
+        const end = await Geocoder.from(addressDescArrivee).then( json =>
+          json.results[0].geometry.location );
+        const distance = getDistance(
+          {latitude: start.lat, longitude: start.lng},
+          {latitude: end.lat, longitude: end.lng}
+        ) / 900;
+
+        //Raw Data because not enough time to make it dynamic :/
+        // need to make getOneVehicle not secured so it can be accessed if isLogged === false
+        const planeConsumption = 0.12 // litter/km
+        const keroseneCarbonSpread = 3000 // gCo2/liter
+        //-----------------------------------------------------
+
+        // CarbonFootPrint = FuelCarbonFootPrint x Consumption x Km
+        const footPrint = Math.round(keroseneCarbonSpread * planeConsumption * distance / 1000 * 100) / 100;
+        setCarbonFootprint(footPrint);
+        dispatch({type: 'isLoading', wait: false});
+      } else {
+        Fetch.getDirections(addressDescDepart,addressDescArrivee,vehicle).then( result => {
+          if (result.status==="OK") {
+            Fetch.getOneVehicle(defaultVehicles[index].label, token).then( myVehicle => {
+              Fetch.getVehicleFuel(myVehicle.data.id,token).then( myFuel => {
+                getCarbonFootprint(
+                  myFuel.data.carbonFootprint,
+                  myVehicle.data.conso,
+                  result.routes[0].legs[0].distance.value/1000
+                );
+                dispatch({type: 'isLoading', wait: false});
+              })
+            })
+          } else {
+            dispatch({type: 'isLoading', wait: false});
+            setCarbonFootprint(null)
+            return Snack.warning('Itinéraire impossible à calculer !',showSnack,dispatch);
+          }
+        })
+      }
+    } else {
+      Snack.danger('Tous les champs doivent être remplis !',showSnack,dispatch);
+    }
   }
 
-  useEffect(()=> {
-    dispatch({type: 'progress', load: 0})
-    dispatch({type: 'isLoading', wait: true});
-  },[])
+  /**
+  * @defaultVehicles
+  * @ FORMATS VEHICLE NAME FOR MAPS API
+  */
+  const formatVehicle = (vehicleName) => {
+    switch(vehicleName) {
+      case 'Train' :
+        return 'transit';
+      case 'Voiture' :
+        return 'driving';
+      case 'Vélo' :
+        return 'bicycling';
+      case 'Avion' :
+        return 'plane';
+      default :
+        return 'driving';
+    }
+  }
+
+  /**
+  * @carbonFootprint
+  * @ CALCULATES CARBON FOOTPRINT
+  */
+  const getCarbonFootprint = (fuelCarbonFootPrint, consumption, distance) => {
+    const result = Math.round(fuelCarbonFootPrint * consumption * distance / 1000 * 100) / 100;
+    setCarbonFootprint(result);
+    return result;
+  }
+
+  /**
+  * @index
+  * @ UPDATES RADIO BUTTONS INDEX
+  */
+  const onPressRadio = value => setIndex(value);
+
+  /**
+  * @backgroundColor
+  * @ SETS DYNAMIC STYLE FOR RESULT
+  */
+  const resultStyle = currentFootprint => {
+    let color;
+    // Average per travel : 600kgCo2
+    if (currentFootprint < 500) {
+      color = colors.GREEN;
+    } else if (currentFootprint < 800) {
+      color = colors.CARROT;
+    } else
+      color = colors.BLOOD;
+
+    return {
+          alignSelf: 'center',
+          width: 300,
+          height: 50,
+          backgroundColor: color,
+          marginBottom: 30,
+          paddingTop: 14,
+          borderRadius: 7,
+          opacity: 0.8,
+        }
+  }
+
+  /**
+  * @showDialog
+  * @showSnack
+  * @ CLOSES INFOS DIALOG
+  */
+  const cancel = () => {
+    dispatch({type:'showDialog',dialog:{on:false,which:''}})
+    Snack.warning('Départ annulé',showSnack,dispatch);
+  }
 
   return (
     <>
-      {/* PRINCIPALE VIEW */}
-
-      {/* <Banner message= "Créer un itinéraire"/> */}
-      <View style={Style.mainContainer} >
-
-        <View style={Style.form}>
-
-          <Text style={Style.title}>Créer un itinéraire</Text>
-
-          <View >
-            <View style={Style.textInputContainer}>
-              <TouchableOpacity
-                activeOpacity= {0}
-                onPress={() => {
-                  setModalDepart(true);
-                }}
-              >
-                <Text style={Style.textDestination}>
-                  {" "}
-                  {addressDescDepart
-                    ? addressDescDepart
-                    : "Ajouter départ"}{" "}
-                </Text>
-              </TouchableOpacity>
-            </View>
-
-
-            <View style={Style.textInputContainer}>
-              <TouchableOpacity
-                activeOpacity= {0}
-                onPress={() => {
-                  setModalArrive(true);
-                }}
-              >
-                <Text style={Style.textDestination}>
-                  {" "}
-                  {addressDescArrivee
-                    ? addressDescArrivee
-                    : "Ajouter arrivée"}{" "}
-                </Text>
-              </TouchableOpacity>
-            </View>
+      <Banner message= "Itinéraire"/>
+      <ScrollView contentContainerStyle={Style.mainContainer}>
+          <View style={Style.shadow}>
+            <Image
+              source={require("../../../assets/logo.png")}
+              style={{alignSelf:'center', width: 250, height: 250}}/>
           </View>
-
-        
-
-        <View>
-          <RadioForm formHorizontal={true} animation={true}>
-            {transports.map((obj, i) => (
-              <RadioButton
-                labelHorizontal={true}
-                key={i}
-                onPress={onPressRadio}
-              >
-                <RadioButtonInput
-                  obj={obj}
-                  index={i}
-                  isSelected={index === i}
-                  onPress={onPressRadio}
-                  borderWidth={1}
-                  buttonInnerColor={colors.FIRE}
-                  buttonOuterColor={index === i ? colors.SEA : colors.COAL}
-                  buttonSize={8}
-                  buttonOuterSize={15}
-                  buttonStyle={{}}
-                  buttonWrapStyle={{ marginVertical: 10, marginRight: 5 }}
-                />
-                <RadioButtonLabel
-                  obj={obj}
-                  index={i}
-                  onPress={onPressRadio}
-                  labelHorizontal={true}
-                  labelStyle={{ fontSize: 16, color: colors.SEA }}
-                  labelWrapStyle={{ marginVertical: 5, marginRight: 20 }}
-                />
-              </RadioButton>
-            ))}
-          </RadioForm>
-        </View>
-
-        <View >
-          <Button
-            style={Style.searchButton}
-            icon="search"
-            mode="contained"
-            onPress= {()=> fetch()}
-            datan={() => fetch()}
-          >
-            Rechercher
-            </Button>
-            </View>
-        </View>
-
-        {/* MODAL DEPART */}
-
-
-        <Modal
-          animationType="slide"
-          transparent={false}
-          visible={modalDepart}
-          onRequestClose={() => {
-            Alert.alert("Modal has been closed.");
-          }}
-        >
-          <View style={{ flex: 1 }}>
-            <GooglePlacesAutocomplete
-              placeholder="Départ"
-              marginTop= {10}
-              minLength={2} // minimum length of text to search
-              autoFocus={true}
-              returnKeyType={"search"} // Can be left out for default return key https://facebook.github.io/react-native/docs/textinput.html#returnkeytype
-              keyboardAppearance={"light"} // Can be left out for default keyboardAppearance https://facebook.github.io/react-native/docs/textinput.html#keyboardappearance
-              listViewDisplayed="true" // true/false/undefined
-              fetchDetails={true}
-              renderDescription={row => row.description} // custom description render
-              onPress={(data, details = null) => {
-                // 'details' is provided when fetchDetails = true
-                console.log(data, details);
-                setaddressDescDepart(data.description);
-                setModalDepart(false);
-              }}
-              getDefaultValue={() => ""}
-              query={{
-                // available options: https://developers.google.com/places/web-service/autocomplete
-                key: ENV.googleMapsApiKey,
-                language: "fr", // language of the results
-                types: '(cities)' // default: 'geocode'
-              }}
-
-              styles={{
-                textInputContainer: {
-                  marginTop: 10,
-                  marginLeft: 5,
-                },
-                description: {
-                  fontWeight: "bold"
-                },
-                predefinedPlacesDescription: {
-                  color: "#1faadb"
-                },
-                textInput: {
-                  flex: 1
-                },
-                listView: {
-                  flex: 1
-                }
-              }}
-              //currentLocation={true} // Will add a 'Current location' button at the top of the predefined places list
-              //currentLocationLabel="Current location"
-              //nearbyPlacesAPI='GooglePlacesSearch' // Which API to use: GoogleReverseGeocoding or GooglePlacesSearch
-              GoogleReverseGeocodingQuery={
-                {
-                  // available options for GoogleReverseGeocoding API : https://developers.google.com/maps/documentation/geocoding/intro
-                }
+          <View style={Style.form}>
+            {isLoading &&
+              <ActivityIndicator size='large' animating={true} color={colors.SEA} />
+            }
+            {!isLoading && (
+            <>
+              {carbonFootprint &&
+                <View style={resultStyle(carbonFootprint)}>
+                  <Text style={{alignSelf:'center', fontSize: 18, color: colors.WHITE, fontWeight: 'bold'}}>{carbonFootprint} kg de CO2 / passager</Text>
+                </View>
               }
-              GooglePlacesSearchQuery={{
-                // available options for GooglePlacesSearch API : https://developers.google.com/places/web-service/search
-                rankby: "distance",
-                type: "geocode"
-              }}
-              GooglePlacesDetailsQuery={{
-                // available options for GooglePlacesDetails API : https://developers.google.com/places/web-service/details
-                fields: "formatted_address"
-              }}
-              filterReverseGeocodingByTypes={[
-                "locality",
-                "administrative_area_level_3"
-              ]} // filter the reverse geocoding results by types - ['locality', 'administrative_area_level_3'] if you want to display only cities
-              //predefinedPlaces={}
+              <GooglePlacesAutocomplete
+                placeholder="Départ"
+                marginTop= {2}
+                minLength={2}
+                autoFocus={false}
+                keyboardAppearance={"light"}
+                renderDescription={row => row.description}
+                listViewDisplayed="true"
+                fetchDetails={true}
+                onPress={data => setaddressDescDepart(data.description)}
+                getDefaultValue={() => addressDescDepart}
+                query={{key: ENV.googleMapsApiKey, language: "fr", types: '(cities)'}}
+                GooglePlacesSearchQuery={{rankby: "distance", type: "geocode"}}
+                GooglePlacesDetailsQuery={{fields: "formatted_address"}}
+                filterReverseGeocodingByTypes={["locality", "administrative_area_level_3"]}
+                debounce={200}
+              />
+              <GooglePlacesAutocomplete
+                placeholder="Arrivée"
+                minLength={2}
+                autoFocus={false}
+                returnKeyType={"search"}
+                keyboardAppearance={"light"}
+                listViewDisplayed="true"
+                fetchDetails={true}
+                onPress={data => setaddressDescArrivee(data.description)}
+                getDefaultValue={() => addressDescArrivee}
+                query={{key: ENV.googleMapsApiKey, language: "fr", types: '(cities)'}}
+                GooglePlacesSearchQuery={{ rankby: "distance", type: "geocode" }}
+                GooglePlacesDetailsQuery={{ fields: "formatted_address" }}
+                filterReverseGeocodingByTypes={["locality", "administrative_area_level_3"]}
+                debounce={200}
+              />
+            <View>
+              <RadioForm formHorizontal={true} animation={true} style={{justifyContent:'center'}}>
+                {(defaultVehicles!==[]) && defaultVehicles.map((obj, i) => (
+                  <RadioButton
+                    labelHorizontal={true}
+                    key={i}
+                    onPress={onPressRadio}
+                  >
+                    <RadioButtonInput
+                      obj={obj}
+                      index={i}
+                      isSelected={index === i}
+                      onPress={onPressRadio}
+                      borderWidth={1}
+                      buttonInnerColor={colors.FIRE}
+                      buttonOuterColor={index === i ? colors.SEA : colors.COAL}
+                      buttonSize={8}
+                      buttonOuterSize={15}
+                      buttonStyle={{}}
+                      buttonWrapStyle={{ marginVertical: 10, marginRight: 5 }}
+                    />
+                    <RadioButtonLabel
+                      obj={obj}
+                      index={i}
+                      onPress={onPressRadio}
+                      labelHorizontal={true}
+                      labelStyle={{ fontSize: 16, color: colors.SEA }}
+                      labelWrapStyle={{ marginVertical: 5, marginRight: 20 }}
+                    />
+                  </RadioButton>
+                ))}
+              </RadioForm>
+            </View>
 
-              debounce={200} // debounce the requests in ms. Set to 0 to remove debounce. By default 0ms.
-              //renderLeftButton={()  => <Text>renderLeftButton</Text>}
-              renderRightButton={() => (
-                <Button block info onPress={() => setModalDepart(false)}
-                style={Style.cancelButton}
-                >
-                  <Text style={Style.textcancelButton}>Cancel</Text>
+            <View >
+              <Button
+                style={Style.searchButton}
+                icon="search"
+                mode="contained"
+                onPress= {search}
+              >
+                Rechercher
                 </Button>
-              )}
-            />
+              </View>
+            </>
+            )}
           </View>
-        </Modal>
-
-        {/* MODAL ARRIVEE */}
-
-        <Modal
-          animationType="slide"
-          transparent={false}
-          visible={modalArrive}
-          onRequestClose={() => {
-            Alert.alert("Modal has been closed.");
-          }}
-        >
-          <View style={{ flex: 1 }}>
-            <GooglePlacesAutocomplete
-              placeholder="Arrivée"
-              minLength={2} // minimum length of text to search
-              autoFocus={true}
-              returnKeyType={"search"} // Can be left out for default return key https://facebook.github.io/react-native/docs/textinput.html#returnkeytype
-              keyboardAppearance={"light"} // Can be left out for default keyboardAppearance https://facebook.github.io/react-native/docs/textinput.html#keyboardappearance
-              listViewDisplayed="true" // true/false/undefined
-              fetchDetails={true}
-              renderDescription={row => row.description} // custom description render
-              onPress={(data, details = null) => {
-                // 'details' is provided when fetchDetails = true
-                console.log(data, details);
-                setaddressDescArrivee(data.description);
-                setModalArrive(false);
-              }}
-              getDefaultValue={() => ""}
-              query={{
-                // available options: https://developers.google.com/places/web-service/autocomplete
-                key: ENV.googleMapsApiKey,
-                language: "fr", // language of the results
-                types: '(cities)' // default: 'geocode'
-              }}
-              styles={{
-                textInputContainer: {
-                  marginTop: 10,
-                  marginLeft: 5,
-                },
-                description: {
-                  fontWeight: "bold"
-                },
-                predefinedPlacesDescription: {
-                  color: "#1faadb"
-                },
-                textInput: {
-                  flex: 3
-                },
-                listView: {
-                  flex: 1
-                }
-              }}
-              //currentLocation={true} // Will add a 'Current location' button at the top of the predefined places list
-              //currentLocationLabel="Current location"
-              //nearbyPlacesAPI='GooglePlacesSearch' // Which API to use: GoogleReverseGeocoding or GooglePlacesSearch
-              GoogleReverseGeocodingQuery={
-                {
-                  // available options for GoogleReverseGeocoding API : https://developers.google.com/maps/documentation/geocoding/intro
-                }
-              }
-              GooglePlacesSearchQuery={{
-                // available options for GooglePlacesSearch API : https://developers.google.com/places/web-service/search
-                rankby: "distance",
-                type: "geocode"
-              }}
-              GooglePlacesDetailsQuery={{
-                // available options for GooglePlacesDetails API : https://developers.google.com/places/web-service/details
-                fields: "formatted_address"
-              }}
-              filterReverseGeocodingByTypes={[
-                "locality",
-                "administrative_area_level_3"
-              ]} // filter the reverse geocoding results by types - ['locality', 'administrative_area_level_3'] if you want to display only cities
-              //predefinedPlaces={}
-
-              debounce={200} // debounce the requests in ms. Set to 0 to remove debounce. By default 0ms.
-              //renderLeftButton={()  => <Text>renderLeftButton</Text>}
-              renderRightButton={() => (
-                <Button block info onPress={() => setModalArrive(false)} 
-                style={Style.cancelButton}
-                >
-                  <Text style={Style.textcancelButton}>Cancel</Text>
-                </Button>
-              )}
-            />
-          </View>
-        </Modal>
-      </View>
+      </ScrollView>
     </>
   );
 }
