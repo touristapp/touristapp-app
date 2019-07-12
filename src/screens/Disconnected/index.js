@@ -5,14 +5,17 @@ import React from 'react';
 import Style from '../../styles/disconnected';
 
 // Components imorts
+import { useStateValue } from '../../hooks/state'
 import Banner from '../../components/Banner'
 import { View, Image } from 'react-native';
-import { Title } from 'react-native-paper';
+import { Title, Button } from 'react-native-paper';
 
 export default function Disconnected() {
+    const [{ switchScreen }, dispatch] = useStateValue();
+
     return (
         <>
-            <Banner message="Oups !"/>
+            <Banner message="Mes Voyages"/>
             <View style={Style.mainContainer}>
                 <Title style={Style.text}>Vous n'êtes pas connecté</Title>
                 <Image

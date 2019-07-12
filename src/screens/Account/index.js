@@ -35,12 +35,7 @@ export default function Account() {
 
     return (
         <View style={Style.mainContainer}>
-          {!isLogged &&
-            <ActivityIndicator size='large' animating={true} color={colors.SEA} />
-          }
-          {isLogged && (
-            renderSwitch(AccountScreen)
-          )}
+            {renderSwitch(AccountScreen)}
         </View>
     )
 }

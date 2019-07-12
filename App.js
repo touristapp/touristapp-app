@@ -30,7 +30,14 @@ const App = () => {
 		AuthScreen: 'viewAuth',
 		AccountScreen: 'viewAccount',
 		SearchScreen: 'createRoute',
+<<<<<<< Updated upstream
 		HomeScreen: 'home',
+=======
+		HomeScreen: 'search',
+		mySearches: [],
+		myTravels: [],
+		myTravelsNSearches: []
+>>>>>>> Stashed changes
 	};
 
 	// Define how states would be updated by some actions

@@ -8,7 +8,7 @@ import { colors } from "../../../styles/themes/variables";
 // Hooks imports
 import { useStateValue } from '../../../hooks/state'
 import ENV from "../../../../env";
-import { Fetch, Snack, Vehicles } from '../../../tools';
+import { Fetch, Snack, Storage, Vehicles } from '../../../tools';
 
 // Components imports
 import Banner from '../../../components/Banner'
@@ -20,7 +20,7 @@ import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplet
 import RadioForm, { RadioButton, RadioButtonInput, RadioButtonLabel } from "react-native-simple-radio-button";
 
 export default function CreateRoute() {
-  const [{ isLogged, showSnack, isLoading, token, progress, showDialog, defaultVehicles, userVehicle }, dispatch] = useStateValue();
+  const [{ isLogged, switchScreen, showSnack, isLoading, token, progress, showDialog, defaultVehicles, currentUser, userVehicle }, dispatch] = useStateValue();
   const [addressDescDepart, setaddressDescDepart] = useState('');
   const [addressDescArrivee, setaddressDescArrivee] = useState('');
   const [index, setIndex] = useState(0);
@@ -35,6 +35,7 @@ export default function CreateRoute() {
   * @ INITS DEFAULT VEHICLES
   */
   useEffect(()=>{
+    console.log("CALL CREATE ROUTE");
     if (defaultVehicles!==[]) {
       Vehicles.map( (vehicle,index) => {
           transports.push({
@@ -51,7 +52,7 @@ export default function CreateRoute() {
       }
       dispatch({type: 'defaultVehicles', set: transports})
     }
-  },[token])
+  },[])
 
 
   /**
@@ -60,7 +61,6 @@ export default function CreateRoute() {
   */
   const search = async () => {
     if (addressDescDepart!=='' && addressDescArrivee!=='') {
-      dispatch({type: 'isLoading', wait: true});
       const vehicle = formatVehicle(defaultVehicles[index].label)
 
       // Maps API doesn't handle flights, so this is manual calculation
@@ -82,28 +82,45 @@ export default function CreateRoute() {
         //-----------------------------------------------------
 
         // CarbonFootPrint = FuelCarbonFootPrint x Consumption x Km
-        const footPrint = Math.round(keroseneCarbonSpread * planeConsumption * distance / 1000 * 100) / 100;
-        setCarbonFootprint(footPrint);
-        dispatch({type: 'isLoading', wait: false});
+        getCarbonFootprint(
+          keroseneCarbonSpread,
+          planeConsumption,
+          distance
+        );
       } else {
+        dispatch({type: 'isLoading', wait: true});
         Fetch.getDirections(addressDescDepart,addressDescArrivee,vehicle).then( result => {
           if (result.status==="OK") {
             Fetch.getOneVehicle(defaultVehicles[index].label, token).then( myVehicle => {
               Fetch.getVehicleFuel(myVehicle.data.id,token).then( myFuel => {
-                getCarbonFootprint(
-                  myFuel.data.carbonFootprint,
-                  myVehicle.data.conso,
-                  result.routes[0].legs[0].distance.value/1000
-                );
-                dispatch({type: 'isLoading', wait: false});
+                const body = {
+                  	UserId: currentUser.id,
+                    departure: addressDescDepart,
+                    destination: addressDescArrivee,
+                    carbonFootprint: getCarbonFootprint(
+                      myFuel.data.carbonFootprint,
+                      myVehicle.data.conso,
+                      result.routes[0].legs[0].distance.value/1000
+                    ),
+                    distance: Math.round(result.routes[0].legs[0].distance.value/1000),
+                    duration: result.routes[0].legs[0].duration.value,
+                    done: false,
+                    VehicleId: myVehicle.data.id
+                };
+
+                console.log(body);
+
+                Fetch.createTravel(body, token ).then( travel => {
+                  console.log(travel);
+                })
               })
             })
           } else {
-            dispatch({type: 'isLoading', wait: false});
             setCarbonFootprint(null)
             return Snack.warning('Itinéraire impossible à calculer !',showSnack,dispatch);
           }
         })
+        dispatch({type: 'isLoading', wait: false});
       }
     } else {
       Snack.danger('Tous les champs doivent être remplis !',showSnack,dispatch);
@@ -181,26 +198,36 @@ export default function CreateRoute() {
     Snack.warning('Départ annulé',showSnack,dispatch);
   }
 
+  /**
+  * @isLogged
+  * @ LOGOUT
+  */
+  const logout = () => {
+    dispatch({type: 'resetState'});
+    Storage.clear();
+    Snack.warning('Logged out !',showSnack,dispatch);
+  }
+
   return (
     <>
       <Banner message= "Itinéraire"/>
       <ScrollView contentContainerStyle={Style.mainContainer}>
-          <View style={Style.shadow}>
+          <View>
             <Image
               source={require("../../../assets/logo.png")}
-              style={{alignSelf:'center', width: 250, height: 250}}/>
+              style={{margin: 0, alignSelf:'center', width: 200, height: 200}}/>
           </View>
           <View style={Style.form}>
-            {isLoading &&
-              <ActivityIndicator size='large' animating={true} color={colors.SEA} />
-            }
-            {!isLoading && (
-            <>
-              {carbonFootprint &&
+              {isLoading===true &&
+                <ActivityIndicator size='large' animating={true} color={colors.SEA} />
+              }
+              {isLoading!==true && carbonFootprint!==null &&
                 <View style={resultStyle(carbonFootprint)}>
                   <Text style={{alignSelf:'center', fontSize: 18, color: colors.WHITE, fontWeight: 'bold'}}>{carbonFootprint} kg de CO2 / passager</Text>
                 </View>
               }
+              {isLoading!==true &&
+              <>
               <GooglePlacesAutocomplete
                 placeholder="Départ"
                 marginTop= {2}
@@ -277,9 +304,22 @@ export default function CreateRoute() {
               >
                 Rechercher
                 </Button>
+                {!isLogged &&
+                  <Button
+                    style={Style.connectButton}
+                    icon="send"
+                    mode="contained"
+                    onPress={() => dispatch({
+                        type: 'switchScreen',
+                        tab: 'AuthScreen',
+                        screen: 'login'
+                    })}>
+                    S'identifier
+                  </Button>
+                }
               </View>
             </>
-            )}
+            }
           </View>
       </ScrollView>
     </>

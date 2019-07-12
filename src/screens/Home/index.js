@@ -9,6 +9,7 @@ import ViewHome from './ViewHome';
 import MyTravels from './MyTravels';
 import MyStats from './MyStats'
 import MySearches from './mySearches';
+import Disconnected from '../Disconnected';
 
 // Hooks imports
 import { useStateValue } from '../../hooks/state'
@@ -40,16 +41,15 @@ export default function Home() {
     }
 
     return (
-        <View style={Style.mainContainer}>
-          {renderSwitch(HomeScreen)}
-        </View>
+      <>
+          {!isLogged && (
+              <Disconnected/>
+          )}
+          {isLogged && (
+            <View style={Style.mainContainer}>
+              {renderSwitch(HomeScreen)}
+            </View>
+          )}
+      </>
     )
-    /*
-    {isLogged && (
-        this.renderSwitch(HomeScreen)
-    )}
-    {!isLogged && (
-        <Disconnected/>
-    )}
-    */
 }

@@ -100,6 +100,7 @@ const mapsApi = async (addressDescDepart, addressDescArrivee, vehicle) => {
         throw errors;
     }
   };
+
 /***************************************/
 /*              SHORTCUTS              */
 /***************************************/
@@ -139,4 +140,32 @@ export default Fetch = {
   getDirections: (addressDescDepart, addressDescArrivee, vehicle) =>
       mapsApi( addressDescDepart, addressDescArrivee, vehicle),
 
+<<<<<<< Updated upstream
+=======
+  /******** PICTURES *********/
+  postPicture: async (userId, body, auth) => {
+    try{
+      let response = await fetch(`${api}user/addImage/${userId}`, {
+        method: "POST",
+        headers: {
+          "Authorization": 'Bearer ' + auth.token
+        },
+        body
+      })
+      return response.json()
+    }
+    catch(err){
+      console.log("ERROR on fetching picture", err)
+    }
+  },
+
+  deletePicture: (fileKey, auth) => remove(`${api}user/deleteImage/${fileKey}`,auth),
+
+  /******** TRAVEL ************/
+  getSearches: async (UserId, auth) => get(`${api}travel/itineraire/${UserId}`, auth),
+
+  getTravels: async (UserId, auth) => get(`${api}travel/voyage/${UserId}`, auth),
+
+  createTravel: (body,auth) => post(`${api}travel/`, JSON.stringify(body), auth),
+>>>>>>> Stashed changes
 }

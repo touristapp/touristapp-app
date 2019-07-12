@@ -78,6 +78,7 @@ const EditVehicle = () => {
         dispatch({type:'showDialog',dialog:{on:false,which:''}})
         dispatch({type: 'isLoading', wait: false});
       });
+      dispatch({type:'showDialog',dialog:{on:false,which:''}})
     }
   }
 
@@ -144,15 +145,27 @@ const EditVehicle = () => {
         </>
       }
       <DataTable.Row style={Style.datarow}>
-        <Button style={Style.editVehicle} icon="directions-car" color={colors.SEA} mode="text" onPress={() => dispatch({type:'showDialog',dialog:{on:true,which:'vehicle'}})}>
-            {currentUser.VehicleId && 'Modifier'}{!currentUser.VehicleId && 'Ajouter'} mon véhicule
-        </Button>
+        {currentUser.VehicleId!==null &&
+          <Button style={Style.editVehicle} icon="directions-car" color={colors.SEA} mode="text" onPress={() => dispatch({type:'showDialog',dialog:{on:true,which:'vehicle'}})}>
+              Modifier mon véhicule
+          </Button>
+        }
+        {currentUser.VehicleId===null &&
+          <Button style={Style.editVehicle} icon="directions-car" color={colors.SEA} mode="text" onPress={() => dispatch({type:'showDialog',dialog:{on:true,which:'vehicle'}})}>
+              Ajouter mon véhicule
+          </Button>
+        }
         {(showDialog.which === 'vehicle') && (
           <Portal>
             <Dialog
                visible={showDialog.on}
                onDismiss={()=>dispatch({type:'showDialog',dialog:{on:false,which:''}})}>
-              <Dialog.Title>{currentUser.VehicleId && 'Modifier'}{!currentUser.VehicleId && 'Ajouter'} mon véhicule</Dialog.Title>
+               {currentUser.VehicleId!==null &&
+                 <Dialog.Title>Modifier mon véhicule</Dialog.Title>
+               }
+               {currentUser.VehicleId===null &&
+                 <Dialog.Title>Ajouter mon véhicule</Dialog.Title>
+               }
                 <Dialog.Content>
                   <ScrollView>
                     <View style={Style.mainContainer}>
@@ -224,7 +237,7 @@ const EditVehicle = () => {
           </Portal>
         )}
       </DataTable.Row>
-      {currentUser.VehicleId &&
+      {currentUser.VehicleId!==null &&
         <DataTable.Row style={Style.datarow}>
           <Button
             color={colors.FIRE}
